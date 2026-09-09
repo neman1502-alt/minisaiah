@@ -21,9 +21,248 @@ REPORTS_DIR = CURRENT_DIR / "reports"
 INDEX_HTML_PATH = CURRENT_DIR / "index.html"
 REPORTS_DATA_JSON = CURRENT_DIR / "reports_data.json"
 
-sys.path.insert(0, str(BASE_DIR))
-from bible_agent.report_builder_common import build_master_html, convert_html_to_pdf
-from 공유사이트.sync_to_share import BIBLE_CANON_ORDER, CANON_CATEGORY_MAP, get_canon_index
+BIBLE_CANON_ORDER = [
+    "창세기", "출애굽기", "레위기", "민수기", "신명기",
+    "여호수아", "사사기", "룻기", "사무엘상", "사무엘하", "열왕기상", "열왕기하",
+    "역대상", "역대하", "에스라", "느헤미야", "에스더",
+    "욥기", "시편", "잠언", "전도서", "아가",
+    "이사야", "예레미야", "예레미야애가", "에스겔", "다니엘",
+    "호세아", "요엘", "아모스", "오바댜", "요나", "미가",
+    "나훔", "하박국", "스바냐", "학개", "스가랴", "말라기",
+    "마태복음", "마가복음", "누가복음", "요한복음",
+    "사도행전",
+    "로마서", "고린도전서", "고린도후서", "갈라디아서", "에베소서", "빌립보서", "골로새서",
+    "데살로니가전서", "데살로니가후서", "디모데전서", "디모데후서", "디도서", "빌레몬서",
+    "히브리서", "야고보서", "베드로전서", "베드로후서", "요한일서", "요한이서", "요한삼서", "유다서",
+    "요한계시록"
+]
+
+CANON_CATEGORY_MAP = {
+    "창세기": ("구약", "율법서"), "출애굽기": ("구약", "율법서"), "레위기": ("구약", "율법서"), "민수기": ("구약", "율법서"), "신명기": ("구약", "율법서"),
+    "여호수아": ("구약", "역사서"), "사사기": ("구약", "역사서"), "룻기": ("구약", "역사서"), "사무엘상": ("구약", "역사서"), "사무엘하": ("구약", "역사서"),
+    "열왕기상": ("구약", "역사서"), "열왕기하": ("구약", "역사서"), "역대상": ("구약", "역사서"), "역대하": ("구약", "역사서"), "에스라": ("구약", "역사서"), "느헤미야": ("구약", "역사서"), "에스더": ("구약", "역사서"),
+    "욥기": ("구약", "시가서"), "시편": ("구약", "시가서"), "잠언": ("구약", "시가서"), "전도서": ("구약", "시가서"), "아가": ("구약", "시가서"),
+    "이사야": ("구약", "예언서"), "예레미야": ("구약", "예언서"), "예레미야애가": ("구약", "예언서"), "에스겔": ("구약", "예언서"), "다니엘": ("구약", "예언서"),
+    "호세아": ("구약", "예언서"), "요엘": ("구약", "예언서"), "아모스": ("구약", "예언서"), "오바댜": ("구약", "예언서"), "요나": ("구약", "예언서"), "미가": ("구약", "예언서"),
+    "나훔": ("구약", "예언서"), "하박국": ("구약", "예언서"), "스바냐": ("구약", "예언서"), "학개": ("구약", "예언서"), "스가랴": ("구약", "예언서"), "말라기": ("구약", "예언서"),
+    "마태복음": ("신약", "복음서"), "마가복음": ("신약", "복음서"), "누가복음": ("신약", "복음서"), "요한복음": ("신약", "복음서"),
+    "사도행전": ("신약", "역사서"),
+    "로마서": ("신약", "바울서신"), "고린도전서": ("신약", "바울서신"), "고린도후서": ("신약", "바울서신"), "갈라디아서": ("신약", "바울서신"), "에베소서": ("신약", "바울서신"),
+    "빌립보서": ("신약", "바울서신"), "골로새서": ("신약", "바울서신"), "데살로니가전서": ("신약", "바울서신"), "데살로니가후서": ("신약", "바울서신"),
+    "디모데전서": ("신약", "바울서신"), "디모데후서": ("신약", "바울서신"), "디도서": ("신약", "바울서신"), "빌레몬서": ("신약", "바울서신"),
+    "히브리서": ("신약", "일반서신"), "야고보서": ("신약", "일반서신"), "베드로전서": ("신약", "일반서신"), "베드로후서": ("신약", "일반서신"),
+    "요한일서": ("신약", "일반서신"), "요한이서": ("신약", "일반서신"), "요한삼서": ("신약", "일반서신"), "유다서": ("신약", "일반서신"),
+    "요한계시록": ("신약", "예언서")
+}
+
+def get_canon_index(book_name: str) -> int:
+    try:
+        return BIBLE_CANON_ORDER.index(book_name)
+    except ValueError:
+        return 999
+
+def clean_character_counts(text: str) -> str:
+    text = re.sub(r"\s*-\s*\[[\d,\s~]+자\]", "", text)
+    text = re.sub(r"\[[\d,\s~]+자\]", "", text)
+    return text
+
+def separate_numbered_items(text: str) -> str:
+    text = re.sub(r"([.!?\"\'\)])\s+(\d+[\.\)]\s+)", r"\1\n\n\2", text)
+    text = re.sub(r"([^\n])\n(\d+[\.\)]\s+)", r"\1\n\n\2", text)
+    return text
+
+def build_master_html(md_content: str, title: str, book: str, passage: str) -> str:
+    content = clean_character_counts(md_content)
+    content = separate_numbered_items(content)
+
+    def format_tables(text):
+        lines = text.split("\n")
+        new_lines = []
+        in_table = False
+        table_html = []
+        for line in lines:
+            if line.strip().startswith("|") and line.strip().endswith("|"):
+                if not in_table:
+                    in_table = True
+                    table_html = ["<div class='table-container'><table>"]
+                cells = [c.strip() for c in line.strip().split("|")[1:-1]]
+                if all(re.match(r"^:?-+:?$", c) for c in cells):
+                    continue
+                tag = "th" if len(table_html) == 1 else "td"
+                row_str = "".join(f"<{tag}>{c}</{tag}>" for c in cells)
+                table_html.append(f"<tr>{row_str}</tr>")
+            else:
+                if in_table:
+                    in_table = False
+                    table_html.append("</table></div>")
+                    new_lines.append("\n".join(table_html))
+                    table_html = []
+                new_lines.append(line)
+        if in_table:
+            table_html.append("</table></div>")
+            new_lines.append("\n".join(table_html))
+        return "\n".join(new_lines)
+
+    formatted = format_tables(content)
+    formatted = re.sub(r"^### (.*)$", r"<h3>\1</h3>\n\n", formatted, flags=re.MULTILINE)
+    formatted = re.sub(r"^## (.*)$", r"<h2>\1</h2>\n\n", formatted, flags=re.MULTILINE)
+    formatted = re.sub(r"^# (.*)$", r"<h1>\1</h1>\n\n", formatted, flags=re.MULTILINE)
+    formatted = re.sub(r"\*\*(.*?)\*\*", r"<strong>\1</strong>", formatted)
+    formatted = re.sub(r"\*(.*?)\*", r"<em>\1</em>", formatted)
+    formatted = re.sub(r"\[(.*?)\]\((.*?)\)", r"<a href='\2' target='_blank' rel='noopener noreferrer'>\1</a>", formatted)
+    formatted = re.sub(r"^- (.*)$", r"<li>\1</li>", formatted, flags=re.MULTILINE)
+    formatted = re.sub(r"((?:<li>.*</li>\n?)+)", r"<ul>\1</ul>\n\n", formatted)
+    formatted = re.sub(r"^> (.*)$", r"<blockquote>\1</blockquote>\n\n", formatted, flags=re.MULTILINE)
+
+    raw_blocks = formatted.split("\n\n")
+    body_html = ""
+    for block in raw_blocks:
+        b_str = block.strip()
+        if not b_str:
+            continue
+        if any(b_str.startswith(tag) for tag in ["<h1", "<h2", "<h3", "<div", "<ul", "<ol", "<blockquote", "<hr"]):
+            body_html += b_str + "\n"
+        else:
+            lines = b_str.split("\n")
+            cur_item = []
+            for line in lines:
+                l_str = line.strip()
+                if not l_str:
+                    continue
+                if re.match(r"^\d+[\.\)]\s+", l_str):
+                    if cur_item:
+                        body_html += f"<div class='numbered-item'>{' '.join(cur_item)}</div>\n"
+                        cur_item = []
+                    cur_item.append(l_str)
+                else:
+                    if cur_item:
+                        cur_item.append(l_str)
+                    else:
+                        body_html += f"<p>{l_str}</p>\n"
+            if cur_item:
+                body_html += f"<div class='numbered-item'>{' '.join(cur_item)}</div>\n"
+
+    return f"""<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{passage} 올인원 마스터 대통합 연구보고서</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {{
+            --primary: #1e3a8a;
+            --primary-dark: #0f172a;
+            --gold: #d97706;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --border: #e2e8f0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }}
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        body {{
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.85;
+            padding: 2rem 1rem;
+            word-break: keep-all;
+        }}
+        .container {{
+            max-width: 1040px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }}
+        h1 {{
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid var(--gold);
+            padding-bottom: 1rem;
+        }}
+        h2 {{
+            font-size: 1.55rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 2.5rem;
+            margin-bottom: 1.2rem;
+            padding-left: 0.75rem;
+            border-left: 5px solid var(--gold);
+        }}
+        h3 {{
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-top: 1.8rem;
+            margin-bottom: 0.8rem;
+        }}
+        p {{ margin-bottom: 1.15rem; font-size: 1.05rem; color: #334155; }}
+        strong {{ color: var(--primary-dark); font-weight: 700; }}
+        em {{ color: var(--gold); font-style: normal; font-weight: 600; }}
+        .numbered-item {{
+            background: #f8fafc;
+            border-left: 4px solid #3b82f6;
+            padding: 0.9rem 1.25rem;
+            margin-bottom: 0.85rem;
+            border-radius: 0 10px 10px 0;
+            font-size: 1.02rem;
+            color: #334155;
+            line-height: 1.75;
+        }}
+        .table-container {{
+            overflow-x: auto;
+            margin: 1.75rem 0;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }}
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            background: #fff;
+        }}
+        th {{
+            background-color: #f1f5f9;
+            color: var(--primary-dark);
+            font-weight: 700;
+            padding: 0.9rem 1.1rem;
+            border-bottom: 2px solid var(--border);
+        }}
+        td {{
+            padding: 0.85rem 1.1rem;
+            border-bottom: 1px solid var(--border);
+            color: #334155;
+        }}
+        blockquote {{
+            background: #f8fafc;
+            border-left: 4px solid var(--primary);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }}
+        ul, ol {{ margin-left: 1.75rem; margin-bottom: 1.5rem; }}
+        li {{ margin-bottom: 0.5rem; }}
+        a {{ color: #2563eb; text-decoration: none; }}
+        a:hover {{ text-decoration: underline; }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        {body_html}
+    </div>
+</body>
+</html>"""
+
+def convert_html_to_pdf(html_path: Path, pdf_path: Path) -> bool:
+    # Render cloud: HTML serves directly, PDF is optional
+    return False
 
 def parse_bible_passage(raw_input: str):
     """사용자가 입력한 성경 구절 문자열 정규화 (예: '로마서 8:1-11', '창 1:1-5', '롬 8 1 11')"""
