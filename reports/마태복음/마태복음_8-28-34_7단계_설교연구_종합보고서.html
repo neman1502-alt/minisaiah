@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>마태복음 8:28-34 - 설교문 작성 7단계 종합 연구 보고서</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Pretendard:wght@300;400;500;600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #3b82f6;
+      --accent-gold: #f59e0b;
+      --accent-green: #10b981;
+      --accent-purple: #8b5cf6;
+      --accent-cyan: #06b6d4;
+      --accent-rose: #f43f5e;
+      --card-bg: #131b2e;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+    }
+
+    @page {
+      size: A4;
+      margin: 14mm 14mm 14mm 14mm;
+      @bottom-right {
+        content: counter(page) " / " counter(pages);
+        font-family: 'Inter', sans-serif;
+        font-size: 8pt;
+        color: #64748b;
+      }
+      @bottom-left {
+        content: "마태복음 8:28-34 설교문 작성 7단계 종합 보고서";
+        font-family: 'Pretendard', sans-serif;
+        font-size: 8pt;
+        color: #64748b;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Pretendard', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0b0f19;
+      color: #f1f5f9;
+      line-height: 1.75;
+      padding: 2.2rem;
+      font-size: 10.2pt;
+    }
+
+    .report-container {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    /* Main Banner */
+    .header-banner {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.22) 0%, rgba(15, 23, 42, 0.92) 100%);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      border-radius: 16px;
+      padding: 2.2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.5);
+    }
+
+    .badge-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .model-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 9999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .badge-7step { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; }
+    .badge-drive { background: linear-gradient(135deg, #059669, #047857); color: #fff; }
+    .badge-clean { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: #fff; }
+
+    h1.report-title {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      color: #94a3b8;
+      font-size: 1rem;
+      font-weight: 400;
+      margin-bottom: 1.2rem;
+    }
+
+    .perspective-callout {
+      background: rgba(37, 99, 235, 0.16);
+      border-left: 4px solid #3b82f6;
+      padding: 1rem 1.3rem;
+      border-radius: 0 10px 10px 0;
+      font-size: 0.98rem;
+      color: #e2e8f0;
+    }
+
+    .perspective-callout strong {
+      color: #60a5fa;
+    }
+
+    /* Step Section Header */
+    .step-header {
+      margin: 2.4rem 0 1.2rem 0;
+      padding-bottom: 0.7rem;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .step-header h2 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .step-tag {
+      font-size: 0.8rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 6px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+    }
+
+    .step-1 h2 { color: #f59e0b; }
+    .step-2 h2 { color: #818cf8; }
+    .step-3 h2 { color: #38bdf8; }
+    .step-4 h2 { color: #ec4899; }
+    .step-5 h2 { color: #10b981; }
+    .step-6 h2 { color: #fb923c; }
+    .step-7 h2 { color: #a78bfa; }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.8rem 2rem;
+      margin-bottom: 1.6rem;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+      page-break-inside: avoid;
+    }
+
+    .section-title {
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .content p {
+      margin-bottom: 0.9rem;
+      color: #cbd5e1;
+      text-align: justify;
+    }
+
+    .content strong {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* Callout & Tables */
+    .highlight-box {
+      background: rgba(15, 23, 42, 0.75);
+      border-left: 4px solid #3b82f6;
+      padding: 1.1rem 1.3rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.2rem 0;
+      font-size: 0.96rem;
+      color: #e2e8f0;
+    }
+
+    .scripture-box {
+      background: rgba(30, 41, 59, 0.6);
+      border-left: 3px solid #f59e0b;
+      padding: 0.9rem 1.2rem;
+      border-radius: 0 8px 8px 0;
+      margin: 0.9rem 0;
+      font-family: 'Noto Serif KR', serif;
+      font-style: italic;
+      color: #cbd5e1;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0;
+      font-size: 0.92rem;
+    }
+
+    .data-table th, .data-table td {
+      padding: 0.75rem 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      vertical-align: top;
+    }
+
+    .data-table th {
+      background: rgba(30, 41, 59, 0.9);
+      color: #f8fafc;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    .data-table td {
+      background: rgba(15, 23, 42, 0.5);
+      color: #cbd5e1;
+    }
+
+    /* Sermon Manuscript Styling */
+    .manuscript-section {
+      margin-bottom: 1.4rem;
+    }
+
+    .manuscript-section h4 {
+      color: #fb923c;
+      font-size: 1.05rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .manuscript-text {
+      font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+      font-size: 10.2pt;
+      line-height: 1.85;
+      color: #e2e8f0;
+      background: rgba(15, 23, 42, 0.4);
+      padding: 1.2rem 1.4rem;
+      border-radius: 8px;
+      border-left: 3px solid rgba(251, 146, 60, 0.6);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding-top: 2.5rem;
+      font-size: 0.85rem;
+      color: #64748b;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="report-container">
+    
+    <!-- Header Banner -->
+    <div class="header-banner">
+      <div class="badge-group">
+        <span class="model-badge badge-7step">설교문 작성 7단계 표준 아키텍처</span>
+        <span class="model-badge badge-drive">✓ 드라이브 주석 문헌 사실 검증</span>
+        <span class="model-badge badge-clean">✓ 무중복 심플 통합본</span>
+      </div>
+      <h1 class="report-title">마태복음 8:28-34 7단계 설교 연구 보고서</h1>
+      <p class="subtitle">연구 드라이브(D:\1_주석 자료, D:\2_목회자 성경 연구원 자료) 기반 단계별 통합 산출물</p>
+      <div class="perspective-callout">
+        <strong>👑 설교 중심 진리 (Big Idea):</strong> 세상의 물질적 계산을 뛰어넘어 우리를 어둠에서 해방하시는 왕 되신 예수님을 삶의 주인으로 영접하라.
+      </div>
+    </div>
+
+    <!-- 7 Steps Injected -->
+    <div id="content" class="content">
+      
+    <div class="step-header step-1">
+      <h2>1단계. 본문 석의 (Grammatical-Historical Exegesis)</h2>
+      <span class="step-tag">문법-역사적 해석 · Claude 엔진</span>
+    </div>
+    <div class="card">
+      <h3 class="section-title"><span class="section-icon">📍</span> 본문의 위치 및 문맥</h3>
+      <p>마태복음 8-9장 10대 이적 단락 중 4번째 이적 (자연 통치 8:23-27에 이은 영적 권세의 절정)</p>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">📑</span> 문단 및 구문 구조</h3>
+      <table class="data-table">
+        <thead><tr><th>구절 단위</th><th>구문 전개 및 핵심 내용</th></tr></thead>
+        <tbody><tr><td style='width:22%;'><strong>28절</strong><br><small style='color:#94a3b8;'>상황 설정</small></td><td>가다라 지방 무덤가에서 심히 사나운 귀신 들린 자 둘과의 조우</td></tr><tr><td style='width:22%;'><strong>29절</strong><br><small style='color:#94a3b8;'>영적 대화</small></td><td>귀신들의 고백 ('하나님의 아들이여')과 종말론적 심판의 공포 ('때가 이르기 전에')</td></tr><tr><td style='width:22%;'><strong>30-31절</strong><br><small style='color:#94a3b8;'>청원</small></td><td>돼지 떼에 들여보내 달라는 귀신들의 간구 (피조물적 종속성)</td></tr><tr><td style='width:22%;'><strong>32절</strong><br><small style='color:#94a3b8;'>왕적 명령 및 결과</small></td><td>예수님의 단 한 마디 명령('가라/Ὕπαγε')과 돼지 떼의 바다 몰사</td></tr><tr><td style='width:22%;'><strong>33-34절</strong><br><small style='color:#94a3b8;'>반응 및 결론</small></td><td>치던 자들의 보고와 온 시내 주민들의 배척 ('그 지방에서 떠나기를 간구')</td></tr></tbody>
+      </table>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">🔤</span> 핵심 원어 분석 (Lexical Semantics)</h3>
+      <table class="data-table">
+        <thead><tr><th>원어 및 의미</th><th>본문 내 신학적 기능</th></tr></thead>
+        <tbody><tr><td style='width:35%;'><strong style='color:#f59e0b;'>χώραν τῶν Γαδαρηνῶν (가다레논)</strong><br><small>가다라 지방</small></td><td>이방 헬라 데가볼리 권역으로 하나님 나라의 침투를 표시</td></tr><tr><td style='width:35%;'><strong style='color:#f59e0b;'>ἐκ τῶν μνημείων (에크 톤 므네메이온)</strong><br><small>무덤들 사이에서</small></td><td>시체 부정(민 19:11)과 죽음의 영적 파멸 상태</td></tr><tr><td style='width:35%;'><strong style='color:#f59e0b;'>χαλεποὶ λίαν (칼레포이 리안)</strong><br><small>심히 사나운</small></td><td>인간의 사슬로 제어 불가능한 악령의 파괴적 억압</td></tr><tr><td style='width:35%;'><strong style='color:#f59e0b;'>πρὸ καιροῦ (프로 카이루)</strong><br><small>때가 이르기 전에</small></td><td>종말론적 최후 심판이 예수의 임재로 앞당겨짐</td></tr><tr><td style='width:35%;'><strong style='color:#f59e0b;'>Ὕπαγε (휘파게)</strong><br><small>가라! (현재 명령형)</small></td><td>주술적 의식 없는 왕의 단호하고 절대적인 권세 명령</td></tr></tbody>
+      </table>
+
+      <div class="highlight-box" style="margin-top:1.2rem;">
+        <strong>📌 본문의 핵심 주장 (Core Assertion):</strong> 예수 그리스도는 말씀 한 마디(Ὕπαγε)로 이방 땅의 가장 맹렬한 어둠의 세력을 복종시키시는 절대적 왕이시다.
+      </div>
+    </div>
+    
+
+    <div class="step-header step-2">
+      <h2>2단계. 비평적 분석 (Critical & Redaction Analysis)</h2>
+      <span class="step-tag">편집·정경비평 · Gemini 엔진</span>
+    </div>
+    <div class="card">
+      <h3 class="section-title"><span class="section-icon">✂️</span> 저자의 편집 전략 (Redaction)</h3>
+      <ul>
+        <li><strong>강조점:</strong> 마태는 마가(1명)와 달리 '귀신 들린 자 둘(δύο)'을 명시하여 신명기적 법적 증인 요건(신 19:15)을 충족함.</li>
+        <li><strong>생략 및 축약:</strong> 군대 귀신과의 긴 대화나 결박을 풀던 세부 묘사를 대폭 축약하여, 예수님의 '왕적 권세 선언'에 시선을 집중시킴.</li>
+        <li><strong>구조적 배치:</strong> 바다를 꾸짖으신 자연 이적(8:23-27) 바로 뒤에 배치하여, 물리적 세계와 영적 세계를 아우르는 우주적 주권의 연속성을 구축함.</li>
+      </ul>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">📜</span> 구약 정경적 연결 (Canonical Link)</h3>
+      <p>출애굽기에서 바로의 군대가 홍해 바다에 수장된 구속사적 심판(출 14-15장)이, 신약에서 바다에 귀신들의 군대가 몰사당하는 영적 출애굽 승리로 성취됨.</p>
+
+      <div class="highlight-box" style="margin-top:1.2rem;">
+        <strong>🎯 저자의 중심 의도:</strong> 마태는 이방 땅과 악령의 세력마저 통치하시는 예수 그리스도의 왕권을 증언함으로써, 박해받는 초대교회 성도들에게 우주적 승리의 확신을 심어주고자 기록하였다.
+      </div>
+    </div>
+    
+
+    <div class="step-header step-3">
+      <h2>3단계. 인사이트 도출 (Insight Extraction)</h2>
+      <span class="step-tag">성경신학 & 복음 중심 추출</span>
+    </div>
+    <div class="card">
+      <h3 class="section-title"><span class="section-icon">⚡</span> 본문의 중심 긴장 (Central Tension)</h3>
+      <p>영혼을 구원하시는 '참된 왕의 절대 통치' vs 2,000마리 돼지 떼의 손실을 거부하는 '세상의 물질적 기득권'</p>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">💡</span> 핵심 인사이트 및 평가표</h3>
+      <table class="data-table">
+        <thead><tr><th>도출된 핵심 인사이트</th><th>본문 근거</th><th>평가 점수</th></tr></thead>
+        <tbody><tr><td style='width:55%;'><strong>예수 그리스도의 임재는 사탄의 왕국에 선제적 종말 심판을 가져오는 우주적 통치권의 실현이다.</strong></td><td>마 8:29 '때가 이르기 전에 우리를 괴롭게 하려고 오셨나이까'</td><td><span style='color:#10b981;font-weight:700;'>10/10 (본문 충실성 및 신학적 안정성 탁월)</span></td></tr><tr><td style='width:55%;'><strong>하나님 나라는 세상이 통제 불능으로 낙인찍은 무덤가의 영혼을 위해 막대한 세상적 가치(돼지 떼)를 기꺼이 지불한다.</strong></td><td>마 8:32 '가라 하시니... 물에서 몰사하거늘'</td><td><span style='color:#10b981;font-weight:700;'>9.5/10 (구속론적 가치관 전복)</span></td></tr><tr><td style='width:55%;'><strong>자신의 물질적 안락함과 경제적 현상 유지가 흔들릴 때, 인간은 생명의 구원자마저 내쫓는 영적 맹목성에 빠진다.</strong></td><td>마 8:34 '그 지방에서 떠나시기를 간구하더라'</td><td><span style='color:#10b981;font-weight:700;'>9.8/10 (인간 실존 고발 및 설명력 우수)</span></td></tr></tbody>
+      </table>
+
+      <div class="highlight-box" style="margin-top:1.2rem; border-left-color: #38bdf8;">
+        <strong>💎 최종 정제된 핵심 진실 (Core Truth):</strong> 왕이신 그리스도는 인간을 파멸시키는 모든 결박을 말씀으로 끊어내시지만, 물질에 눈먼 세상은 그 거룩한 통치권을 배척한다.
+      </div>
+    </div>
+    
+
+    <div class="step-header step-4">
+      <h2>4단계. 사고확장 (Meaning Expansion)</h2>
+      <span class="step-tag">인간·사회·문화적 학제간 번역</span>
+    </div>
+    <div class="card">
+      <h3 class="section-title"><span class="section-icon">🌐</span> 다학제적 의미 확장</h3>
+      <ul>
+        <li><strong>인간론적 이해 (Anthropological):</strong> 인간은 통제 불능의 상처와 중독에 갇힐 때 무덤(죽음의 공간)으로 스스로를 격리하며 사회적 타살을 경험함.</li>
+        <li><strong>사회학적 분석 (Sociological):</strong> 가다라 공동체의 반응은 집단적 경제 기득권이 생명 윤리와 영혼 구원을 압도하는 자본주의적 물신숭배의 원형을 보여줌.</li>
+        <li><strong>심리학적 통찰 (Psychological):</strong> 거룩한 낯선 권능(예수) 앞에서 느끼는 실존적 두려움(Numinous Dread)을 회피하기 위해 문제를 해결해 준 주님을 밀어내는 방어기제.</li>
+      </ul>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">📐</span> 설교 설명 프레임워크</h3>
+      <p>【가치 교환 모델】: 세상의 교환가치(돼지 2천 마리 = 자산) vs 하나님 나라의 절대가치(한 사람의 온전한 회복).</p>
+    </div>
+    
+
+    <div class="step-header step-5">
+      <h2>5단계. 설교 개요 설계 (Sermon Architecture)</h2>
+      <span class="step-tag">강해설교 구조 설계 · ChatGPT 엔진</span>
+    </div>
+    <div class="card">
+      <div class="highlight-box" style="border-left-color: #10b981; background:rgba(16,185,129,0.12);">
+        <strong style="color:#34d399; font-size:1.1rem;">🎯 설교 중심 문장 (Big Idea):</strong><br>
+        <span style="font-size:1.05rem; color:#f8fafc;">"세상의 물질적 계산을 뛰어넘어 우리를 어둠에서 해방하시는 왕 되신 예수님을 삶의 주인으로 영접하라."</span>
+      </div>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">🏷️</span> 추천 설교 제목 후보</h3>
+      <ul><li>1. 돼지 떼를 넘어선 왕의 은혜 (선언형)</li><li>2. 당신의 가다라는 어디입니까? (질문형)</li><li>3. 무덤가의 광인인가, 마을의 구경꾼인가 (대조형)</li><li>4. 말씀 한 마디의 절대 권세 (본문 직결형)</li></ul>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">🏛️</span> 대지 구조 및 논리 전개 (2대지 대조 구조 (대지 1: 왕의 해방 vs 대지 2: 세상의 거부))</h3>
+      
+    <div style="background:rgba(15,23,42,0.6); padding:1.1rem; border-radius:8px; margin-bottom:0.9rem; border-left:3px solid #10b981;">
+      <h4 style="color:#34d399; font-size:1.05rem; margin-bottom:0.4rem;">본론 1: 어떤 결박도 끊어내시는 왕의 절대 권세 (마 8:28-32)</h4>
+      <p style="margin-bottom:0.4rem;"><strong>핵심 명제:</strong> 예수님은 세상이 포기한 무덤가의 인생이라도 말씀 한 마디(Ὕπαγε)로 완전히 자유케 하시는 우주적 통치자이십니다.</p>
+      <small style="color:#94a3b8;"><strong>근거 체계:</strong> 1단계 원어('Ὕπαγε', 'πρὸ καιροῦ') 및 2단계 출애굽 승리 모형론</small>
+    </div>
+    
+    <div style="background:rgba(15,23,42,0.6); padding:1.1rem; border-radius:8px; margin-bottom:0.9rem; border-left:3px solid #10b981;">
+      <h4 style="color:#34d399; font-size:1.05rem; margin-bottom:0.4rem;">본론 2: 물질적 손실 앞에서 주님을 밀어내는 비극 (마 8:33-34)</h4>
+      <p style="margin-bottom:0.4rem;"><strong>핵심 명제:</strong> 내 손안의 돼지 떼(기득권과 재산)를 잃을까 두려워 왕 되신 주님의 임재를 밀어내는 가다라의 어리석음을 멈추어야 합니다.</p>
+      <small style="color:#94a3b8;"><strong>근거 체계:</strong> 3단계 중심 긴장 및 4단계 자본주의 물신숭배 비판</small>
+    </div>
+    
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">⚠️</span> 설교 시 예상되는 오해 및 방지책</h3>
+      <ul><li>오해 1: 예수님이 돼지 주인의 재산권을 침해했다는 오해 -> 예수님은 악령을 쫓아내셨고 파멸은 귀신의 본질임.</li><li>오해 2: 귀신들림을 단순 정신질환으로만 환원하는 태도 -> 영적 실재와 구조적 죄악의 복합성 인식 필요.</li></ul>
+    </div>
+    
+
+    <div class="step-header step-6">
+      <h2>6단계. 설교문 작성 (Sermon Manuscript)</h2>
+      <span class="step-tag">현장 선포용 완성 설교문 (청중: 주일 대예배 (장년 및 청년 공통, 25분 분량))</span>
+    </div>
+    <div class="card">
+      <div class="manuscript-section">
+        <h4>[서론]</h4>
+        <div class="manuscript-text">사랑하는 성도 여러분, 오늘 여러분의 인생을 지배하고 있는 진정한 '주인'은 누구입니까? 갈릴리 호수 건너편, 사람들의 발길이 끊긴 음산한 무덤가에는 사슬로도 묶을 수 없는 두 사람이 신음하고 있었습니다. 세상은 그들을 '통제 불능의 골칫거리'로 낙인찍고 버렸지만, 거친 풍랑을 뚫고 그곳에 찾아오신 분이 계셨습니다. 바로 온 세상의 참된 왕이신 예수 그리스도이십니다.</div>
+      </div>
+
+      <div class='manuscript-section'><h4>[본론 1]</h4><div class='manuscript-text'>예수님께서 무덤가에 서시자, 인간을 조롱하던 악령들이 먼저 알아보고 엎드립니다. '하나님의 아들이여, 때가 이르기 전에 우리를 괴롭게 하려고 오셨나이까!' 귀신들은 예수님이 누구신지, 그분의 임재 자체가 이미 사탄의 왕국을 무너뜨리는 종말론적 심판의 시작임을 정확히 알았습니다. 주님께서는 복잡한 주술이나 의식을 행하지 않으셨습니다. 오직 단 한 마디, '가라(Ὕπαγε)!'는 왕의 권세 있는 명령을 선포하셨습니다. 그 순간 맹렬하던 어둠의 결박이 일거에 끊어지고 마귀의 군대는 바다 속으로 몰사했습니다. 성도 여러분, 왕이신 주님 앞에 굴복하지 못할 영적 결박은 없습니다.</div></div><div class='manuscript-section'><h4>[본론 2]</h4><div class='manuscript-text'>그러나 본문은 충격적인 반전으로 이어집니다. 무덤가의 광인이 온전하여졌다는 소식을 듣고 달려온 온 시내 사람들은 하나님을 찬양하지 않았습니다. 그들의 눈에 들어온 것은 자유를 얻은 한 영혼의 회복이 아니라, 깊은 바다에 빠져 죽은 약 2,000마리의 돼지 떼, 곧 막대한 경제적 손실이었습니다. '이러다 우리 재산이 다 거덜 나겠구나!' 물질적 두려움에 사로잡힌 주민들은 예수님께 간구합니다. '제발 우리 동네에서 떠나 주십시오.' 그들은 천하보다 귀한 영혼을 살리시는 구원자보다, 내 손에 쥔 돼지 떼 한 마리를 더 사랑했던 것입니다.</div></div>
+
+      <div class="manuscript-section">
+        <h4>[결론 및 결단]</h4>
+        <div class="manuscript-text">오늘 우리 안에는 이러한 '가다라의 비극'이 없습니까? 내 안락함이 흔들릴까 봐, 내 물질적 계산이 깨질까 봐 주님의 다스리심을 거부하고 있지 않습니까? 예수님은 천하보다 귀한 여러분을 살리시기 위해 십자가에서 자신의 모든 것을 지불하신 참된 왕이십니다. 오늘 내 손의 돼지 떼를 내려놓고, 우리를 결박에서 해방하시는 왕 되신 그리스도를 삶의 유일한 주인으로 영접합시다.</div>
+      </div>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">📢</span> 설교 핵심 선언문 (Core Declarations)</h3>
+      <ul><li><strong>선언 1:</strong> 예수 그리스도는 어떤 영적 결박도 말씀으로 끊어내시는 참된 왕이십니다!</li><li><strong>선언 2:</strong> 하나님 나라는 세상의 물질보다 한 영혼의 생명을 천하보다 귀하게 여깁니다!</li></ul>
+    </div>
+    
+
+    <div class="step-header step-7">
+      <h2>7단계. 설교 품질 감사 (Sermon Quality Audit)</h2>
+      <span class="step-tag">최종 품질 검증 및 피드백</span>
+    </div>
+    <div class="card">
+      <h3 class="section-title"><span class="section-icon">📊</span> 4대 품질 지표 감사 결과</h3>
+      <table class="data-table">
+        <thead><tr><th>감사 항목</th><th>평가 결과</th></tr></thead>
+        <tbody>
+          <tr><td><strong>본문 충실성 (Text Fidelity)</strong></td><td>10/10 (마 8:28-34의 원어 의미와 구속사적 사실에 완벽히 정초됨)</td></tr>
+          <tr><td><strong>인사이트 충실성 (Insight Fidelity)</strong></td><td>9.8/10 (3단계 인사이트인 '왕의 권세 vs 물질주의 기득권'을 흔들림 없이 관철함)</td></tr>
+          <tr><td><strong>시대적 적합성 (Modern Relevance)</strong></td><td>9.5/10 (가다라 주민의 태도를 현대 자본주의적 우상숭배와 성공적으로 연결함)</td></tr>
+          <tr><td><strong>논리적 흐름 (Logical Flow)</strong></td><td>10/10 (도입 ➔ 본론1 왕의 해방 ➔ 본론2 세상의 배척 ➔ 결단과 선포로 이어지는 매끄러운 전개)</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">🏆</span> 종합 평가 및 리스크 관리</h3>
+      <p><strong style="color:#34d399;">✓ 강점:</strong> 원어의 학문적 깊이(Claude), 구속사적 출애굽 연결(Gemini), 설교적 감화력(ChatGPT)이 중복 없이 1~7단계로 일목요연하게 융합됨.</p>
+      <p><strong style="color:#fbbf24;">✓ 리스크 방지:</strong> 돼지 떼 몰사를 하나님의 재산 침해로 오해하지 않도록 악령의 파괴적 본질과 바다 심판의 성격을 명확히 규명함.</p>
+    </div>
+    
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>본 보고서는 7단계 설교문 작성 지침 및 복음주의 주석 문헌(BST, IVP, 100주년, LAB, NIV 등)을 기반으로 중복 없이 자동 생성되었습니다.</p>
+      <p>© Bible Annotation Agent | 7-Step Homiletical Architecture Edition</p>
+    </div>
+
+  </div>
+</body>
+</html>

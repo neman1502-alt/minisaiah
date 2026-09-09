@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>성경분석 올인원 마스터 대통합 연구보고서 공유 허브 & 실시간 분석기</title>
+  
+  <!-- Meta Tags -->
+  <meta name="title" content="성경분석 올인원 마스터 대통합 연구보고서 공유 허브">
+  <meta name="description" content="원하는 성경구절을 입력하면 9대 필수 영역(원어음독, D드라이브 주석/목성연 융합, 4대 모형론, 6대 다학제 팩트체크, 공인통계, 강해설교문)으로 즉시 완성되는 실시간 올인원 마스터 연구보고서 플랫폼">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800;900&family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --navy-950: #090d16;
+      --navy-900: #0f172a;
+      --navy-800: #1e293b;
+      --primary: #1e3a8a;
+      --primary-light: #2563eb;
+      --gold: #d97706;
+      --gold-light: #fef3c7;
+      --gold-accent: #f59e0b;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --radius-xl: 18px;
+      --radius-lg: 12px;
+      --radius-md: 8px;
+      --shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.02);
+      --shadow-hover: 0 20px 30px -10px rgba(30, 58, 138, 0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Pretendard', -apple-system, sans-serif; }
+    body { background-color: var(--bg); color: var(--text-main); line-height: 1.6; word-break: keep-all; }
+
+    /* Top Navigation */
+    header {
+      background: rgba(15, 23, 42, 0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .nav-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0.9rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .logo-badge {
+      background: linear-gradient(135deg, var(--gold), #b45309);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+    }
+    .logo-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .nav-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .btn-share-all {
+      background: linear-gradient(135deg, var(--gold), var(--gold-accent));
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-share-all:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.35);
+    }
+
+    /* Hero Banner */
+    .hero {
+      background: linear-gradient(135deg, #090d16 0%, #1e293b 50%, #1e3a8a 100%);
+      color: #ffffff;
+      padding: 3.5rem 1.5rem 3.5rem;
+      text-align: center;
+      position: relative;
+    }
+    .hero-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid var(--gold-accent);
+      color: var(--gold-accent);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 999px;
+      margin-bottom: 1.2rem;
+    }
+    .hero h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1.35;
+      margin-bottom: 1rem;
+      letter-spacing: -0.03em;
+    }
+    .hero p {
+      font-size: 1.05rem;
+      color: #cbd5e1;
+      margin-bottom: 2.2rem;
+    }
+
+    /* Generator Box (실시간 성경구절 분석기) */
+    .generator-card {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 16px;
+      padding: 1.5rem 1.75rem;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+      border: 2px solid var(--gold-accent);
+      text-align: left;
+      margin-bottom: 2rem;
+    }
+    .generator-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .generator-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--navy-900);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .generator-tag {
+      font-size: 0.75rem;
+      background: var(--gold-light);
+      color: var(--gold);
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .generator-form {
+      display: flex;
+      gap: 10px;
+    }
+    .generator-form input {
+      flex: 1;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 1.02rem;
+      outline: none;
+      transition: all 0.2s;
+      color: #0f172a;
+    }
+    .generator-form input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    .generator-form button {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #ffffff;
+      border: none;
+      padding: 12px 26px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .generator-form button:hover {
+      background: linear-gradient(135deg, #172554, #1d4ed8);
+      transform: translateY(-1px);
+    }
+    .generator-guide {
+      font-size: 0.84rem;
+      color: #64748b;
+      margin-top: 8px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .generator-guide span {
+      cursor: pointer;
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    /* Search Bar */
+    .search-wrapper {
+      max-width: 620px;
+      margin: 0 auto;
+      display: flex;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 5px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    }
+    .search-wrapper input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 10px 16px;
+      font-size: 0.98rem;
+      color: #0f172a;
+    }
+    .search-wrapper button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .search-wrapper button:hover { background: #1e40af; }
+
+    /* Main Container */
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    /* Tabs */
+    .tabs-wrapper {
+      background: #ffffff;
+      padding: 1.5rem;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-card);
+      margin-bottom: 2.5rem;
+      border: 1px solid var(--border);
+    }
+    .tabs-group-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+    .tabs-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tab-btn {
+      background: #f1f5f9;
+      border: 1px solid transparent;
+      color: #475569;
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover {
+      background: #e2e8f0;
+      color: var(--navy-900);
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    /* Section Heading */
+    .section-header {
+      margin-bottom: 1.5rem;
+    }
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--navy-900);
+    }
+
+    /* Reports Grid */
+    .reports-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.75rem;
+    }
+    .master-card {
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+    .master-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+      border-color: #cbd5e1;
+    }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .card-badges {
+      display: flex;
+      gap: 6px;
+    }
+    .badge-testament {
+      background: #e0e7ff;
+      color: #3730a3;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .badge-genre {
+      background: #fef3c7;
+      color: #92400e;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .card-master-tag {
+      font-size: 0.72rem;
+      color: var(--gold);
+      font-weight: 800;
+    }
+    .card-passage {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+    .card-heading {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--navy-900);
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+    .card-desc {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .tag-item {
+      font-size: 0.75rem;
+      color: #475569;
+      background: #f1f5f9;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    /* Actions */
+    .card-actions {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr 44px;
+      gap: 8px;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+    .btn-view {
+      background: var(--primary);
+      color: #ffffff;
+      text-align: center;
+      padding: 10px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-view:hover { background: #1e40af; }
+
+    .btn-pdf {
+      background: #f1f5f9;
+      color: #334155;
+      text-align: center;
+      padding: 10px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-pdf:hover { background: #e2e8f0; }
+
+    .btn-copy {
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--gold);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-copy:hover {
+      background: #fef3c7;
+      border-color: var(--gold);
+    }
+
+    /* Modal (생성 중 & 완료 팝업) */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(6px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 3000;
+      padding: 20px;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-box {
+      background: #ffffff;
+      width: 100%;
+      max-width: 560px;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+      text-align: center;
+      position: relative;
+    }
+    .modal-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .modal-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--navy-900);
+      margin-bottom: 0.5rem;
+    }
+    .modal-desc {
+      font-size: 0.95rem;
+      color: #64748b;
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Stepper Animation */
+    .steps-container {
+      text-align: left;
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #64748b;
+    }
+    .step-item:last-child { margin-bottom: 0; }
+    .step-item.active { color: var(--primary); font-weight: 800; }
+    .step-item.done { color: #16a34a; }
+    .step-spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #cbd5e1;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .btn-modal-primary {
+      background: var(--primary);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 700;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-modal-secondary {
+      background: #f1f5f9;
+      color: #334155;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      border-left: 4px solid var(--gold-accent);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 4000;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* Footer */
+    footer {
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 3rem 1.5rem;
+      text-align: center;
+      font-size: 0.88rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    footer p { margin-bottom: 0.5rem; }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 1.7rem; }
+      .generator-form { flex-direction: column; }
+      .reports-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <span class="logo-badge">ALL-IN-ONE MASTER</span>
+        <span class="logo-title">성경분석 올인원 마스터 허브</span>
+      </a>
+      <div class="nav-actions">
+        <button onclick="copyShareUrl()" class="btn-share-all">
+          <span>🔗 사이트 전체 링크 복사</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-badge">🌟 AI Bible Exegetical Master Platform</div>
+      <h1>원하는 성경구절 올인원 마스터 즉시 분석 & 공유 허브</h1>
+      <p>원어 형태론(한글 음독), D드라이브 1_주석/2_목성연 융합, 4대 모형론, 6대 다학제 팩트체크 및 설교문 전문까지 원하는 어떤 구절이든 100% 동일한 고품질 표준으로 즉시 제공합니다.</p>
+      
+      <!-- Live Generator Box -->
+      <div class="generator-card">
+        <div class="generator-header">
+          <div class="generator-title">
+            <span>⚡ 원하는 성경구절 실시간 마스터 분석 요청</span>
+          </div>
+          <span class="generator-tag">9대 필수 규격 완비</span>
+        </div>
+        <form class="generator-form" onsubmit="handleAnalyzeSubmit(event)">
+          <input type="text" id="passageInput" placeholder="분석할 성경 본문을 입력하세요 (예: 로마서 8:1-11, 창세기 1:1-5, 출애굽기 3:1-14)" required>
+          <button type="submit" id="btnAnalyze">
+            <span>🚀 올인원 마스터 분석 생성</span>
+          </button>
+        </form>
+        <div class="generator-guide">
+          <strong>추천 빠른 분석:</strong>
+          <span onclick="setQuickPassage('로마서 8:1-11')">로마서 8:1-11</span>
+          <span onclick="setQuickPassage('창세기 1:1-5')">창세기 1:1-5</span>
+          <span onclick="setQuickPassage('출애굽기 3:1-14')">출애굽기 3:1-14</span>
+          <span onclick="setQuickPassage('시편 23:1-6')">시편 23:1-6</span>
+          <span onclick="setQuickPassage('이사야 40:27-31')">이사야 40:27-31</span>
+        </div>
+      </div>
+
+      <!-- Quick Search Bar -->
+      <div class="search-wrapper">
+        <input type="text" id="searchInput" placeholder="아카이브 보고서 검색 (예: 레위기, 민수기, 시편, 거룩, 별빛)..." onkeyup="filterReports()">
+        <button onclick="filterReports()">검색</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Main Container -->
+  <main class="container">
+    
+    <!-- Canon Category Tabs -->
+    <div class="tabs-wrapper">
+      <div class="tabs-group-title">📌 전체 & 언약 구분</div>
+      <div class="tabs-row">
+        <button class="tab-btn active" onclick="setFilter('all', 'all')">전체보기</button>
+        <button class="tab-btn" onclick="setFilter('testament', '구약')">구약 전체 (Old Testament)</button>
+        <button class="tab-btn" onclick="setFilter('testament', '신약')">신약 전체 (New Testament)</button>
+      </div>
+
+      <div class="tabs-group-title" style="margin-top: 1rem;">📖 정경 세부 장르별 분류</div>
+      <div class="tabs-row">
+        <button class="tab-btn" onclick="setFilter('genre', '율법서')">📜 율법서 (모세오경)</button>
+        <button class="tab-btn" onclick="setFilter('genre', '구약역사서')">🏛️ 역사서 (구약)</button>
+        <button class="tab-btn" onclick="setFilter('genre', '시가서')">🎵 시가서 (지혜문학)</button>
+        <button class="tab-btn" onclick="setFilter('genre', '구약예언서')">🔮 예언서 (구약)</button>
+        <button class="tab-btn" onclick="setFilter('genre', '복음서')">📖 복음서 (신약)</button>
+        <button class="tab-btn" onclick="setFilter('genre', '신약역사서')">⛵ 역사서 (신약)</button>
+        <button class="tab-btn" onclick="setFilter('genre', '바울서신')">✉️ 바울서신</button>
+        <button class="tab-btn" onclick="setFilter('genre', '일반서신')">📬 일반서신</button>
+        <button class="tab-btn" onclick="setFilter('genre', '신약예언서')">👑 예언서 (신약)</button>
+      </div>
+    </div>
+
+    <!-- Active Filter Title -->
+    <div class="section-header">
+      <h2 class="section-title" id="filterStatusText">🌟 전체 올인원 마스터 대통합 보고서</h2>
+    </div>
+
+    <!-- Grid -->
+    <div class="reports-grid" id="reportsGrid">
+      <!-- Rendered via JS -->
+    </div>
+
+  </main>
+
+  <!-- Processing / Result Modal -->
+  <div class="modal-overlay" id="processModal">
+    <div class="modal-box">
+      <div class="modal-icon" id="modalIcon">⚡</div>
+      <h3 class="modal-title" id="modalTitle">올인원 마스터 심층 분석 중...</h3>
+      <p class="modal-desc" id="modalDesc">정립된 9대 표준 방법론에 따라 고밀도 학술 연구보고서를 실시간 빌드하고 있습니다.</p>
+
+      <div class="steps-container" id="stepsContainer">
+        <div class="step-item active" id="step1">
+          <span class="step-spinner"></span> 1️⃣ 원어(히브리어/헬라어) 형태론 및 한글 음독 정밀 대조표 구성
+        </div>
+        <div class="step-item" id="step2">
+          <span>⏳</span> 2️⃣ D드라이브 [1_주석 자료] & [2_목성연 자료] 심층 융합 고찰
+        </div>
+        <div class="step-item" id="step3">
+          <span>⏳</span> 3️⃣ 구약-신약 정경 4대 모형론 정밀 대조표 및 비평 분석
+        </div>
+        <div class="step-item" id="step4">
+          <span>⏳</span> 4️⃣ 6대 다학제 대표 학자 실존 팩트체크 및 공인 통계 연결
+        </div>
+        <div class="step-item" id="step5">
+          <span>⏳</span> 5️⃣ 강해설교문 전문 및 4대 교육부서 실천 가이드 집대성
+        </div>
+      </div>
+
+      <div class="modal-buttons" id="modalButtons" style="display: none;">
+        <a href="#" target="_blank" class="btn-modal-primary" id="btnModalView">📖 웹 보고서 바로 열람</a>
+        <a href="#" download class="btn-modal-primary" id="btnModalPdf" style="background: var(--gold);">📥 PDF 다운로드</a>
+        <button class="btn-modal-secondary" onclick="closeModal()">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <span>✅ 링크가 클립보드에 복사되었습니다!</span>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p><strong>Bible Analysis All-in-One Master Hub & Live Engine</strong> | AI 성경분석 대통합 시스템</p>
+    <p style="color: #64748b;">원어 심층 석의 및 강해설교 연구보고서 공유 오픈 아카이브</p>
+  </footer>
+
+  <script>
+    // 성경 66권 정경 순서
+    const BIBLE_CANON_ORDER = [
+      "창세기", "출애굽기", "레위기", "민수기", "신명기",
+      "여호수아", "사사기", "룻기", "사무엘상", "사무엘하", "열왕기상", "열왕기하",
+      "역대상", "역대하", "에스라", "느헤미야", "에스더",
+      "욥기", "시편", "잠언", "전도서", "아가",
+      "이사야", "예레미야", "예레미야애가", "에스겔", "다니엘",
+      "호세아", "요엘", "아모스", "오바댜", "요나", "미가",
+      "나훔", "하박국", "스바냐", "학개", "스가랴", "말라기",
+      "마태복음", "마가복음", "누가복음", "요한복음",
+      "사도행전",
+      "로마서", "고린도전서", "고린도후서", "갈라디아서", "에베소서", "빌립보서", "골로새서",
+      "데살로니가전서", "데살로니가후서", "디모데전서", "디모데후서", "디도서", "빌레몬서",
+      "히브리서", "야고보서", "베드로전서", "베드로후서", "요한일서", "요한이서", "요한삼서", "유다서",
+      "요한계시록"
+    ];
+
+    function getCanonIndex(bookName) {
+      const idx = BIBLE_CANON_ORDER.indexOf(bookName);
+      return idx === -1 ? 999 : idx;
+    }
+
+    // 전역 보고서 리스트
+    let masterReports = [];
+    let currentFilterType = 'all';
+    let currentFilterVal = 'all';
+
+    function setQuickPassage(p) {
+      document.getElementById('passageInput').value = p;
+      document.getElementById('passageInput').focus();
+    }
+
+    // 실시간 성경구절 분석 요청 처리
+    async function handleAnalyzeSubmit(e) {
+      e.preventDefault();
+      const passage = document.getElementById('passageInput').value.trim();
+      if (!passage) return;
+
+      openModal();
+      animateSteps();
+
+      try {
+        const response = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ passage: passage, isPrivate: false, createdBy: 'guest' })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          finishModalSuccess(result);
+          // 아카이브 목록 즉시 재로드
+          loadReports();
+        } else {
+          finishModalError(result.error || '분석 중 오류가 발생했습니다.');
+        }
+      } catch (err) {
+        finishModalError('서버 연결 중 오류가 발생했습니다: ' + err.message);
+      }
+    }
+
+    function openModal() {
+      document.getElementById('processModal').classList.add('active');
+      document.getElementById('modalIcon').innerText = '⚡';
+      document.getElementById('modalTitle').innerText = '올인원 마스터 심층 분석 중...';
+      document.getElementById('modalDesc').innerText = '정립된 9대 표준 규격에 따라 고품질 마스터 보고서를 생성하고 있습니다.';
+      document.getElementById('stepsContainer').style.display = 'block';
+      document.getElementById('modalButtons').style.display = 'none';
+      
+      // 스텝 초기화
+      for (let i = 1; i <= 5; i++) {
+        const el = document.getElementById('step' + i);
+        el.className = 'step-item';
+        el.querySelector('span').innerHTML = '⏳';
+      }
+      document.getElementById('step1').className = 'step-item active';
+      document.getElementById('step1').querySelector('span').className = 'step-spinner';
+    }
+
+    function animateSteps() {
+      let currentStep = 1;
+      const interval = setInterval(() => {
+        if (currentStep < 5) {
+          const prev = document.getElementById('step' + currentStep);
+          prev.className = 'step-item done';
+          prev.querySelector('span').className = '';
+          prev.querySelector('span').innerText = '✅';
+
+          currentStep++;
+          const next = document.getElementById('step' + currentStep);
+          next.className = 'step-item active';
+          next.querySelector('span').className = 'step-spinner';
+          next.querySelector('span').innerText = '';
+        } else {
+          clearInterval(interval);
+        }
+      }, 1200);
+    }
+
+    function finishModalSuccess(result) {
+      for (let i = 1; i <= 5; i++) {
+        const el = document.getElementById('step' + i);
+        el.className = 'step-item done';
+        el.querySelector('span').className = '';
+        el.querySelector('span').innerText = '✅';
+      }
+
+      document.getElementById('modalIcon').innerText = '🎉';
+      document.getElementById('modalTitle').innerText = `[${result.passage}] 마스터 보고서 완성!`;
+      document.getElementById('modalDesc').innerText = '9대 필수 영역이 완비된 연구보고서와 PDF가 성공적으로 빌드되었습니다.';
+      
+      document.getElementById('btnModalView').href = result.htmlUrl;
+      if (result.pdfUrl) {
+        document.getElementById('btnModalPdf').href = result.pdfUrl;
+        document.getElementById('btnModalPdf').style.display = 'inline-block';
+      } else {
+        document.getElementById('btnModalPdf').style.display = 'none';
+      }
+
+      document.getElementById('modalButtons').style.display = 'flex';
+      showToast(`🎉 [${result.passage}] 마스터 보고서가 생성되었습니다!`);
+    }
+
+    function finishModalError(errorMsg) {
+      document.getElementById('modalIcon').innerText = '⚠️';
+      document.getElementById('modalTitle').innerText = '분석 생성 실패';
+      document.getElementById('modalDesc').innerText = errorMsg;
+      document.getElementById('modalButtons').style.display = 'flex';
+      document.getElementById('btnModalView').style.display = 'none';
+      document.getElementById('btnModalPdf').style.display = 'none';
+    }
+
+    function closeModal() {
+      document.getElementById('processModal').classList.remove('active');
+    }
+
+    function renderReports(list) {
+      const grid = document.getElementById('reportsGrid');
+      grid.innerHTML = '';
+      if (!list || list.length === 0) {
+        grid.innerHTML = `<div class="empty-state"><h3>해당 분류의 연구보고서가 준비 중입니다</h3></div>`;
+        return;
+      }
+      
+      // 성경 66권 정경 순서로 정렬
+      const sortedList = [...list].sort((a, b) => getCanonIndex(a.book) - getCanonIndex(b.book));
+
+      sortedList.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'master-card';
+        const tagsHtml = (item.tags || []).map(t => `<span class="tag-item">#${t}</span>`).join('');
+        card.innerHTML = `
+          <div>
+            <div class="card-top">
+              <div class="card-badges">
+                <span class="badge-testament">${item.testament}</span>
+                <span class="badge-genre">${item.genre}</span>
+              </div>
+              <div class="card-master-tag">🌟 마스터 보고서</div>
+            </div>
+            <div class="card-passage">${item.passage}</div>
+            <h3 class="card-heading">${item.title}</h3>
+            <p class="card-desc">${item.subtitle}</p>
+            <div class="card-tags">${tagsHtml}</div>
+          </div>
+          <div class="card-actions">
+            <a href="${item.htmlUrl}" target="_blank" class="btn-view">📖 웹 보고서</a>
+            ${item.pdfUrl ? `<a href="${item.pdfUrl}" download class="btn-pdf">📥 PDF</a>` : ''}
+            <button onclick="copyLink('${item.htmlUrl}')" class="btn-copy" title="공유 링크 복사">🔗</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function setFilter(type, val) {
+      currentFilterType = type;
+      currentFilterVal = val;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', (type === 'all' && btn.innerText.includes('전체보기')) || (type === 'testament' && btn.innerText.includes(val)) || (type === 'genre' && ( (val === '율법서' && btn.innerText.includes('율법서')) || (val === '구약역사서' && btn.innerText.includes('역사서 (구약)')) || (val === '시가서' && btn.innerText.includes('시가서')) || (val === '구약예언서' && btn.innerText.includes('예언서 (구약)')) || (val === '복음서' && btn.innerText.includes('복음서')) || (val === '신약역사서' && btn.innerText.includes('역사서 (신약)')) || (val === '바울서신' && btn.innerText.includes('바울서신')) || (val === '일반서신' && btn.innerText.includes('일반서신')) || (val === '신약예언서' && btn.innerText.includes('예언서 (신약)')) )));
+      });
+      filterReports();
+    }
+
+    function filterReports() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      const filtered = masterReports.filter(item => {
+        let matchFilter = (currentFilterType === 'all') ? true :
+          (currentFilterType === 'testament') ? (item.testament === currentFilterVal) :
+          (currentFilterType === 'genre') ? (
+            (currentFilterVal === '율법서' ? item.genre === '율법서' :
+            currentFilterVal === '구약역사서' ? (item.testament === '구약' && item.genre === '역사서') :
+            currentFilterVal === '시가서' ? item.genre === '시가서' :
+            currentFilterVal === '구약예언서' ? (item.testament === '구약' && item.genre === '예언서') :
+            currentFilterVal === '복음서' ? item.genre === '복음서' :
+            currentFilterVal === '신약역사서' ? (item.testament === '신약' && item.genre === '역사서') :
+            currentFilterVal === '바울서신' ? item.genre === '바울서신' :
+            currentFilterVal === '일반서신' ? item.genre === '일반서신' :
+            currentFilterVal === '신약예언서' ? (item.testament === '신약' && item.genre === '예언서') : false)
+          ) : false;
+        let matchQuery = q ? (item.title.toLowerCase().includes(q) || item.subtitle.toLowerCase().includes(q) || item.book.toLowerCase().includes(q) || item.passage.toLowerCase().includes(q) || (item.tags && item.tags.some(t => t.toLowerCase().includes(q)))) : true;
+        return matchFilter && matchQuery;
+      });
+
+      let statusLabel = '🌟 전체 올인원 마스터 대통합 보고서';
+      if (currentFilterType === 'testament') statusLabel = `📖 ${currentFilterVal} 마스터 보고서`;
+      else if (currentFilterType === 'genre') {
+        const genreNames = {'율법서': '📜 율법서 (모세오경)', '구약역사서': '🏛️ 구약 역사서', '시가서': '🎵 시가서', '구약예언서': '🔮 구약 예언서', '복음서': '📖 복음서 (신약)', '신약역사서': '⛵ 신약 역사서', '바울서신': '✉️ 바울서신', '일반서신': '📬 일반서신', '신약예언서': '👑 신약 예언서'};
+        statusLabel = `${genreNames[currentFilterVal] || currentFilterVal} 마스터 보고서`;
+      }
+      document.getElementById('filterStatusText').innerText = statusLabel;
+      renderReports(filtered);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      if (msg) toast.querySelector('span').innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function copyLink(url) {
+      const fullUrl = new URL(url, window.location.href).href;
+      navigator.clipboard.writeText(fullUrl).then(() => {
+        showToast('✅ 보고서 공유 링크가 복사되었습니다!');
+      }).catch(() => {
+        prompt('아래 링크를 복사하세요:', fullUrl);
+      });
+    }
+
+    function copyShareUrl() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        showToast('✅ 마스터 허브 사이트 링크가 복사되었습니다!');
+      }).catch(() => {
+        prompt('아래 링크를 복사하세요:', window.location.href);
+      });
+    }
+
+    // 서버에서 실시간 공개 보고서 목록 로드 (isPrivate == false 만 로드)
+    async function loadReports() {
+      try {
+        const res = await fetch('/api/reports?mode=public&t=' + new Date().getTime());
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          masterReports = data;
+          filterReports();
+        }
+      } catch (e) {
+        console.log('보고서 로드 오류:', e);
+      }
+    }
+
+    // 초기 실행
+    loadReports();
+  </script>
+</body>
+</html>

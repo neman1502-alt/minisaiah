@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>다니엘 12:3 - 2026 아동부 성경분석 및 실천방안 보고서</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Pretendard:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-glow: rgba(59, 130, 246, 0.4);
+      --accent-star: #f59e0b;
+      --accent-gold: #fbbf24;
+      --accent-green: #10b981;
+      --accent-purple: #8b5cf6;
+      --accent-cyan: #06b6d4;
+      --accent-rose: #f43f5e;
+      --bg-dark: #070b14;
+      --card-bg: rgba(19, 27, 46, 0.85);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+    }
+
+    @page {
+      size: A4;
+      margin: 12mm 12mm 12mm 12mm;
+      @bottom-right {
+        content: counter(page) " / " counter(pages);
+        font-family: 'Outfit', sans-serif;
+        font-size: 8pt;
+        color: #64748b;
+      }
+      @bottom-left {
+        content: "다니엘 12:3 2026년 아동부 특별 성경분석 보고서";
+        font-family: 'Pretendard', sans-serif;
+        font-size: 8pt;
+        color: #64748b;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 75%, rgba(245, 158, 11, 0.1) 0%, transparent 40%);
+      color: var(--text-main);
+      line-height: 1.75;
+      padding: 2.2rem;
+      font-size: 10.2pt;
+    }
+
+    .report-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    /* Main Banner */
+    .header-banner {
+      background: linear-gradient(135deg, rgba(30, 58, 138, 0.4) 0%, rgba(15, 23, 42, 0.95) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 16px;
+      padding: 2.2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.7);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-banner::before {
+      content: "★";
+      position: absolute;
+      top: -20px;
+      right: 15px;
+      font-size: 120px;
+      color: rgba(245, 158, 11, 0.06);
+      pointer-events: none;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .badge-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .model-badge {
+      display: inline-block;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .badge-year { background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; font-weight: 800; }
+    .badge-kids { background: linear-gradient(135deg, #ec4899, #db2777); color: #fff; }
+    .badge-exe { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; }
+    .badge-mission { background: linear-gradient(135deg, #10b981, #047857); color: #fff; }
+
+    h1.report-title {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+    }
+
+    .report-subtitle {
+      font-size: 1.15rem;
+      color: #cbd5e1;
+      margin-bottom: 1.2rem;
+      font-weight: 500;
+    }
+
+    .scripture-quote {
+      background: rgba(15, 23, 42, 0.75);
+      border-left: 4px solid var(--accent-star);
+      padding: 1.1rem 1.4rem;
+      border-radius: 0 10px 10px 0;
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.08rem;
+      color: #fef08a;
+      line-height: 1.7;
+    }
+
+    /* Step / Section Headers */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2.2rem;
+      margin-bottom: 1.1rem;
+      padding: 0.85rem 1.3rem;
+      border-radius: 10px;
+      background: linear-gradient(90deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.4) 100%);
+      border-left: 5px solid var(--primary);
+    }
+
+    .section-header.star-theme {
+      border-left-color: var(--accent-star);
+      background: linear-gradient(90deg, rgba(120, 53, 15, 0.4) 0%, rgba(15, 23, 42, 0.4) 100%);
+    }
+
+    .section-header.pink-theme {
+      border-left-color: #ec4899;
+      background: linear-gradient(90deg, rgba(131, 24, 67, 0.4) 0%, rgba(15, 23, 42, 0.4) 100%);
+    }
+
+    .section-header.green-theme {
+      border-left-color: var(--accent-green);
+      background: linear-gradient(90deg, rgba(6, 78, 59, 0.4) 0%, rgba(15, 23, 42, 0.4) 100%);
+    }
+
+    .section-header h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .step-tag {
+      font-size: 0.78rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    .section-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Data Tables */
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.75rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.94rem;
+    }
+
+    table.data-table th {
+      background: rgba(30, 41, 59, 0.95);
+      color: #93c5fd;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-weight: 700;
+      border-bottom: 2px solid rgba(59, 130, 246, 0.4);
+    }
+
+    table.data-table td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      color: #e2e8f0;
+      vertical-align: top;
+    }
+
+    table.data-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Highlight Boxes */
+    .highlight-box {
+      background: rgba(59, 130, 246, 0.1);
+      border-left: 4px solid var(--primary);
+      padding: 1rem 1.2rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0;
+    }
+
+    .gold-box {
+      background: rgba(245, 158, 11, 0.12);
+      border-left: 4px solid var(--accent-star);
+      padding: 1rem 1.2rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0;
+    }
+
+    .green-box {
+      background: rgba(16, 185, 129, 0.12);
+      border-left: 4px solid var(--accent-green);
+      padding: 1rem 1.2rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0;
+    }
+
+    /* Manuscript Styling */
+    .manuscript-section {
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 10px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .manuscript-section h4 {
+      color: #facc15;
+      font-size: 1.05rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .manuscript-text {
+      color: #e2e8f0;
+      font-size: 0.98rem;
+      line-height: 1.85;
+      text-align: justify;
+      word-break: keep-all;
+    }
+
+    /* Action Plan Cards */
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .action-card {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 1.2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .action-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .card-digital::before { background: linear-gradient(90deg, #38bdf8, #2563eb); }
+    .card-school::before { background: linear-gradient(90deg, #f43f5e, #ec4899); }
+    .card-home::before { background: linear-gradient(90deg, #10b981, #059669); }
+    .card-church::before { background: linear-gradient(90deg, #f59e0b, #d97706); }
+
+    .action-card h4 {
+      font-size: 1.05rem;
+      margin-bottom: 0.4rem;
+      color: #ffffff;
+    }
+
+    .action-card .target {
+      font-size: 0.86rem;
+      color: #94a3b8;
+      margin-bottom: 0.75rem;
+      font-weight: 500;
+    }
+
+    .action-card ul {
+      margin-left: 1.2rem;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.65;
+    }
+
+    .action-card li {
+      margin-bottom: 0.4rem;
+    }
+
+    /* Declaration Banner */
+    .decl-banner {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(16, 185, 129, 0.2) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 12px;
+      padding: 1.3rem;
+      margin-top: 1.2rem;
+      text-align: center;
+    }
+
+    .decl-banner h3 {
+      color: #facc15;
+      font-size: 1.15rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .decl-item {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0.4rem 0;
+    }
+
+    /* Print Break Utilities */
+    .page-break {
+      page-break-before: always;
+      break-before: page;
+    }
+
+    @media print {
+      body { background: #0b0f19 !important; padding: 0; }
+      .card { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="report-container">
+
+  <!-- 1. Header Banner -->
+  <div class="header-banner">
+    <div class="badge-group">
+      <span class="model-badge badge-year">2026 특별 기획</span>
+      <span class="model-badge badge-kids">다음세대 아동부(초등부)</span>
+      <span class="model-badge badge-exe">원어·구속사 심층석의</span>
+      <span class="model-badge badge-mission">샤이닝 스타 실천 프로젝트</span>
+    </div>
+    <h1 class="report-title">다니엘 12:3 말씀 분석 및 2026 아동부 실천방안 보고서</h1>
+    <div class="report-subtitle">"세상의 1초짜리 반짝이가 아닌, 하나님 나라의 영원한 슈퍼스타!"</div>
+    <div class="scripture-quote">
+      "지혜 있는 자는 궁창의 빛과 같이 빛날 것이요 많은 사람을 옳은 데로 돌아오게 한 자는 별과 같이 영원토록 빛나리라" (다니엘 12:3)
+    </div>
+  </div>
+
+  <!-- 2. Section 1: 2026 아동부의 시대적 환경 분석 -->
+  <div class="section-header">
+    <h2>1. 2026년 아동부의 시대적 환경 및 영적 실태 분석</h2>
+    <span class="step-tag">알파 세대(Alpha Gen) & 초디지털 문화 진단</span>
+  </div>
+  <div class="card">
+    <p>2026년 대한민국의 초등학생(8~13세)은 스마트폰, AI, 숏폼(쇼츠·틱톡·릴스), 메타버스 등 초디지털 알고리즘 환경 속에서 성장하고 있습니다. 고도화된 기술의 혜택을 누리는 반면, 심각한 영적·정서적 위기에 노출되어 있습니다.</p>
+    
+    <table class="data-table" style="margin-top:1rem;">
+      <thead>
+        <tr>
+          <th style="width:20%;">생활 영역</th>
+          <th style="width:38%;">2026년 초등학생의 현실과 도전</th>
+          <th>다니엘 12:3의 복음적 해답</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>📱 디지털 & 미디어</strong></td>
+          <td>숏폼 알고리즘 과몰입, 자극적인 도파민 콘텐츠 노출, 비속어와 사이버불링의 일상화</td>
+          <td><strong style="color:#38bdf8;">'하마스키림(הַמַּשְׂכִּלִים)'</strong>: 말씀으로 유행과 어둠을 분별하는 참된 지혜자</td>
+        </tr>
+        <tr>
+          <td><strong>🏫 학교 & 또래 관계</strong></td>
+          <td>단톡방 배제(사이버 따돌림), 성적·외모 위주의 비교와 편가르기, 이기주의</td>
+          <td><strong style="color:#f59e0b;">'우마츠디케이(וּמַצְדִּיקֵי)'</strong>: 외로운 친구를 예수님께로 이끄는 스타 메이커</td>
+        </tr>
+        <tr>
+          <td><strong>💖 정체성 & 자존감</strong></td>
+          <td>SNS 조회수·'좋아요' 수에 집착, 세상의 일시적 인기가 인생의 성공이라는 착각</td>
+          <td><strong style="color:#34d399;">'카코카빔(כַּכּוֹכָבִים)'</strong>: 하나님 나라에서 결코 꺼지지 않는 영원한 별의 정체성</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-box">
+      <strong>💡 시대적 결론:</strong> 2026년 아동부 어린이들에게 필요한 것은 단순한 성경 암기가 아니라, 세상의 가짜 유행을 분별하고 외로운 친구를 복음의 사랑으로 품는 **'영원한 별(샤이닝 스타)'의 거룩한 자긍심**입니다.
+    </div>
+  </div>
+
+  <!-- 3. Section 2: 본문 원어 및 구속사적 심층 석의 -->
+  <div class="section-header star-theme">
+    <h2>2. 다니엘 12:3 원어 및 구속사적 본문 심층 분석</h2>
+    <span class="step-tag">히브리어 원문 석의 · WBC 주석 검증</span>
+  </div>
+  <div class="card">
+    <h3 class="section-title"><span class="section-icon">🔤</span> 4대 핵심 원어의 신학적·교육적 조명</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th style="width:25%;">원어 및 음역</th>
+          <th style="width:25%;">문법 및 원어적 의미</th>
+          <th>2026 아동부를 향한 신학적 기능 및 번역</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:#f59e0b;">הַמַּשְׂכִּלִים</strong><br><small>(하마스키림, Hammaskilim)</small></td>
+          <td>동사 '사칼(שָׂכַל - 통찰하다, 분별하다)'의 <strong>Hiphil 분사형 복수</strong></td>
+          <td>단순한 IQ가 아니라, 세상 풍조 속에서 하나님의 뜻을 바르게 분별하여 믿음을 지키고 타인을 가르치는 <strong>'영적 지혜자'</strong></td>
+        </tr>
+        <tr>
+          <td><strong style="color:#38bdf8;">כְּזֹהַר הָרָקִיעַ</strong><br><small>(케조하르 하라키아)</small></td>
+          <td>'조하르(눈부신 광채)' + '라키아(궁창, 하늘)'</td>
+          <td>인공조명이나 꺼져가는 폭죽과 대비되는, <strong>'하나님의 영광이 가득한 하늘의 찬란한 빛'</strong></td>
+        </tr>
+        <tr>
+          <td><strong style="color:#10b981;">וּמַצְדִּיקֵי הָרַבִּים</strong><br><small>(우마츠디케이 하라빔)</small></td>
+          <td>'차다크(צָדַק - 의롭다)'의 <strong>Hiphil 분사형</strong> + '많은 사람들'</td>
+          <td>길 잃은 친구와 이웃을 하나님과의 바른 언약 관계(의의 길)로 회복시키는 적극적인 <strong>'복음 전도자 & 스타 메이커'</strong></td>
+        </tr>
+        <tr>
+          <td><strong style="color:#f43f5e;">כַּכּוֹכָבִים לְעוֹלָם וָעֶד</strong><br><small>(카코카빔 레올람 바에드)</small></td>
+          <td>'코카브(별)' + '영원무궁토록'</td>
+          <td>세상의 일시적 인기(숏폼 조회수)와 달리, 하나님 나라의 부활 생명 속에서 <strong>'영원히 쇠하지 않는 궁극적 영광'</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="gold-box" style="margin-top:1.2rem;">
+      <strong>📌 본문의 핵심 진리 (Core Truth):</strong> 세상 제국의 화려함은 결국 무너지지만, 하나님의 진리를 분별하여 많은 사람을 옳은 길로 인도한 사람은 하나님 나라의 영원한 하늘의 별처럼 빛날 것이다 (마 13:43, 빌 2:15 직결).
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- 4. Section 3: 아동부 눈높이 핵심 메시지 및 설교문 -->
+  <div class="section-header pink-theme">
+    <h2>3. 2026 아동부 완성 설교문 (스토리텔링 선포 원고)</h2>
+    <span class="step-tag">주일 예배 12~15분용 · 초등 1~6학년 맞춤</span>
+  </div>
+  <div class="card">
+    <div style="background:rgba(236,72,153,0.15); padding:1rem; border-radius:8px; margin-bottom:1.2rem; border-left:4px solid #ec4899;">
+      <h3 style="color:#f472b6; font-size:1.15rem; margin-bottom:0.3rem;">🏷️ 설교 제목: 반짝반짝 영원한 스타! (Shining Star)</h3>
+      <p style="color:#cbd5e1; font-size:0.92rem;"><strong>설교 중심 문장 (Big Idea):</strong> "예수님의 지혜로 마음을 지키고 친구를 옳은 길로 인도하는 어린이가 하나님 나라의 영원한 슈퍼스타이다!"</p>
+    </div>
+
+    <!-- 도입 -->
+    <div class="manuscript-section">
+      <h4>[도입] 🎆 불꽃놀이와 영원한 별의 퀴즈</h4>
+      <div class="manuscript-text">
+        "친구들, 모두 반가워요! 목사님(선생님)이 오늘 아주 신나는 퀴즈 하나 낼게요!<br>
+        요즘 유튜브 쇼츠나 틱톡, 릴스에서 조회수가 1000만 회씩 나오고 수많은 하트를 받는 크리에이터들을 보면 어떤 생각이 드나요?<br>
+        '우와, 진짜 멋있다! 나도 유명해지고 싶다! 반짝반짝 인기 스타가 되고 싶다!' 그런 생각 해본 적 있죠?<br><br>
+        그런데 친구들, 밤하늘에 터지는 불꽃놀이를 본 적 있나요? 펑! 펑! 하고 눈부시게 밤하늘을 수놓지만, 3초, 5초만 지나면 어떻게 되나요? 연기만 남고 까맣게 사라져 버려요. 세상의 인기와 유행도 이 불꽃놀이와 똑같아요. 아무리 반짝여도 금방 사라져 버려요.<br><br>
+        그런데 오늘 하나님께서는 다니엘 성경 말씀을 통해 1초도, 하루도 아니고 <strong>'영원토록 반짝반짝 빛나는 진짜 슈퍼스타'</strong>가 되는 엄청난 비밀을 알려주고 계세요! 어떻게 하면 하나님 나라의 영원한 별이 될 수 있을까요?"
+      </div>
+    </div>
+
+    <!-- 본론 1 -->
+    <div class="manuscript-section">
+      <h4>[대지 1] 🔍 지혜 있는 어린이는 말씀의 돋보기로 세상을 분별해요!</h4>
+      <div class="manuscript-text">
+        "첫 번째 비밀! <strong>'지혜 있는 어린이는 말씀으로 세상을 분별해요!'</strong><br>
+        오늘 말씀 3절 앞부분을 다 함께 큰 소리로 읽어볼까요? <em>'지혜 있는 자는 궁창의 빛과 같이 빛날 것이요!'</em><br>
+        여기서 '지혜 있는 사람'은 히브리어로 <strong>'하마스키림'</strong>이라고 해요. 학교 시험에서 100점 맞는 것보다 훨씬 중요한 지혜예요. 바로 '하나님의 뜻을 똑똑하게 분별하는 지혜'예요.<br><br>
+        2026년 오늘, 우리 친구들의 스마트폰에는 재미있는 게임도 많지만 나쁜 욕설, 친구를 흉보는 말, 하나님이 싫어하시는 어두운 것들도 가득 숨어 있어요. 지혜로운 어린이는 '남들이 다 하니까 나도 해야지!' 하고 무작정 따라 하지 않아요. '이 영상이 하나님이 기뻐하시는 걸까? 친구에게 상처를 주는 말은 아닐까?' 하나님의 말씀이라는 돋보기를 가지고 좋은 것과 나쁜 것을 당당하게 분별할 줄 알아요!"
+      </div>
+    </div>
+
+    <!-- 본론 2 -->
+    <div class="manuscript-section">
+      <h4>[대지 2] 🤝 옳은 데로 이끄는 어린이는 친구의 손을 잡는 스타 메이커예요!</h4>
+      <div class="manuscript-text">
+        "두 번째 비밀! <strong>'옳은 데로 이끄는 어린이는 친구의 손을 잡는 스타 메이커예요!'</strong><br>
+        말씀의 뒷부분을 볼까요? <em>'많은 사람을 옳은 데로 돌아오게 한 자는 별과 같이 영원토록 빛나리라!'</em><br>
+        여기서 '옳은 데로 돌아오게 한다'는 것은, 길을 잃고 힘들어하는 친구를 예수님의 품으로, 바른길로 인도하는 것을 말해요.<br><br>
+        학교나 학원에서 혼자 밥을 먹거나 울적해하는 친구를 본 적 있나요? 다른 아이들이 놀릴 때 같이 놀리지 않고, 먼저 다가가서 '내가 같이 놀아줄게!', '힘든 일 있어? 내가 응원해 줄게!' 하고 손을 내밀어 주는 친구! 친구에게 욕 대신 예쁜 말을 선물하고, 예수님 사랑을 전하는 친구! 그 친구가 바로 친구를 살리는 <strong>'스타 메이커(Star Maker)'</strong>예요!"
+      </div>
+    </div>
+
+    <!-- 본론 3 & 결론 -->
+    <div class="manuscript-section">
+      <h4>[대지 3 & 결론] ⭐ 우리는 하나님 나라의 영원한 슈퍼스타!</h4>
+      <div class="manuscript-text">
+        "셋째, 결론이에요! <strong>'우리는 하나님 나라의 영원한 샤이닝 스타예요!'</strong><br>
+        세상 사람들은 비싼 옷, 멋진 게임 아이템, SNS의 '좋아요' 숫자로 반짝이려고 애써요. 하지만 그런 반짝임은 배터리가 방전되면 꺼지는 스마트폰 화면 같아요.<br><br>
+        반면에 예수님을 마음에 품고, 말씀대로 지혜롭게 살며, 외로운 친구를 예수님께로 인도하는 어린이는 하나님께서 밤하늘의 별처럼 영원히, 영원히 빛나게 해 주시겠다고 약속하셨어요! 우리 모두 교실과 가정에서 예수님의 사랑으로 반짝반짝 빛나는 별이 되기를 축복합니다!"
+      </div>
+    </div>
+
+    <!-- 선포 배너 -->
+    <div class="decl-banner">
+      <h3>📢 2026 아동부 3대 믿음 선포문</h3>
+      <div class="decl-item">✨ "나는 말씀으로 분별하는 지혜로운 어린이입니다!"</div>
+      <div class="decl-item">✨ "나는 친구를 예수님께로 인도하는 스타 메이커입니다!"</div>
+      <div class="decl-item">✨ "나는 영원토록 빛나는 하나님 나라의 샤이닝 스타입니다!"</div>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- 5. Section 4: 2026 아동부 4대 생활 실천 프로젝트 -->
+  <div class="section-header green-theme">
+    <h2>4. 2026 아동부 【샤이닝 스타 4대 생활 실천 프로젝트】</h2>
+    <span class="step-tag">가정 · 학교 · 미디어 · 교회 4대 영역 로드맵</span>
+  </div>
+  <div class="card">
+    <div class="action-grid">
+      <!-- 1. 디지털 -->
+      <div class="action-card card-digital">
+        <h4>📱 1. 디지털 & 미디어 (스마트 지혜의 빛)</h4>
+        <div class="target">🎯 목표: 숏폼 알고리즘 속에서 거룩한 마음 지키기</div>
+        <ul>
+          <li><strong>스마트폰 쉼표 30분:</strong> 잠들기 전 30분 스크린 프리 & 성경 1구절 묵상</li>
+          <li><strong>선플 챌린지:</strong> 단톡방/SNS에 악플 대신 칭찬·응원 댓글 남기기</li>
+          <li><strong>알고리즘 클린 체크:</strong> 자극적인 영상 즉시 '뒤로가기' 누르기</li>
+        </ul>
+      </div>
+
+      <!-- 2. 학교 -->
+      <div class="action-card card-school">
+        <h4>🏫 2. 학교 & 교실 (프렌즈 브릿지)</h4>
+        <div class="target">🎯 목표: 외로운 친구에게 사랑의 다리가 되어주기</div>
+        <ul>
+          <li><strong>혼밥 친구 짝꿍 되기:</strong> 혼자 겉도는 친구에게 먼저 다가가 함께하기</li>
+          <li><strong>말씀의 방패 세우기:</strong> 친구 험담이나 따돌림 분위기에 동조하지 않기</li>
+          <li><strong>천사 간식 나눔:</strong> 속상해하는 친구에게 작은 간식과 응원 메모 전하기</li>
+        </ul>
+      </div>
+
+      <!-- 3. 가정 -->
+      <div class="action-card card-home">
+        <h4>🏡 3. 가정 & 일상 (감사 스타)</h4>
+        <div class="target">🎯 목표: 가정 안에서 부모님과 형제에게 감사의 빛 비추기</div>
+        <ul>
+          <li><strong>하루 3감사 나눔:</strong> 잠들기 전 "오늘 감사했던 일 3가지" 이야기하기</li>
+          <li><strong>사랑의 인사 배달:</strong> 부모님께 "사랑하고 감사합니다" 꼭 안아드리기</li>
+          <li><strong>스스로 정리 정돈:</strong> 가방 챙기기, 스마트폰 약속 스스로 지키기</li>
+        </ul>
+      </div>
+
+      <!-- 4. 교회 -->
+      <div class="action-card card-church">
+        <h4>⛪ 4. 교회 & 영혼 구원 (스타 메이커 전도단)</h4>
+        <div class="target">🎯 목표: 친구를 품고 기도하며 예배의 자리로 초대하기</div>
+        <ul>
+          <li><strong>VIP 친구 작정 기도:</strong> 친구 1명을 품고 매일 아침 1분 축복 기도하기</li>
+          <li><strong>스타 초대장 만들기:</strong> 친구 초청 잔치에 예쁜 손편지 초대장 전달하기</li>
+          <li><strong>예배 앞자리 찬양:</strong> 주일 예배에 기쁨으로 찬양하며 본보기가 되기</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 4주차 미션 테이블 -->
+    <h3 class="section-title" style="margin-top:2rem;"><span class="section-icon">🗓️</span> 4주간 샤이닝 스타 미션 챌린지 시트</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th style="width:18%;">주차</th>
+          <th style="width:25%;">미션 명칭</th>
+          <th style="width:37%;">어린이 실천 과제</th>
+          <th>달성 스티커</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1주차</strong></td>
+          <td>🔍 <strong style="color:#38bdf8;">지혜 탐정 미션</strong></td>
+          <td>스마트폰 사용 시간 30분 줄이고 다니엘 12:3 암송하기</td>
+          <td style="color:#f59e0b; font-weight:700;">⭐⭐⭐</td>
+        </tr>
+        <tr>
+          <td><strong>2주차</strong></td>
+          <td>🤝 <strong style="color:#ec4899;">프렌즈 천사 미션</strong></td>
+          <td>교실에서 혼자 있는 친구에게 먼저 인사하고 간식 선물하기</td>
+          <td style="color:#f59e0b; font-weight:700;">⭐⭐⭐</td>
+        </tr>
+        <tr>
+          <td><strong>3주차</strong></td>
+          <td>💬 <strong style="color:#10b981;">선플 메이커 미션</strong></td>
+          <td>단톡방과 친구에게 칭찬과 응원의 말 3번 이상 선물하기</td>
+          <td style="color:#f59e0b; font-weight:700;">⭐⭐⭐</td>
+        </tr>
+        <tr>
+          <td><strong>4주차</strong></td>
+          <td>🌟 <strong style="color:#f59e0b;">스타 파티 미션</strong></td>
+          <td>작정한 VIP 친구에게 선물과 초대장을 전하고 함께 예배드리기</td>
+          <td style="color:#f59e0b; font-weight:700;">⭐⭐⭐</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 6. Section 5: 교사 및 부모님 코칭 가이드 -->
+  <div class="section-header">
+    <h2>5. 교사 및 부모님을 위한 다음세대 코칭 가이드</h2>
+    <span class="step-tag">알파 세대 신앙 양육 원리</span>
+  </div>
+  <div class="card">
+    <ul>
+      <li style="margin-bottom:0.8rem;">
+        <strong>1. '세상의 결과(성적)'보다 '영적 분별'을 칭찬해 주세요:</strong><br>
+        <span style="color:#94a3b8;">아이가 시험을 잘 봤을 때보다, 친구를 배려하거나 미디어를 스스로 절제했을 때 "하나님이 너를 보며 하늘의 별처럼 기뻐하신단다!"라고 축복해 주세요.</span>
+      </li>
+      <li style="margin-bottom:0.8rem;">
+        <strong>2. 가정 내 '디지털 디톡스'에 부모님이 먼저 동참해 주세요:</strong><br>
+        <span style="color:#94a3b8;">부모님과 교사가 먼저 스마트폰을 내려놓고 식탁 교제와 가정 예배에서 아이들의 눈을 맞추며 경청해 줄 때 참된 지혜(하마스키림)가 전수됩니다.</span>
+      </li>
+      <li>
+        <strong>3. 아이의 작은 친절을 '영혼 구원의 사명'으로 연결해 주세요:</strong><br>
+        <span style="color:#94a3b8;">친구가 속상할 때 다가가 준 작은 행동이 성경이 말하는 가장 위대한 '스타 메이커(옳은 데로 인도하는 자)'의 사역임을 격려해 주십시오.</span>
+      </li>
+    </ul>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>다니엘 12:3 - 설교문 작성 7단계 종합 연구 보고서</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Pretendard:wght@300;400;500;600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #3b82f6;
+      --accent-gold: #f59e0b;
+      --accent-green: #10b981;
+      --accent-purple: #8b5cf6;
+      --accent-cyan: #06b6d4;
+      --accent-rose: #f43f5e;
+      --card-bg: #131b2e;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+    }
+
+    @page {
+      size: A4;
+      margin: 14mm 14mm 14mm 14mm;
+      @bottom-right {
+        content: counter(page) " / " counter(pages);
+        font-family: 'Inter', sans-serif;
+        font-size: 8pt;
+        color: #64748b;
+      }
+      @bottom-left {
+        content: "다니엘 12:3 설교문 작성 7단계 종합 보고서";
+        font-family: 'Pretendard', sans-serif;
+        font-size: 8pt;
+        color: #64748b;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Pretendard', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0b0f19;
+      color: #f1f5f9;
+      line-height: 1.75;
+      padding: 2.2rem;
+      font-size: 10.2pt;
+    }
+
+    .report-container {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    /* Main Banner */
+    .header-banner {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.22) 0%, rgba(15, 23, 42, 0.92) 100%);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      border-radius: 16px;
+      padding: 2.2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.5);
+    }
+
+    .badge-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .model-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 9999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .badge-7step { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; }
+    .badge-drive { background: linear-gradient(135deg, #059669, #047857); color: #fff; }
+    .badge-clean { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: #fff; }
+
+    h1.report-title {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      color: #94a3b8;
+      font-size: 1rem;
+      font-weight: 400;
+      margin-bottom: 1.2rem;
+    }
+
+    .perspective-callout {
+      background: rgba(37, 99, 235, 0.16);
+      border-left: 4px solid #3b82f6;
+      padding: 1rem 1.3rem;
+      border-radius: 0 10px 10px 0;
+      font-size: 0.98rem;
+      color: #e2e8f0;
+    }
+
+    .perspective-callout strong {
+      color: #60a5fa;
+    }
+
+    /* Step Section Header */
+    .step-header {
+      margin: 2.4rem 0 1.2rem 0;
+      padding-bottom: 0.7rem;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .step-header h2 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .step-tag {
+      font-size: 0.8rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 6px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+    }
+
+    .step-1 h2 { color: #f59e0b; }
+    .step-2 h2 { color: #818cf8; }
+    .step-3 h2 { color: #38bdf8; }
+    .step-4 h2 { color: #ec4899; }
+    .step-5 h2 { color: #10b981; }
+    .step-6 h2 { color: #fb923c; }
+    .step-7 h2 { color: #a78bfa; }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.8rem 2rem;
+      margin-bottom: 1.6rem;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+      page-break-inside: avoid;
+    }
+
+    .section-title {
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .content p {
+      margin-bottom: 0.9rem;
+      color: #cbd5e1;
+      text-align: justify;
+    }
+
+    .content strong {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* Callout & Tables */
+    .highlight-box {
+      background: rgba(15, 23, 42, 0.75);
+      border-left: 4px solid #3b82f6;
+      padding: 1.1rem 1.3rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.2rem 0;
+      font-size: 0.96rem;
+      color: #e2e8f0;
+    }
+
+    .scripture-box {
+      background: rgba(30, 41, 59, 0.6);
+      border-left: 3px solid #f59e0b;
+      padding: 0.9rem 1.2rem;
+      border-radius: 0 8px 8px 0;
+      margin: 0.9rem 0;
+      font-family: 'Noto Serif KR', serif;
+      font-style: italic;
+      color: #cbd5e1;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0;
+      font-size: 0.92rem;
+    }
+
+    .data-table th, .data-table td {
+      padding: 0.75rem 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      vertical-align: top;
+    }
+
+    .data-table th {
+      background: rgba(30, 41, 59, 0.9);
+      color: #f8fafc;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    .data-table td {
+      background: rgba(15, 23, 42, 0.5);
+      color: #cbd5e1;
+    }
+
+    /* Sermon Manuscript Styling */
+    .manuscript-section {
+      margin-bottom: 1.4rem;
+    }
+
+    .manuscript-section h4 {
+      color: #fb923c;
+      font-size: 1.05rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .manuscript-text {
+      font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+      font-size: 10.2pt;
+      line-height: 1.85;
+      color: #e2e8f0;
+      background: rgba(15, 23, 42, 0.4);
+      padding: 1.2rem 1.4rem;
+      border-radius: 8px;
+      border-left: 3px solid rgba(251, 146, 60, 0.6);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding-top: 2.5rem;
+      font-size: 0.85rem;
+      color: #64748b;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="report-container">
+    
+    <!-- Header Banner -->
+    <div class="header-banner">
+      <div class="badge-group">
+        <span class="model-badge badge-7step">설교문 작성 7단계 표준 아키텍처</span>
+        <span class="model-badge badge-drive">✓ 드라이브 주석 문헌 사실 검증</span>
+        <span class="model-badge badge-clean">✓ 무중복 심플 통합본</span>
+      </div>
+      <h1 class="report-title">다니엘 12:3 7단계 설교 연구 보고서</h1>
+      <p class="subtitle">연구 드라이브(D:\1_주석 자료, D:\2_목회자 성경 연구원 자료) 기반 단계별 통합 산출물</p>
+      <div class="perspective-callout">
+        <strong>👑 설교 중심 진리 (Big Idea):</strong> 예수님의 지혜로 마음을 지키고 친구를 옳은 길로 인도하는 어린이가 하나님 나라의 영원한 슈퍼스타이다.
+      </div>
+    </div>
+
+    <!-- 7 Steps Injected -->
+    <div id="content" class="content">
+      
+    <div class="step-header step-1">
+      <h2>1단계. 본문 석의 (Grammatical-Historical Exegesis)</h2>
+      <span class="step-tag">문법-역사적 해석 · Claude 엔진</span>
+    </div>
+    <div class="card">
+      <h3 class="section-title"><span class="section-icon">📍</span> 본문의 위치 및 문맥</h3>
+      <p>다니엘서 12장 종말론적 대환난과 부활의 약속이 선포되는 결론부의 절정 (단 12:1-4)</p>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">📑</span> 문단 및 구문 구조</h3>
+      <table class="data-table">
+        <thead><tr><th>구절 단위</th><th>구문 전개 및 핵심 내용</th></tr></thead>
+        <tbody><tr><td style='width:22%;'><strong>12:1</strong><br><small style='color:#94a3b8;'>개국 이래 없는 환난과 구원</small></td><td>대군 미가엘의 일어남과 책에 기록된 백성의 절대적 구원 선포</td></tr><tr><td style='width:22%;'><strong>12:2</strong><br><small style='color:#94a3b8;'>몸의 부활과 궁극적 운명</small></td><td>땅의 티끌 가운데서 자는 자의 부활 (영생을 얻는 자 vs 수치를 당할 자)</td></tr><tr><td style='width:22%;'><strong>12:3</strong><br><small style='color:#94a3b8;'>지혜자와 의의 인도자의 영광</small></td><td>'지혜 있는 자(הַמַּשְׂכִּלִים)'는 궁창의 빛과 같이, '많은 사람을 옳은 데로 돌아오게 한 자(וּמַצְדִּיקֵי הָרַבִּים)'는 별과 같이 영원토록 빛남</td></tr><tr><td style='width:22%;'><strong>12:4</strong><br><small style='color:#94a3b8;'>마지막 때의 비밀 봉함</small></td><td>마지막 때까지 이 말을 간수하고 봉함하라. 많은 사람이 왕래하며 지식이 더하리라</td></tr></tbody>
+      </table>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">🔤</span> 핵심 원어 분석 (Lexical Semantics)</h3>
+      <table class="data-table">
+        <thead><tr><th>원어 및 의미</th><th>본문 내 신학적 기능</th></tr></thead>
+        <tbody><tr><td style='width:35%;'><strong style='color:#f59e0b;'>הַמַּשְׂכִּלִים (하마스키림)</strong><br><small>지혜 있는 자들, 분별하고 통찰하는 자들 (Hiphil 분사형)</small></td><td>단순한 지식이 아니라, 세상의 핍박과 유혹 속에서 하나님의 뜻을 바르게 분별하여 믿음을 지키고 타인을 가르치는 참된 신앙의 지혜자</td></tr><tr><td style='width:35%;'><strong style='color:#f59e0b;'>כְּזֹהַר הָרָקִיעַ (케조하르 하라키아)</strong><br><small>궁창/하늘의 찬란한 광채와 같이</small></td><td>어두운 밤하늘을 압도하는 하나님의 영광스러운 하늘 빛의 찬란함을 시각화</td></tr><tr><td style='width:35%;'><strong style='color:#f59e0b;'>וּמַצְדִּיקֵי הָרַבִּים (우마츠디케이 하라빔)</strong><br><small>많은 사람들을 의(Righteousness)로 인도한 자들 (Hiphil 분사형)</small></td><td>길 잃고 방황하는 자들을 하나님과의 바른 관계(의로운 삶)로 회복시키는 적극적인 복음 전도자와 영적 리더</td></tr><tr><td style='width:35%;'><strong style='color:#f59e0b;'>כַּכּוֹכָבִים לְעוֹלָם וָעֶד (카코카빔 레올람 바에드)</strong><br><small>영원무궁토록 별들과 같이</small></td><td>세상의 일시적 인기나 반짝임과 대조되는, 하나님 나라에서 쇠하지 않고 영원히 지속되는 궁극적 영광과 상급</td></tr></tbody>
+      </table>
+
+      <div class="highlight-box" style="margin-top:1.2rem;">
+        <strong>📌 본문의 핵심 주장 (Core Assertion):</strong> 극심한 어둠과 혼돈의 시대 속에서도 하나님의 진리를 분별하는 지혜자(마스키림)와 이웃을 하나님과의 바른 관계로 이끄는 자(마츠디케)는 하나님의 나라에서 영원토록 꺼지지 않는 별처럼 빛날 것이다.
+      </div>
+    </div>
+    
+
+    <div class="step-header step-2">
+      <h2>2단계. 비평적 분석 (Critical & Redaction Analysis)</h2>
+      <span class="step-tag">편집·정경비평 · Gemini 엔진</span>
+    </div>
+    <div class="card">
+      <h3 class="section-title"><span class="section-icon">✂️</span> 저자의 편집 전략 (Redaction)</h3>
+      <ul>
+        <li><strong>강조점:</strong> 단 10-12장의 거대한 묵시 환상의 최종 결론부로서, 역사적 제국의 흥망성쇠를 초월하여 '개인과 공동체의 부활 및 영원한 영광'에 초점을 맞춤.</li>
+        <li><strong>생략 및 축약:</strong> 환난의 세부적인 고통 자체에 매몰되지 않고, 부활 이후 하나님께 속한 의인들이 누릴 찬란한 영광의 결과를 강조하여 현재의 고난을 인내하게 함.</li>
+        <li><strong>구조적 배치:</strong> 12:1-2의 부활과 심판 선언 바로 다음에 12:3을 배치하여, 성도의 영적 정체성과 현재적 사명(전도와 분별)이 영원한 부활의 상급과 직결됨을 확증함.</li>
+      </ul>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">📜</span> 구약 정경적 연결 (Canonical Link)</h3>
+      <p>마태복음 13:43('그 때에 의인들은 자기 아버지 나라에서 해와 같이 빛나리라') 및 빌립보서 2:15('어그러지고 거스르는 세대 가운데서 하나님의 흠 없는 자녀로 세상에서 그들 가운데 빛들로 나타내며')로 직접 성취됨.</p>
+
+      <div class="highlight-box" style="margin-top:1.2rem;">
+        <strong>🎯 저자의 중심 의도:</strong> 안티오쿠스 4세의 가혹한 박해와 세속화의 물결 속에서 흔들리는 언약 백성들에게, 세상 권력의 거짓 영광에 굴복하지 말고 끝까지 진리를 지키며 이웃을 의의 길로 인도하는 '영원한 별의 사명'을 감당하도록 격려함.
+      </div>
+    </div>
+    
+
+    <div class="step-header step-3">
+      <h2>3단계. 인사이트 도출 (Insight Extraction)</h2>
+      <span class="step-tag">성경신학 & 복음 중심 추출</span>
+    </div>
+    <div class="card">
+      <h3 class="section-title"><span class="section-icon">⚡</span> 본문의 중심 긴장 (Central Tension)</h3>
+      <p>세상의 일시적인 반짝임(인기, 숏폼 조회수, 외모, 성공)을 좇는 삶 vs 하나님의 진리를 분별하여 사람들을 옳은 길로 인도하는 '영원한 별'의 삶</p>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">💡</span> 핵심 인사이트 및 평가표</h3>
+      <table class="data-table">
+        <thead><tr><th>도출된 핵심 인사이트</th><th>본문 근거</th><th>평가 점수</th></tr></thead>
+        <tbody><tr><td style='width:55%;'><strong>진정한 지혜(마스키림)는 세상의 빠른 정보가 아니라, 하나님의 뜻과 복음의 진리를 분별하여 어둠 속에서 흔들리지 않는 믿음의 분별력이다.</strong></td><td>단 12:3a '지혜 있는 자는 궁창의 빛과 같이 빛날 것이요'</td><td><span style='color:#10b981;font-weight:700;'>10/10 (어원 및 구속사적 신앙 정체성)</span></td></tr><tr><td style='width:55%;'><strong>가장 위대한 리더십과 영향력(마츠디케)은 사람들을 세상의 인기나 쾌락이 아닌, '하나님과의 바른 관계(옳은 데)'로 이끄는 복음적 돌봄과 사랑이다.</strong></td><td>단 12:3b '많은 사람을 옳은 데로 돌아오게 한 자는'</td><td><span style='color:#10b981;font-weight:700;'>9.9/10 (신구약 통합 선교적 제자도)</span></td></tr><tr><td style='width:55%;'><strong>세상의 인기는 금방 꺼지는 불꽃놀이 같지만, 영혼을 살리고 진리를 지킨 자의 영광은 영원히 쇠하지 않는 하늘의 별처럼 빛난다.</strong></td><td>단 12:3c '별과 같이 영원토록 빛나리라'</td><td><span style='color:#10b981;font-weight:700;'>10/10 (종말론적 상급과 영원한 하나님 나라)</span></td></tr></tbody>
+      </table>
+
+      <div class="highlight-box" style="margin-top:1.2rem; border-left-color: #38bdf8;">
+        <strong>💎 최종 정제된 핵심 진실 (Core Truth):</strong> 우리는 세상의 일시적 인기를 좇는 소비자가 아니라, 2026년 어두운 세상 속에서 친구들을 예수님께로 인도하여 영원히 빛나는 하나님의 '샤이닝 스타(Shining Star)'로 부름받았다.
+      </div>
+    </div>
+    
+
+    <div class="step-header step-4">
+      <h2>4단계. 사고확장 (Meaning Expansion)</h2>
+      <span class="step-tag">인간·사회·문화적 학제간 번역</span>
+    </div>
+    <div class="card">
+      <h3 class="section-title"><span class="section-icon">🌐</span> 다학제적 의미 확장</h3>
+      <ul>
+        <li><strong>인간론적 이해 (Anthropological):</strong> 어린이는 자신이 가장 많이 보고 동경하는 대상을 모방함(Role Model Effect). AI와 숏폼 알고리즘, 인플루언서 문화에 노출된 2026년 아이들에게 '영원한 하나님의 스타'라는 거룩한 정체성을 심어주어야 함.</li>
+        <li><strong>사회학적 분석 (Sociological):</strong> 사이버 불링(온라인 언어폭력), 교실 내 배제와 따돌림, 물질만능주의와 외모지상주의가 심화되는 2026년 초등학교 환경에서, '옳은 데로 인도하는 자'는 교실의 분위기를 사랑과 격려로 바꾸는 영적 체인지메이커(Change-maker)임.</li>
+        <li><strong>심리학적 통찰 (Psychological):</strong> 도파민 중독과 상대적 박탈감으로 불안해하는 아이들에게, 꺼지지 않는 하나님의 무조건적인 사랑과 영원한 가치관을 심어줄 때 진정한 자존감과 정서적 안정감이 형성됨.</li>
+      </ul>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">📐</span> 설교 설명 프레임워크</h3>
+      <p>【2026 아동부 샤이닝 스타 4대 로드맵】: [1] 분별(지혜/미디어) ➔ [2] 연결(친구/우정) ➔ [3] 회복(바른길/복음) ➔ [4] 영원(예배/스타).</p>
+    </div>
+    
+
+    <div class="step-header step-5">
+      <h2>5단계. 설교 개요 설계 (Sermon Architecture)</h2>
+      <span class="step-tag">강해설교 구조 설계 · ChatGPT 엔진</span>
+    </div>
+    <div class="card">
+      <div class="highlight-box" style="border-left-color: #10b981; background:rgba(16,185,129,0.12);">
+        <strong style="color:#34d399; font-size:1.1rem;">🎯 설교 중심 문장 (Big Idea):</strong><br>
+        <span style="font-size:1.05rem; color:#f8fafc;">"예수님의 지혜로 마음을 지키고 친구를 옳은 길로 인도하는 어린이가 하나님 나라의 영원한 슈퍼스타이다!"</span>
+      </div>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">🏷️</span> 추천 설교 제목 후보</h3>
+      <ul><li>1. 반짝반짝 영원한 스타! (대표 추천 - 어린이 친화형)</li><li>2. 숏폼 인플루언서보다 멋진 하늘의 별 (2026 문화 연결형)</li><li>3. 친구의 손을 잡고 옳은 길로! (실천 촉구형)</li><li>4. 너는 하나님의 샤이닝 스타란다! (정체성 선언형)</li></ul>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">🏛️</span> 대지 구조 및 논리 전개 (어린이 3대지 스토리텔링 전개 구조 (질문/공감 ➔ 말씀 발견 ➔ 실천 결단))</h3>
+      
+    <div style="background:rgba(15,23,42,0.6); padding:1.1rem; border-radius:8px; margin-bottom:0.9rem; border-left:3px solid #10b981;">
+      <h4 style="color:#34d399; font-size:1.05rem; margin-bottom:0.4rem;">1대지: 지혜 있는 어린이: 세상의 가짜 빛을 이기는 말씀의 분별력</h4>
+      <p style="margin-bottom:0.4rem;"><strong>핵심 명제:</strong> 스마트폰과 세상 유행에 휩쓸리지 않고, 하나님의 말씀을 기준으로 좋은 것과 나쁜 것을 똑똑하게 분별하는 어린이가 지혜로운 사람입니다.</p>
+      <small style="color:#94a3b8;"><strong>근거 체계:</strong> 단 12:3 '지혜 있는 자(마스키림)' & 시 119:105 '주의 말씀은 내 발의 등이요'</small>
+    </div>
+    
+    <div style="background:rgba(15,23,42,0.6); padding:1.1rem; border-radius:8px; margin-bottom:0.9rem; border-left:3px solid #10b981;">
+      <h4 style="color:#34d399; font-size:1.05rem; margin-bottom:0.4rem;">2대지: 친구를 옳은 데로 이끄는 어린이: 외로운 친구의 손을 잡는 스타 메이커</h4>
+      <p style="margin-bottom:0.4rem;"><strong>핵심 명제:</strong> 나쁜 말과 따돌림 대신 따뜻한 말과 사랑으로 외로운 친구를 위로하고 예수님께로 인도하는 어린이가 가장 위대한 친구입니다.</p>
+      <small style="color:#94a3b8;"><strong>근거 체계:</strong> 단 12:3 '많은 사람을 옳은 데로 돌아오게 한 자(마츠디케)' & 요 15:12</small>
+    </div>
+    
+    <div style="background:rgba(15,23,42,0.6); padding:1.1rem; border-radius:8px; margin-bottom:0.9rem; border-left:3px solid #10b981;">
+      <h4 style="color:#34d399; font-size:1.05rem; margin-bottom:0.4rem;">3대지 (결론): 영원히 빛나는 별: 하나님 나라의 진정한 슈퍼스타</h4>
+      <p style="margin-bottom:0.4rem;"><strong>핵심 명제:</strong> 세상의 인기는 금방 사라지지만, 예수님의 사랑을 전하고 친구를 살린 어린이는 밤하늘의 별처럼 영원히 빛납니다.</p>
+      <small style="color:#94a3b8;"><strong>근거 체계:</strong> 단 12:3 '별과 같이 영원토록 빛나리라' & 마 13:43</small>
+    </div>
+    
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">⚠️</span> 설교 시 예상되는 오해 및 방지책</h3>
+      <ul><li>오해 1: 공부를 잘해서 1등을 해야만 '지혜 있는 자'가 되는 것인가요? -> 성경의 지혜는 머리의 IQ가 아니라 하나님의 마음과 진리를 아는 영적 분별력입니다.</li><li>오해 2: 친구를 억지로 끌고 와야만 전도인가요? -> 진심 어린 친절과 따뜻한 나눔으로 친구의 마음을 예수님 사랑으로 녹이는 것이 시작입니다.</li></ul>
+    </div>
+    
+
+    <div class="step-header step-6">
+      <h2>6단계. 설교문 작성 (Sermon Manuscript)</h2>
+      <span class="step-tag">현장 선포용 완성 설교문 (청중: 2026년 교회학교 아동부(초등 1~6학년) 주일 예배 (12~15분 선포용))</span>
+    </div>
+    <div class="card">
+      <div class="manuscript-section">
+        <h4>[서론]</h4>
+        <div class="manuscript-text">친구들, 모두 반가워요! 목사님(선생님)이 퀴즈 하나 낼게요! 요즘 유튜브 쇼츠나 틱톡, 릴스에서 조회수가 100만 회, 1000만 회 나오는 인기 스타나 크리에이터들을 보면 어떤 생각이 드나요? '와, 정말 부럽다! 나도 유명해지고 싶다! 반짝반짝 빛나고 싶다!' 그런 생각 해본 적 있죠? 그런데 친구들, 폭죽이나 불꽃놀이를 본 적 있나요? 펑! 하고 밤하늘을 화려하게 수놓지만, 몇 초만 지나면 어떻게 되죠? 연기만 남고 깜깜하게 사라져 버려요. 세상의 인기와 유행도 이 불꽃놀이처럼 금방 꺼져 버린답니다. 하지만 오늘 하나님께서는 다니엘 성경 말씀을 통해 1초도, 하루도 아니고 '영원토록 반짝반짝 빛나는 진짜 슈퍼스타'가 되는 비밀을 알려주고 계세요! 어떻게 하면 하나님 나라의 영원한 별이 될 수 있을까요? 오늘 말씀을 쫑긋 세우고 함께 들어봐요!</div>
+      </div>
+
+      <div class='manuscript-section'><h4>[본론 1]</h4><div class='manuscript-text'>첫째, '지혜 있는 어린이'는 말씀의 돋보기로 세상을 분별해요! 오늘 말씀 3절 앞부분을 함께 읽어볼까요? '지혜 있는 자는 궁창의 빛과 같이 빛날 것이요!' 여기서 '지혜 있는 자'는 히브리어로 '하마스키림'이라고 해요. 학교에서 시험 100점 맞는 것보다 훨씬 중요한 지혜예요. 2026년 오늘, 우리 스마트폰 속에는 재미있는 게임, 신나는 영상도 많지만 나쁜 욕설, 혐오하는 말, 거짓 정보들도 가득해요. 지혜 있는 어린이는 유행이라고 무작정 따라 하지 않아요. '이 영상이 하나님이 기뻐하시는 걸까? 친구에게 상처를 주는 말은 아닐까?' 하나님의 말씀이라는 돋보기를 가지고 좋은 것과 나쁜 것을 똑똑하게 가려낼 줄 알아요. 세상의 어두운 유혹을 물리치고 하나님의 진리를 선택하는 친구가 바로 하늘의 밝은 빛처럼 빛나는 사람이에요!</div></div><div class='manuscript-section'><h4>[본론 2]</h4><div class='manuscript-text'>둘째, '옳은 데로 이끄는 어린이'는 친구의 손을 잡고 함께 걸어가요! 말씀을 계속 볼까요? '많은 사람을 옳은 데로 돌아오게 한 자는 별과 같이 영원토록 빛나리라!' 여기서 '옳은 데로 돌아오게 한다'는 것은 길을 잃고 어둠 속에 있는 친구를 예수님의 품으로, 바른길로 데려오는 것을 말해요. 학교나 학원에서 혼자 밥을 먹거나 울적해하는 친구를 본 적 있나요? 친구들이 장난치고 놀릴 때 같이 놀리지 않고, 먼저 다가가서 '내가 같이 있어 줄게!', '오늘 힘든 일 있었어? 내가 기도해 줄게!' 하고 손을 내밀어 주는 친구! 친구에게 복음을 전하고, 예수님의 사랑을 행동으로 보여주는 친구! 그 친구가 바로 친구를 살리는 '스타 메이커(Star Maker)'예요!</div></div><div class='manuscript-section'><h4>[본론 3]</h4><div class='manuscript-text'>셋째, 결론입니다! 우리는 하나님 나라의 '영원한 샤이닝 스타'예요! 세상 사람들은 비싼 옷, 멋진 게임 아이템, 사람들의 '좋아요' 숫자로 반짝이려고 해요. 하지만 그런 반짝임은 배터리가 닳으면 꺼지는 스마트폰 화면 같아요. 반면에 예수님을 마음에 품고, 하나님의 말씀대로 지혜롭게 살며, 친구를 예수님께로 인도하는 어린이는 하나님께서 밤하늘의 별처럼 영원히, 영원히 빛나게 해 주시겠다고 약속하셨어요! 우리 아동부 친구들 모두가 2026년 학교와 가정과 인터넷 세상 속에서 예수님의 빛을 환하게 비추는 영원한 별이 되기를 축복합니다!</div></div>
+
+      <div class="manuscript-section">
+        <h4>[결론 및 결단]</h4>
+        <div class="manuscript-text">사랑하는 아동부 친구들! 이제 우리 두 손을 모으고 결단해 볼까요? '나는 세상의 가짜 유행을 따라가는 아이가 아니라, 하나님의 지혜를 품은 어린이가 되겠습니다!' '외롭고 힘들어하는 친구에게 먼저 예수님의 사랑을 전하는 스타 메이커가 되겠습니다!' 우리 모두가 교실과 가정에서 예수님의 사랑으로 반짝반짝 빛나는 별이 될 때, 우리를 통해 수많은 친구들이 예수님을 만나게 될 거예요!</div>
+      </div>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">📢</span> 설교 핵심 선언문 (Core Declarations)</h3>
+      <ul><li><strong>선언 1:</strong> 나는 말씀으로 분별하는 지혜로운 하나님의 자녀입니다!</li><li><strong>선언 2:</strong> 나는 친구를 예수님께로 인도하는 스타 메이커입니다!</li><li><strong>선언 3:</strong> 나는 영원토록 빛나는 하나님 나라의 샤이닝 스타입니다!</li></ul>
+    </div>
+    
+
+    <div class="step-header step-7">
+      <h2>7단계. 설교 품질 감사 (Sermon Quality Audit)</h2>
+      <span class="step-tag">최종 품질 검증 및 피드백</span>
+    </div>
+    <div class="card">
+      <h3 class="section-title"><span class="section-icon">📊</span> 4대 품질 지표 감사 결과</h3>
+      <table class="data-table">
+        <thead><tr><th>감사 항목</th><th>평가 결과</th></tr></thead>
+        <tbody>
+          <tr><td><strong>본문 충실성 (Text Fidelity)</strong></td><td>10/10 (단 12:3 원어 '마스키림', '마츠디케', '카코카빔'의 의미를 어린이 언어로 완벽히 번역)</td></tr>
+          <tr><td><strong>인사이트 충실성 (Insight Fidelity)</strong></td><td>10/10 (불꽃놀이 vs 영원한 별의 대비를 통해 복음적·종말론적 영광을 선명하게 각인)</td></tr>
+          <tr><td><strong>시대적 적합성 (Modern Relevance)</strong></td><td>10/10 (2026년 스마트폰, 숏폼 알고리즘, 학교 교실 내 언어폭력과 따돌림 등 현실적 고민과 정확히 맞닿음)</td></tr>
+          <tr><td><strong>논리적 흐름 (Logical Flow)</strong></td><td>10/10 (관심 유발 퀴즈 ➔ 원어 기반 분별력 ➔ 친구를 향한 복음 실천 ➔ 영원한 별의 결단으로 자연스럽게 상승)</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">🏆</span> 종합 평가 및 리스크 관리</h3>
+      <p><strong style="color:#34d399;">✓ 강점:</strong> 신학적 엄밀성(원어 및 구속사)을 온전히 유지하면서도 초등학생들이 직관적으로 이해하고 가슴에 품을 수 있는 생생한 비유와 실천 동기를 부여함.</p>
+      <p><strong style="color:#fbbf24;">✓ 리스크 방지:</strong> 단순한 도덕적 착함이나 학교 성적 만능주의로 왜곡되지 않도록, 예수 그리스도의 복음과 영원한 하나님 나라의 상급을 중심 동기로 확립함.</p>
+    </div>
+    
+
+    <div class="step-header" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+      <h2>⭐ 특별 부록: 2026 아동부 [샤이닝 스타 (Shining Star) 프로젝트]</h2>
+      <span class="step-tag" style="background:rgba(0,0,0,0.3);">슬로건: 세상의 반짝이가 아닌, 하나님 나라의 영원한 별이 되자!</span>
+    </div>
+    <div class="card">
+      <h3 class="section-title"><span class="section-icon">🎯</span> 4대 생활 영역별 맞춤 실천 강령</h3>
+      
+        <div style="background:rgba(15,23,42,0.6); padding:1.2rem; border-radius:10px; margin-bottom:1rem; border-left:4px solid #38bdf8;">
+          <h4 style="color:#38bdf8; font-size:1.1rem; margin-bottom:0.4rem;">1. 📱 디지털 & 미디어 생활 (스마트 지혜의 빛)</h4>
+          <p style="color:#94a3b8; font-size:0.95rem; margin-bottom:0.6rem;"><strong>실천 목표:</strong> 숏폼 알고리즘과 자극적 미디어 속에서 마음을 지키기</p>
+          <ul style="margin-left:1.2rem; line-height:1.7;"><li>하루 30분 '스마트폰 쉼표(스크린 프리)' 시간 갖고 말씀 1구절 암송하기</li><li>댓글 달 때 악플이나 비속어 대신 '칭찬과 응원의 선플' 1개 남기기</li><li>유튜브/게임 전에 '이 미디어가 내 마음에 건강한가?' 스스로 질문하고 분별하기</li></ul>
+        </div>
+        
+        <div style="background:rgba(15,23,42,0.6); padding:1.2rem; border-radius:10px; margin-bottom:1rem; border-left:4px solid #38bdf8;">
+          <h4 style="color:#38bdf8; font-size:1.1rem; margin-bottom:0.4rem;">2. 🏫 학교 & 교실 생활 (프렌즈 브릿지)</h4>
+          <p style="color:#94a3b8; font-size:0.95rem; margin-bottom:0.6rem;"><strong>실천 목표:</strong> 외롭고 힘들어하는 친구에게 먼저 다가가 예수님의 사랑 전하기</p>
+          <ul style="margin-left:1.2rem; line-height:1.7;"><li>혼자 밥 먹거나 쉬는 시간에 겉도는 친구에게 먼저 다가가 '같이 놀자!' 말하기</li><li>친구의 험담이나 뒷이야기에 동조하지 않고 좋은 점 칭찬해 주기</li><li>어려운 숙제나 준비물로 곤란해하는 짝꿍에게 따뜻하게 양보하고 도와주기</li></ul>
+        </div>
+        
+        <div style="background:rgba(15,23,42,0.6); padding:1.2rem; border-radius:10px; margin-bottom:1rem; border-left:4px solid #38bdf8;">
+          <h4 style="color:#38bdf8; font-size:1.1rem; margin-bottom:0.4rem;">3. 🏡 가정 & 일상 생활 (감사 스타)</h4>
+          <p style="color:#94a3b8; font-size:0.95rem; margin-bottom:0.6rem;"><strong>실천 목표:</strong> 가정 안에서 부모님과 형제에게 기쁨과 평화의 빛 비추기</p>
+          <ul style="margin-left:1.2rem; line-height:1.7;"><li>잠들기 전 가족과 함께 '오늘 감사한 일 3가지' 나누기</li><li>부모님께 투정 부리지 않고 '감사합니다, 사랑해요' 하루 1번 꼭 표현하기</li><li>내 방 정리와 스스로 할 일(가방 챙기기)을 책임감 있게 해내기</li></ul>
+        </div>
+        
+        <div style="background:rgba(15,23,42,0.6); padding:1.2rem; border-radius:10px; margin-bottom:1rem; border-left:4px solid #38bdf8;">
+          <h4 style="color:#38bdf8; font-size:1.1rem; margin-bottom:0.4rem;">4. ⛪ 교회 & 영혼 구원 (스타 메이커 전도단)</h4>
+          <p style="color:#94a3b8; font-size:0.95rem; margin-bottom:0.6rem;"><strong>실천 목표:</strong> 친한 친구를 가슴에 품고 기도하며 예수님께로 초대하기</p>
+          <ul style="margin-left:1.2rem; line-height:1.7;"><li>'내 마음의 VIP 친구' 1명 정하고 매일 아침 1분 축복 기도하기</li><li>아동부 행사나 달란트 잔치에 친구 초대장 예쁘게 꾸며 선물과 함께 전하기</li><li>주일 예배 시간에 가장 앞자리에서 기쁨으로 찬양하고 예배의 본보기 되기</li></ul>
+        </div>
+        
+
+      <h3 class="section-title" style="margin-top:1.5rem;"><span class="section-icon">🗓️</span> 4주간 샤이닝 스타 미션 챌린지 로드맵</h3>
+      <table class="data-table">
+        <thead><tr><th>주차 및 미션명</th><th>어린이 실천 활동 내용</th></tr></thead>
+        <tbody><tr><td style='width:28%; color:#f59e0b; font-weight:700;'>1주차: 지혜 탐정 미션</td><td>스마트폰에서 유익하지 않은 앱/알림 정리하고 다니엘 12:3 암송하기</td></tr><tr><td style='width:28%; color:#f59e0b; font-weight:700;'>2주차: 친절 천사 미션</td><td>학교에서 가장 조용하거나 혼자 있는 친구에게 따뜻한 간식 선물하기</td></tr><tr><td style='width:28%; color:#f59e0b; font-weight:700;'>3주차: 선플 메이커 미션</td><td>단톡방이나 친구 SNS에 사랑과 격려의 응원 댓글 3개 달기</td></tr><tr><td style='width:28%; color:#f59e0b; font-weight:700;'>4주차: 스타 파티 미션</td><td>작정한 VIP 친구와 함께 교회에 와서 기쁨의 축제 예배 드리기</td></tr></tbody>
+      </table>
+    </div>
+    
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>본 보고서는 7단계 설교문 작성 지침 및 복음주의 주석 문헌(BST, IVP, 100주년, LAB, NIV 등)을 기반으로 중복 없이 자동 생성되었습니다.</p>
+      <p>© Bible Annotation Agent | 7-Step Homiletical Architecture Edition</p>
+    </div>
+
+  </div>
+</body>
+</html>

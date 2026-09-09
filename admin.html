@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>성경분석 올인원 마스터 연구실 (관리자 전용 스튜디오)</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --navy-950: #090d16;
+      --navy-900: #0f172a;
+      --navy-800: #1e293b;
+      --primary: #1e3a8a;
+      --primary-light: #2563eb;
+      --gold: #d97706;
+      --gold-light: #fef3c7;
+      --gold-accent: #f59e0b;
+      --red: #dc2626;
+      --red-light: #fee2e2;
+      --green: #16a34a;
+      --green-light: #dcfce7;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --radius-xl: 18px;
+      --radius-lg: 12px;
+      --radius-md: 8px;
+      --shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
+      --shadow-hover: 0 20px 30px -10px rgba(30, 58, 138, 0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Pretendard', -apple-system, sans-serif; }
+    body { background-color: var(--bg); color: var(--text-main); line-height: 1.6; word-break: keep-all; }
+
+    /* Top Navigation */
+    header {
+      background: rgba(15, 23, 42, 0.98);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0.9rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .logo-badge {
+      background: linear-gradient(135deg, #dc2626, #991b1b);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+    }
+    .logo-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .nav-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .btn-public-portal {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-public-portal:hover { background: rgba(255, 255, 255, 0.25); }
+    
+    .btn-share-all {
+      background: linear-gradient(135deg, var(--gold), var(--gold-accent));
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    /* Hero Banner */
+    .hero {
+      background: linear-gradient(135deg, #090d16 0%, #1e293b 50%, #1e3a8a 100%);
+      color: #ffffff;
+      padding: 3rem 1.5rem 2.8rem;
+      text-align: center;
+      position: relative;
+    }
+    .hero-container {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 999px;
+      margin-bottom: 1.2rem;
+    }
+    .hero h1 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      line-height: 1.35;
+      margin-bottom: 0.8rem;
+    }
+    .hero p {
+      font-size: 1rem;
+      color: #cbd5e1;
+      margin-bottom: 2rem;
+    }
+
+    /* Admin Generator Box */
+    .generator-card {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 16px;
+      padding: 1.5rem 1.75rem;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+      border: 2px solid var(--gold-accent);
+      text-align: left;
+      margin-bottom: 1.5rem;
+    }
+    .generator-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .generator-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--navy-900);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .generator-options {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #475569;
+    }
+    .generator-options label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .generator-form {
+      display: flex;
+      gap: 10px;
+    }
+    .generator-form input {
+      flex: 1;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 1.02rem;
+      outline: none;
+      color: #0f172a;
+    }
+    .generator-form button {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #ffffff;
+      border: none;
+      padding: 12px 26px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* Studio Mode Switch Tabs (나만보기 vs 남이검색한자료 vs 전체) */
+    .scope-tabs-wrapper {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .scope-btn {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      color: #475569;
+      padding: 12px 20px;
+      border-radius: var(--radius-lg);
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+    .scope-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .scope-btn.active {
+      background: var(--navy-900);
+      color: #ffffff;
+      border-color: var(--navy-900);
+    }
+    .scope-badge {
+      font-size: 0.78rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 800;
+    }
+    .scope-btn.active .scope-badge { background: rgba(255,255,255,0.2); color: #fff; }
+    .scope-btn:not(.active) .scope-badge { background: #f1f5f9; color: #475569; }
+
+    /* Canon Genre Tabs */
+    .genre-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 2rem;
+      background: #ffffff;
+      padding: 1rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+    }
+    .genre-btn {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      color: #64748b;
+      padding: 6px 14px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .genre-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* Reports Grid */
+    .reports-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 1.75rem;
+    }
+    .admin-card {
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      transition: all 0.2s;
+    }
+    .admin-card:hover {
+      box-shadow: var(--shadow-hover);
+      border-color: #cbd5e1;
+    }
+    .admin-card.is-private {
+      border-left: 5px solid #ef4444;
+      background: #fffafa;
+    }
+    .admin-card.is-guest {
+      border-left: 5px solid #3b82f6;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .card-badges { display: flex; gap: 6px; align-items: center; }
+    .badge-scope-private {
+      background: var(--red-light);
+      color: var(--red);
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .badge-scope-public {
+      background: var(--green-light);
+      color: var(--green);
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .badge-creator-guest {
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .card-passage {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+    .card-heading {
+      font-size: 1.18rem;
+      font-weight: 800;
+      color: var(--navy-900);
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    /* Admin Action Toolbar */
+    .admin-toolbar {
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid var(--border);
+    }
+    .btn-toggle-privacy {
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-toggle-privacy:hover { background: #f1f5f9; }
+    
+    .btn-delete {
+      background: var(--red-light);
+      border: 1px solid #fca5a5;
+      color: var(--red);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .btn-delete:hover {
+      background: var(--red);
+      color: #fff;
+    }
+
+    /* Standard Card Actions */
+    .card-actions {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr 44px;
+      gap: 8px;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+    .btn-view {
+      background: var(--primary);
+      color: #ffffff;
+      text-align: center;
+      padding: 9px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .btn-pdf {
+      background: #f1f5f9;
+      color: #334155;
+      text-align: center;
+      padding: 9px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .btn-copy {
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--gold);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(6px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 3000;
+      padding: 20px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+      background: #ffffff;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      border-left: 4px solid var(--gold-accent);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 4000;
+      font-weight: 600;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="nav-container">
+      <a href="admin.html" class="logo">
+        <span class="logo-badge">ADMIN MASTER</span>
+        <span class="logo-title">성경분석 마스터 연구실 (관리자 전용 스튜디오)</span>
+      </a>
+      <div class="nav-actions">
+        <a href="index.html" target="_blank" class="btn-public-portal">🌐 외부 공개 포털 열기 ↗</a>
+        <button onclick="copyShareUrl()" class="btn-share-all">🔗 공유 링크 복사</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-badge">👑 Private Master Management Studio</div>
+      <h1>성경 연구 마스터 스튜디오 & 아카이브 관리</h1>
+      <p>나만의 비공개 연구 자료와 외부 방문자가 검색한 자료를 완전히 분리하여 관리하고, 원치 않는 자료는 1-클릭으로 즉시 삭제합니다.</p>
+      
+      <!-- Admin Generator Box -->
+      <div class="generator-card">
+        <div class="generator-header">
+          <div class="generator-title">
+            <span>⚡ 관리자 전용 실시간 마스터 보고서 생성</span>
+          </div>
+          <div class="generator-options">
+            <label><input type="radio" name="privacyOpt" value="private" checked> 🔒 나만 보기 (비공개)</label>
+            <label><input type="radio" name="privacyOpt" value="public"> 🌐 전체 공개</label>
+          </div>
+        </div>
+        <form class="generator-form" onsubmit="handleAdminAnalyze(event)">
+          <input type="text" id="adminPassageInput" placeholder="분석할 성경 구절 입력 (예: 히브리서 11:1-6, 이사야 53:1-6)" required>
+          <button type="submit" id="btnAdminGenerate">🚀 마스터 분석 생성</button>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Main Studio Workspace -->
+  <main class="container">
+    
+    <!-- 1. Master Scope Tabs (나만의 연구 vs 남이 검색한 자료 vs 공개 아카이브) -->
+    <div class="scope-tabs-wrapper">
+      <button class="scope-btn active" onclick="setScopeFilter('all')">
+        <span>🌟 전체 자료 보기</span>
+        <span class="scope-badge" id="countAll">0</span>
+      </button>
+      <button class="scope-btn" onclick="setScopeFilter('private')">
+        <span>🔒 나만의 비공개 연구 (Private)</span>
+        <span class="scope-badge" id="countPrivate">0</span>
+      </button>
+      <button class="scope-btn" onclick="setScopeFilter('public')">
+        <span>🌐 외부 공개 아카이브 (Public)</span>
+        <span class="scope-badge" id="countPublic">0</span>
+      </button>
+      <button class="scope-btn" onclick="setScopeFilter('guest')">
+        <span>👥 외부 방문자 검색/생성 자료</span>
+        <span class="scope-badge" id="countGuest">0</span>
+      </button>
+    </div>
+
+    <!-- 2. Canon Genre Tabs -->
+    <div class="genre-tabs">
+      <button class="genre-btn active" onclick="setGenreFilter('all')">전체 장르</button>
+      <button class="genre-btn" onclick="setGenreFilter('율법서')">📜 율법서</button>
+      <button class="genre-btn" onclick="setGenreFilter('역사서')">🏛️ 역사서</button>
+      <button class="genre-btn" onclick="setGenreFilter('시가서')">🎵 시가서</button>
+      <button class="genre-btn" onclick="setGenreFilter('예언서')">🔮 예언서</button>
+      <button class="genre-btn" onclick="setGenreFilter('복음서')">📖 복음서</button>
+      <button class="genre-btn" onclick="setGenreFilter('바울서신')">✉️ 바울서신</button>
+      <button class="genre-btn" onclick="setGenreFilter('일반서신')">📬 일반서신</button>
+    </div>
+
+    <!-- 3. Reports Grid -->
+    <div class="reports-grid" id="adminReportsGrid">
+      <!-- Dynamic rendering via JS -->
+    </div>
+
+  </main>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <span>✅ 처리 완료</span>
+  </div>
+
+  <script>
+    const BIBLE_CANON_ORDER = [
+      "창세기", "출애굽기", "레위기", "민수기", "신명기",
+      "여호수아", "사사기", "룻기", "사무엘상", "사무엘하", "열왕기상", "열왕기하",
+      "역대상", "역대하", "에스라", "느헤미야", "에스더",
+      "욥기", "시편", "잠언", "전도서", "아가",
+      "이사야", "예레미야", "예레미야애가", "에스겔", "다니엘",
+      "호세아", "요엘", "아모스", "오바댜", "요나", "미가",
+      "나훔", "하박국", "스바냐", "학개", "스가랴", "말라기",
+      "마태복음", "마가복음", "누가복음", "요한복음",
+      "사도행전",
+      "로마서", "고린도전서", "고린도후서", "갈라디아서", "에베소서", "빌립보서", "골로새서",
+      "데살로니가전서", "데살로니가후서", "디모데전서", "디모데후서", "디도서", "빌레몬서",
+      "히브리서", "야고보서", "베드로전서", "베드로후서", "요한일서", "요한이서", "요한삼서", "유다서",
+      "요한계시록"
+    ];
+
+    function getCanonIndex(bookName) {
+      const idx = BIBLE_CANON_ORDER.indexOf(bookName);
+      return idx === -1 ? 999 : idx;
+    }
+
+    let allReports = [];
+    let currentScope = 'all';
+    let currentGenre = 'all';
+
+    async function fetchAdminReports() {
+      try {
+        const res = await fetch('/api/reports?mode=admin&t=' + new Date().getTime());
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          allReports = data;
+          updateCounts();
+          renderAdminReports();
+        }
+      } catch (e) {
+        console.error('보고서 로드 오류:', e);
+      }
+    }
+
+    function updateCounts() {
+      document.getElementById('countAll').innerText = allReports.length;
+      document.getElementById('countPrivate').innerText = allReports.filter(r => r.isPrivate).length;
+      document.getElementById('countPublic').innerText = allReports.filter(r => !r.isPrivate).length;
+      document.getElementById('countGuest').innerText = allReports.filter(r => r.createdBy === 'guest').length;
+    }
+
+    function setScopeFilter(scope) {
+      currentScope = scope;
+      document.querySelectorAll('.scope-btn').forEach((btn, idx) => {
+        btn.classList.toggle('active', (scope === 'all' && idx === 0) || (scope === 'private' && idx === 1) || (scope === 'public' && idx === 2) || (scope === 'guest' && idx === 3));
+      });
+      renderAdminReports();
+    }
+
+    function setGenreFilter(genre) {
+      currentGenre = genre;
+      document.querySelectorAll('.genre-btn').forEach(btn => {
+        btn.classList.toggle('active', (genre === 'all' && btn.innerText.includes('전체')) || (btn.innerText.includes(genre) && genre !== 'all'));
+      });
+      renderAdminReports();
+    }
+
+    function renderAdminReports() {
+      const grid = document.getElementById('adminReportsGrid');
+      grid.innerHTML = '';
+
+      const filtered = allReports.filter(item => {
+        // 1. Scope filter
+        let matchScope = true;
+        if (currentScope === 'private') matchScope = item.isPrivate === true;
+        else if (currentScope === 'public') matchScope = item.isPrivate !== true;
+        else if (currentScope === 'guest') matchScope = item.createdBy === 'guest';
+
+        // 2. Genre filter
+        let matchGenre = true;
+        if (currentGenre !== 'all') {
+          matchGenre = item.genre.includes(currentGenre) || item.testament.includes(currentGenre);
+        }
+
+        return matchScope && matchGenre;
+      });
+
+      // 정경 순서 정렬
+      filtered.sort((a, b) => getCanonIndex(a.book) - getCanonIndex(b.book));
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 4rem; background: #fff; border-radius: 16px; border: 1px dashed #cbd5e1; color: #64748b;">해당 조건의 보고서가 없습니다.</div>`;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = `admin-card ${item.isPrivate ? 'is-private' : ''} ${item.createdBy === 'guest' ? 'is-guest' : ''}`;
+
+        const isPrivate = item.isPrivate === true;
+        const isGuest = item.createdBy === 'guest';
+
+        card.innerHTML = `
+          <div>
+            <div class="card-top">
+              <div class="card-badges">
+                <span class="${isPrivate ? 'badge-scope-private' : 'badge-scope-public'}">${isPrivate ? '🔒 나만 보기 (비공개)' : '🌐 전체 공개'}</span>
+                ${isGuest ? '<span class="badge-creator-guest">👤 외부 방문자 생성</span>' : '<span style="font-size:0.72rem; color:#64748b; font-weight:700;">👑 관리자 연구</span>'}
+              </div>
+              <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 600;">${item.testament} / ${item.genre}</span>
+            </div>
+            
+            <div class="card-passage">${item.passage}</div>
+            <h3 class="card-heading">${item.title}</h3>
+            <p class="card-desc">${item.subtitle}</p>
+
+            <!-- Admin Action Toolbar -->
+            <div class="admin-toolbar">
+              <button class="btn-toggle-privacy" onclick="togglePrivacy('${item.id || item.passage}', ${!isPrivate})">
+                ${isPrivate ? '🌐 공개로 전환' : '🔒 나만보기로 전환'}
+              </button>
+              <button class="btn-delete" onclick="deleteReport('${item.id || item.passage}', '${item.passage}')">
+                🗑️ 삭제
+              </button>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <a href="${item.htmlUrl}" target="_blank" class="btn-view">📖 웹 보고서</a>
+            ${item.pdfUrl ? `<a href="${item.pdfUrl}" download class="btn-pdf">📥 PDF</a>` : ''}
+            <button onclick="copyLink('${item.htmlUrl}')" class="btn-copy" title="링크 복사">🔗</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // 1. 보고서 삭제 기능
+    async function deleteReport(reportId, passageName) {
+      if (!confirm(`정말로 [${passageName}] 보고서를 삭제하시겠습니까?\n삭제된 내용은 아카이브에서 완전히 제거됩니다.`)) {
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: reportId })
+        });
+        const result = await res.json();
+        if (result.success) {
+          showToast(`🗑️ [${passageName}] 보고서가 삭제되었습니다.`);
+          fetchAdminReports();
+        } else {
+          alert(result.error || '삭제 중 오류가 발생했습니다.');
+        }
+      } catch (err) {
+        alert('서버 통신 오류: ' + err.message);
+      }
+    }
+
+    // 2. 비공개/공개 토글 기능
+    async function togglePrivacy(reportId, setPrivate) {
+      try {
+        const res = await fetch('/api/toggle-privacy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: reportId, isPrivate: setPrivate })
+        });
+        const result = await res.json();
+        if (result.success) {
+          showToast(setPrivate ? '🔒 나만 보기(비공개)로 전환되었습니다.' : '🌐 외부 공개로 전환되었습니다.');
+          fetchAdminReports();
+        }
+      } catch (err) {
+        alert('오류 발생: ' + err.message);
+      }
+    }
+
+    // 3. 관리자 마스터 생성
+    async function handleAdminAnalyze(e) {
+      e.preventDefault();
+      const passage = document.getElementById('adminPassageInput').value.trim();
+      const isPrivate = document.querySelector('input[name="privacyOpt"]:checked').value === 'private';
+      if (!passage) return;
+
+      showToast(`⚡ [${passage}] 마스터 분석을 시작합니다...`);
+
+      try {
+        const res = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ passage: passage, isPrivate: isPrivate, createdBy: 'admin' })
+        });
+        const result = await res.json();
+        if (result.success) {
+          showToast(`🎉 [${result.passage}] 생성 완료!`);
+          document.getElementById('adminPassageInput').value = '';
+          fetchAdminReports();
+        } else {
+          alert('오류: ' + result.error);
+        }
+      } catch (err) {
+        alert('서버 오류: ' + err.message);
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.querySelector('span').innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function copyLink(url) {
+      const fullUrl = new URL(url, window.location.href).href;
+      navigator.clipboard.writeText(fullUrl).then(() => showToast('✅ 링크가 복사되었습니다!'));
+    }
+
+    function copyShareUrl() {
+      const publicUrl = new URL('index.html', window.location.href).href;
+      navigator.clipboard.writeText(publicUrl).then(() => showToast('✅ 외부 공개 포털 링크가 복사되었습니다!'));
+    }
+
+    // 초기 실행
+    fetchAdminReports();
+  </script>
+</body>
+</html>
