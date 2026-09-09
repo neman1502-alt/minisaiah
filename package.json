@@ -1,0 +1,12 @@
+{
+  "name": "bible-analysis-portal",
+  "version": "1.0.0",
+  "description": "AI Bible Exegetical and Homiletical Master Reports Web Sharing Portal",
+  "main": "index.html",
+  "scripts": {
+    "sync": "python sync_to_share.py"
+  },
+  "keywords": ["bible", "exegesis", "theology", "homiletics", "portal"],
+  "author": "Bible Analysis AI Agent",
+  "license": "MIT"
+}

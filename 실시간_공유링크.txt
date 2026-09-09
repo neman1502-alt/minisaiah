@@ -1,0 +1,56 @@
+===========================================================================
+🎉 [성경분석] 올인원 마스터 공유 허브 & 실시간 AI 분석 플랫폼 링크 생성 완료!
+===========================================================================
+
+👑 1. [관리자 전용 마스터 스튜디오 (Admin Studio)]
+👉 외부/모바일 전용 링크: https://restructuring-patrol-lot-uncle.trycloudflare.com/admin.html
+👉 내 컴퓨터 로컬 링크:  http://localhost:8765/admin.html
+
+  🔒 주요 기능:
+  - 나만의 비공개 연구(Private) 생성 및 독점 열람 (외부 포털에는 일절 노출 안 됨)
+  - 🗑️ 원치 않는 보고서 1-클릭 영구 삭제 기능
+  - 👁️ 공개 ↔ 비공개 실시간 전환 기능
+  - 👥 외부 방문자가 검색/생성한 자료 모아보기 및 관리
+
+---------------------------------------------------------------------------
+
+🌐 2. [외부 사용자 공유용 포털 (Public Portal)]
+👉 타인에게 공유할 링크: https://restructuring-patrol-lot-uncle.trycloudflare.com
+
+  💡 주요 기능:
+  - 관리자의 비공개 자료는 API 레벨에서 완벽히 은닉 및 보호
+  - 외부인이 접속하여 원하는 성경구절(예: '로마서 8:1-11') 입력 시 9대 마스터 보고서 실시간 생성
+  - 웹 뷰어 열람, 인쇄용 PDF 다운로드, Markdown 다운로드 즉시 제공
+
+---------------------------------------------------------------------------
+📚 [현재 등록된 성경 정경 순서별 올인원 마스터 대통합 보고서 아카이브]
+---------------------------------------------------------------------------
+📖 1. 레위기 19:2 (레위기 19:2 심층 학술 석의 및 강해설교 대전)
+👉 웹 뷰어: https://restructuring-patrol-lot-uncle.trycloudflare.com/reports/레위기/레위기_19-2_통합_마스터_연구보고서.html
+👉 인쇄 PDF: https://restructuring-patrol-lot-uncle.trycloudflare.com/reports/레위기/레위기_19-2_통합_마스터_연구보고서.pdf
+
+📖 2. 민수기 1:47-54 (민수기 1:47-54 심층 학술 석의 및 강해설교 대전)
+👉 웹 뷰어: https://restructuring-patrol-lot-uncle.trycloudflare.com/reports/민수기/민수기_1-47-54_통합_마스터_연구보고서.html
+👉 인쇄 PDF: https://restructuring-patrol-lot-uncle.trycloudflare.com/reports/민수기/민수기_1-47-54_통합_마스터_연구보고서.pdf
+
+📖 3. 시편 119:17-32 (시편 119:17-32 심층 학술 석의 및 강해설교 대전)
+👉 웹 뷰어: https://restructuring-patrol-lot-uncle.trycloudflare.com/reports/시편/시편_119-17-32_통합_마스터_연구보고서.html
+👉 인쇄 PDF: https://restructuring-patrol-lot-uncle.trycloudflare.com/reports/시편/시편_119-17-32_통합_마스터_연구보고서.pdf
+
+📖 4. 다니엘 12:3 (다니엘 12:3 심층 학술 석의 및 강해설교 대전)
+👉 웹 뷰어: https://restructuring-patrol-lot-uncle.trycloudflare.com/reports/다니엘/다니엘_12-3_통합_마스터_연구보고서.html
+👉 인쇄 PDF: https://restructuring-patrol-lot-uncle.trycloudflare.com/reports/다니엘/다니엘_12-3_통합_마스터_연구보고서.pdf
+
+📖 5. 마태복음 8:28-34 (마태복음 8:28-34 심층 학술 석의 및 강해설교 대전)
+👉 웹 뷰어: https://restructuring-patrol-lot-uncle.trycloudflare.com/reports/마태복음/마태복음_8-28-34_통합_마스터_연구보고서.html
+👉 인쇄 PDF: https://restructuring-patrol-lot-uncle.trycloudflare.com/reports/마태복음/마태복음_8-28-34_통합_마스터_연구보고서.pdf
+
+📖 6. 요한복음 1:43-51 (요한복음 1:43-51 심층 학술 석의 및 강해설교 대전)
+👉 웹 뷰어: https://restructuring-patrol-lot-uncle.trycloudflare.com/reports/요한복음/요한복음_1-43-51_통합_마스터_연구보고서.html
+👉 인쇄 PDF: https://restructuring-patrol-lot-uncle.trycloudflare.com/reports/요한복음/요한복음_1-43-51_통합_마스터_연구보고서.pdf
+
+===========================================================================
+💡 안내 사항:
+- 위 링크는 스마트폰, 태블릿, 외부 PC 어디서든 접속하여 즉시 이용할 수 있습니다.
+- 본 링크 정보는 [공유사이트/실시간_공유링크.txt] 파일에도 자동으로 저장되었습니다.
+===========================================================================
