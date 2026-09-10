@@ -235,70 +235,119 @@ DRIVE_FOLDER_IDS = {
     "pastoral": os.environ.get("DRIVE_PASTORAL_FOLDER_ID", ""),        # 2_목회자 성경 연구원 자료
 }
 
+def _get_all_subfolders(folder_id: str, max_depth: int = 3) -> List[str]:
+    """Google Drive 폴더의 모든 하위 폴더 ID 재귀 수집."""
+    if not _drive_available or not _drive_service or max_depth <= 0:
+        return [folder_id]
+    result = [folder_id]
+    try:
+        q = f"'{folder_id}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false"
+        resp = _drive_service.files().list(q=q, fields="files(id)", pageSize=20).execute()
+        for sub in resp.get("files", []):
+            result.extend(_get_all_subfolders(sub["id"], max_depth - 1))
+    except Exception:
+        pass
+    return result
+
+
 def _search_drive_files(book_name: str, max_files: int = 5) -> List[str]:
-    """Google Drive에서 특정 성경 권명과 관련된 파일 텍스트 수집."""
+    """Google Drive에서 특정 성경 권명과 관련된 파일 텍스트 수집.
+    하위 폴더까지 재귀 탐색하며, 파일명 키워드 매칭 우선 → 전체 파일 순으로 수집."""
     if not _drive_available or not _drive_service:
         return []
-    
+
     keywords = _get_book_keywords(book_name)
     collected = []
-    
+
     for folder_type, folder_id in DRIVE_FOLDER_IDS.items():
         if not folder_id or len(collected) >= max_files:
             break
-        
+
+        # 하위 폴더까지 전부 수집
+        all_folder_ids = _get_all_subfolders(folder_id, max_depth=3)
+
         try:
-            # 키워드 기반 파일 검색
-            for kw in keywords[:2]:
+            from googleapiclient.http import MediaIoBaseDownload
+            import io
+
+            # 1단계: 키워드 기반 파일 우선 검색 (모든 하위 폴더 포함)
+            for fid in all_folder_ids:
                 if len(collected) >= max_files:
                     break
-                query = f"'{folder_id}' in parents and name contains '{kw}' and trashed = false"
-                results = _drive_service.files().list(
-                    q=query,
-                    fields="files(id, name, mimeType)",
-                    pageSize=3
-                ).execute()
-                
-                for file_info in results.get("files", []):
+                for kw in keywords[:3]:
                     if len(collected) >= max_files:
                         break
                     try:
-                        from googleapiclient.http import MediaIoBaseDownload
-                        import io
-                        
-                        file_id = file_info["id"]
-                        mime = file_info.get("mimeType", "")
-                        fname = file_info.get("name", "")
-                        
-                        if "google-apps" in mime:
-                            # Google Docs → export as text
-                            content = _drive_service.files().export(
-                                fileId=file_id, mimeType="text/plain"
-                            ).execute()
-                            text = content.decode("utf-8", errors="ignore")[:4000] if content else ""
-                        else:
-                            # 바이너리 파일 → 로컬 임시 저장 후 추출
-                            request = _drive_service.files().get_media(fileId=file_id)
-                            fh = io.BytesIO()
-                            downloader = MediaIoBaseDownload(fh, request)
-                            done = False
-                            while not done:
-                                _, done = downloader.next_chunk()
-                            fh.seek(0)
-                            
-                            tmp_path = CURRENT_DIR / "tmp" / fname
-                            tmp_path.parent.mkdir(parents=True, exist_ok=True)
-                            tmp_path.write_bytes(fh.read())
-                            text = _extract_text(tmp_path, max_chars=4000)
-                        
-                        if text.strip():
-                            collected.append(f"[Drive/{folder_type}/{fname}]\n{text[:3000]}")
+                        query = f"'{fid}' in parents and name contains '{kw}' and trashed = false"
+                        results = _drive_service.files().list(
+                            q=query,
+                            fields="files(id, name, mimeType)",
+                            pageSize=3
+                        ).execute()
+                        for file_info in results.get("files", []):
+                            if len(collected) >= max_files:
+                                break
+                            text = _read_drive_file(file_info)
+                            if text.strip():
+                                fname = file_info.get("name", "")
+                                collected.append(f"[Drive/{folder_type}/{fname}]\n{text[:3000]}")
                     except Exception as e:
-                        print(f"⚠️ [DriveLoader] Drive 파일 읽기 실패 ({fname}): {e}")
+                        print(f"⚠️ [DriveLoader] Drive 키워드 검색 실패: {e}")
+
+            # 2단계: 키워드 매칭 파일이 부족하면 폴더 내 최신 파일로 보완
+            if len(collected) < 2:
+                try:
+                    query = f"'{folder_id}' in parents and mimeType != 'application/vnd.google-apps.folder' and trashed = false"
+                    results = _drive_service.files().list(
+                        q=query,
+                        fields="files(id, name, mimeType)",
+                        pageSize=5,
+                        orderBy="modifiedTime desc"
+                    ).execute()
+                    for file_info in results.get("files", []):
+                        if len(collected) >= max_files:
+                            break
+                        text = _read_drive_file(file_info)
+                        if text.strip():
+                            fname = file_info.get("name", "")
+                            collected.append(f"[Drive/{folder_type}/{fname}]\n{text[:3000]}")
+                except Exception as e:
+                    print(f"⚠️ [DriveLoader] Drive 폴더 스캔 실패: {e}")
+
         except Exception as e:
-            print(f"⚠️ [DriveLoader] Drive 검색 실패: {e}")
-    
+            print(f"⚠️ [DriveLoader] Drive 검색 전체 실패: {e}")
+
     return collected
+
+
+def _read_drive_file(file_info: dict) -> str:
+    """Drive 파일 하나를 읽어 텍스트 반환."""
+    try:
+        from googleapiclient.http import MediaIoBaseDownload
+        import io
+        file_id = file_info["id"]
+        mime = file_info.get("mimeType", "")
+        fname = file_info.get("name", "")
+        if "google-apps" in mime:
+            content = _drive_service.files().export(
+                fileId=file_id, mimeType="text/plain"
+            ).execute()
+            return content.decode("utf-8", errors="ignore")[:4000] if content else ""
+        else:
+            request = _drive_service.files().get_media(fileId=file_id)
+            fh = io.BytesIO()
+            downloader = MediaIoBaseDownload(fh, request)
+            done = False
+            while not done:
+                _, done = downloader.next_chunk()
+            fh.seek(0)
+            tmp_path = CURRENT_DIR / "tmp" / fname
+            tmp_path.parent.mkdir(parents=True, exist_ok=True)
+            tmp_path.write_bytes(fh.read())
+            return _extract_text(tmp_path, max_chars=4000)
+    except Exception as e:
+        print(f"⚠️ [DriveLoader] 파일 읽기 실패: {e}")
+        return ""
 
 
 # ─────────────────────────────────────────────────────────────
