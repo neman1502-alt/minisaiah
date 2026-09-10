@@ -444,8 +444,17 @@ WBC 및 IVP 배경주석의 {passage} 역사적·문화적 배경 분석 (3-4문
 
 반드시 한국어로, 각 태그를 유지하여 작성하십시오."""
 
-        response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
-        text = response.text
+        text = ""
+        for model_cand in ["gemini-2.0-flash", "gemini-1.5-flash"]:
+            try:
+                response = client.models.generate_content(model=model_cand, contents=prompt)
+                if response and response.text:
+                    text = response.text
+                    break
+            except Exception as e_m:
+                print(f"⚠️ [Generator] Gemini ({model_cand}) 실패: {e_m}")
+        if not text:
+            return {}
         result = {}
         import re as _re
         sections = {
