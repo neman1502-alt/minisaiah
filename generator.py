@@ -445,7 +445,7 @@ WBC 및 IVP 배경주석의 {passage} 역사적·문화적 배경 분석 (3-4문
 반드시 한국어로, 각 태그를 유지하여 작성하십시오."""
 
         text = ""
-        for model_cand in ["gemini-2.0-flash", "gemini-1.5-flash"]:
+        for model_cand in ["gemini-3.6-flash", "gemini-2.5-flash", "gemini-1.5-flash"]:
             try:
                 response = client.models.generate_content(model=model_cand, contents=prompt)
                 if response and response.text:

@@ -89,7 +89,7 @@ def _init_google_drive():
 # ─────────────────────────────────────────────────────────────
 _gemini_client = None
 _gemini_available = False
-GEMINI_MODELS = ["gemini-2.0-flash", "gemini-1.5-flash"]
+GEMINI_MODELS = ["gemini-3.6-flash", "gemini-2.5-flash", "gemini-1.5-flash"]
 GEMINI_MODEL = GEMINI_MODELS[0]
 
 def _init_gemini():

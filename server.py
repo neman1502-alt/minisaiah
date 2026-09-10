@@ -254,7 +254,7 @@ class BibleMasterApiHandler(SimpleHTTPRequestHandler):
             g_key = os.environ.get("GEMINI_API_KEY", "")
             g_client = genai.Client(api_key=g_key)
             g_resp = g_client.models.generate_content(
-                model="gemini-2.0-flash",
+                model="gemini-3.6-flash",
                 contents="핑 테스트: 'OK'라고만 답하세요."
             )
             info["gemini_direct_ping"] = {
