@@ -6,6 +6,14 @@ import shutil
 import subprocess
 from pathlib import Path
 
+# DriveLoader: Google Drive + Gemini AI 통합 모듈 (선택적 로드)
+try:
+    from drive_loader import load_knowledge_base as _drive_load_kb, clear_knowledge_cache
+    _DRIVE_LOADER_AVAILABLE = True
+except ImportError:
+    _DRIVE_LOADER_AVAILABLE = False
+    print("⚠️ [Generator] drive_loader 없음 → 하드코딩 지식 베이스 모드")
+
 # Fix Windows console UTF-8 output
 if sys.platform == "win32":
     try:
@@ -399,16 +407,35 @@ BOOK_SPECIFIC_KNOWLEDGE = {
     }
 }
 
-def get_book_knowledge(book_name: str, testament: str, genre: str):
-    """성경 권별 지식 베이스 검색 및 기본 지식 반환"""
-    if book_name in BOOK_SPECIFIC_KNOWLEDGE:
-        return BOOK_SPECIFIC_KNOWLEDGE[book_name]
+def get_book_knowledge(book_name: str, testament: str, genre: str, passage: str = "") -> dict:
+    """성경 권별 지식 베이스 검색.
     
-    # 기본 서신서/역사서/예언서 폴백 지식
+    우선순위:
+    1. 하드코딩된 상세 지식 (10대 권 - 창/출/레/민/신/시편/이사야/마태/로마서/요한)
+    2. drive_loader (Google Drive API → 로컬 D드라이브 → Gemini AI 생성)
+    3. 제너릭 템플릿 폴백
+    """
+    # 1. 하드코딩된 상세 지식 베이스 우선 사용
+    if book_name in BOOK_SPECIFIC_KNOWLEDGE:
+        kb = BOOK_SPECIFIC_KNOWLEDGE[book_name].copy()
+        print(f"📖 [KnowledgeBase] 상세 하드코딩 지식 사용: {book_name}")
+        return kb
+    
+    # 2. drive_loader 통해 실제 드라이브 자료 + Gemini AI 생성
+    if _DRIVE_LOADER_AVAILABLE:
+        try:
+            kb = _drive_load_kb(book_name, passage or book_name, testament, genre)
+            print(f"🤖 [KnowledgeBase] DriveLoader 자료 사용: {book_name} (출처: {kb.get('_source', 'unknown')})")
+            return kb
+        except Exception as e:
+            print(f"⚠️ [KnowledgeBase] DriveLoader 실패 → 폴백: {e}")
+    
+    # 3. 최종 제너릭 템플릿 폴백
     is_ot = (testament == "구약")
+    print(f"📝 [KnowledgeBase] 제너릭 템플릿 사용: {book_name}")
     if is_ot:
         return {
-            "original_words": [("בְּרִית", "베리트", "명사 여성 단수", "언약 - 하나님께서 자기 백성과 맺으신 영원하고 변함없는 구원의 약속"), ("חֶ֫סֶד", "헤세드", "명사 남성 단수", "인애, 성실 - 연약한 인간을 끝까지 포기하지 않으시는 하나님의 무조건적 사랑")],
+            "original_words": [("בְּרִית", "베리트", "명사 여성 단수", f"언약 - {book_name}에서 하나님께서 자기 백성과 맺으신 영원하고 변함없는 구원의 약속"), ("חֶ֫סֶד", "헤세드", "명사 남성 단수", f"인애, 성실 - {book_name} 전체를 관통하는 하나님의 무조건적이고 영원한 언약적 사랑")],
             "oxford_hockma": f"옥스포드 원어성경대전과 호크마 종합주석은 {book_name}의 역사적 정황과 원어 구문 구조를 치밀하게 분석하며, 본문이 언약 백성의 정체성과 순종의 필연성을 강조하고 있음을 논증한다.",
             "calvin_park": f"칼빈 성경주석과 박윤선 박사 종합주석은 {book_name}에 나타난 하나님의 절대 주권과 구속사적 섭리를 개혁주의 신학의 관점에서 조명하며 성도의 실존적 경건을 촉구한다.",
             "wbc_ivp": f"WBC와 IVP 배경주석은 고대 근동의 역사문화적 배경 속에서 {book_name}의 원독자들에게 전달되었던 1차적 메시지와 하나님의 거룩한 구별됨을 복원한다.",
@@ -417,7 +444,7 @@ def get_book_knowledge(book_name: str, testament: str, genre: str):
         }
     else:
         return {
-            "original_words": [("χάρις", "카리스", "명사 여성 단수 주격", "은혜 - 죄인을 의인으로 변화시키며 구원을 보증하는 하나님의 조건 없는 선물"), ("πίστις", "피스티스", "명사 여성 단수 주격", "믿음 - 예수 그리스도의 대속 사역을 신뢰하고 전인격적으로 연합하는 순종")],
+            "original_words": [("χάρις", "카리스", "명사 여성 단수 주격", f"은혜 - {book_name}에서 죄인을 의인으로 변화시키며 구원을 보증하는 하나님의 조건 없는 선물"), ("πίστις", "피스티스", "명사 여성 단수 주격", f"믿음 - {book_name}에서 예수 그리스도의 대속 사역을 신뢰하고 전인격적으로 연합하는 순종")],
             "oxford_hockma": f"옥스포드 원어성경대전과 호크마 종합주석은 {book_name}의 헬라어 문법과 수사학적 논증을 정밀 분석하며, 그리스도의 십자가와 부활이 성도의 삶에 미치는 능력을 역설한다.",
             "calvin_park": f"칼빈 성경주석과 박윤선 박사 종합주석은 {book_name}의 신학적 뼈대인 이신칭의와 성화의 교리를 명쾌하게 해설하며 성령 안에서 누리는 자유와 거룩한 순종을 선포한다.",
             "wbc_ivp": f"WBC와 IVP 성경배경주석은 1세기 그레코-로만 사회와 초기 교회가 마주한 이단적 도전 속에서 {book_name}이 선포하는 사도적 정통 신앙을 밝힌다.",
@@ -439,8 +466,8 @@ def generate_dynamic_master_report(raw_passage: str, is_private: bool = False, c
     title = f"{passage} 심층 학술 석의 및 강해설교 대전"
     subtitle = f"구속사적 언약의 성취와 현대적 적용: 1~4단계 무삭제 석의, 4대 모형론 및 6대 다학제 팩트체크"
 
-    # D드라이브 주석 및 목성연 지식 베이스 추출
-    kb = get_book_knowledge(book_name, testament, genre)
+    # 주석 자료 지식 베이스 추출 (Google Drive → 로컬 D드라이브 → Gemini AI → 템플릿 순)
+    kb = get_book_knowledge(book_name, testament, genre, passage)
     orig1, orig2 = kb["original_words"][0], kb["original_words"][1]
 
     # 9대 필수 영역을 포함한 마스터 리포트 마크다운 본문 생성
