@@ -478,6 +478,8 @@ def generate_with_gemini(
     올인원 마스터 보고서의 핵심 섹션을 생성합니다.
     """
     if not _gemini_available or not _gemini_client:
+        _init_gemini()
+    if not _gemini_available or not _gemini_client:
         return None
     
     original_lang = "히브리어(BHS/WLC)" if testament == "구약" else "헬라어(NA28 Nestle-Aland)"

@@ -499,9 +499,10 @@ def get_book_knowledge(book_name: str, testament: str, genre: str, passage: str 
             kb = _drive_load_kb(book_name, passage or book_name, testament, genre)
             source = kb.get("_source", "template")
             print(f"🤖 [KnowledgeBase] DriveLoader 자료 사용: {book_name} (출처: {source})")
-            # drive_loader가 template 이외의 내용을 생성했으면 그대로 사용
-            if source != "template":
+            # drive_loader가 Gemini로 풍성한 학술 내용을 합성한 경우에만 즉시 사용
+            if "gemini" in source:
                 return kb
+            print(f"🔄 [KnowledgeBase] drive_loader에 주석 파일은 있으나 Gemini 미합성 (출처: {source}) → Gemini 직접 호출로 보완")
             # template이면 3단계로 진행
         except Exception as e:
             print(f"⚠️ [KnowledgeBase] DriveLoader 실패 → 폴백: {e}")

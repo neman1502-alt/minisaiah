@@ -248,6 +248,26 @@ class BibleMasterApiHandler(SimpleHTTPRequestHandler):
         except Exception as e:
             info["drive_loader_status"] = {"error": str(e)[:200]}
 
+        # Gemini 직접 호출 테스트 (오류 원인 정밀 진단)
+        try:
+            from google import genai
+            g_key = os.environ.get("GEMINI_API_KEY", "")
+            g_client = genai.Client(api_key=g_key)
+            g_resp = g_client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents="핑 테스트: 'OK'라고만 답하세요."
+            )
+            info["gemini_direct_ping"] = {
+                "status": "SUCCESS",
+                "reply": g_resp.text.strip() if g_resp and g_resp.text else "EMPTY"
+            }
+        except Exception as e:
+            info["gemini_direct_ping"] = {
+                "status": "FAILED",
+                "error_type": type(e).__name__,
+                "error_msg": str(e)[:300]
+            }
+
         # 빌립보서로 지식 베이스 테스트
         try:
             from generator import get_book_knowledge
