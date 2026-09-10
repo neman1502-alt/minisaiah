@@ -407,31 +407,117 @@ BOOK_SPECIFIC_KNOWLEDGE = {
     }
 }
 
+def _generate_with_gemini_direct(book_name: str, passage: str, testament: str, genre: str) -> dict:
+    """generator.py 자체 Gemini 직접 호출 - drive_loader 없이도 고품질 내용 생성."""
+    api_key = os.environ.get("GEMINI_API_KEY", "")
+    if not api_key:
+        return {}
+    try:
+        from google import genai
+        client = genai.Client(api_key=api_key)
+        original_lang = "히브리어(BHS/WLC)" if testament == "구약" else "헬라어(NA28)"
+
+        prompt = f"""당신은 한국 개혁주의 성경신학 전문가입니다.
+{passage} ({testament}/{genre})에 대한 학술 주석 분석을 한국어로 작성하십시오.
+
+## OUTPUT_START
+
+### [OXFORD_HOCKMA]
+옥스포드 원어성경대전 및 호크마 종합주석의 {passage} 원어 분석 및 핵심 교훈 (3-4문장):
+
+### [CALVIN_PARK]
+칼빈 성경주석 및 박윤선 종합주석의 {passage} 신학적 통찰 (3-4문장):
+
+### [WBC_IVP]
+WBC 및 IVP 배경주석의 {passage} 역사적·문화적 배경 분석 (3-4문장):
+
+### [MOKSUNGYEON]
+목회자 성경연구원(목성연) 구속사 강의의 {passage} 언약신학적 의미 및 현대 적용 (3-4문장):
+
+### [NARRATIVE_FOCUS]
+{book_name} 전체 맥락에서 {passage}의 구속사적 핵심 (1문장):
+
+### [SERMON_BIGIDEA]
+{passage} 강해설교 핵심 명제 Big Idea (1문장):
+
+## OUTPUT_END
+
+반드시 한국어로, 각 태그를 유지하여 작성하십시오."""
+
+        response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
+        text = response.text
+        result = {}
+        import re as _re
+        sections = {
+            "oxford_hockma": r"\[OXFORD_HOCKMA\](.*?)(?=\[CALVIN_PARK\]|\[WBC_IVP\]|\[MOKSUNGYEON\]|\[NARRATIVE_FOCUS\]|\[SERMON_BIGIDEA\]|## OUTPUT_END|$)",
+            "calvin_park":   r"\[CALVIN_PARK\](.*?)(?=\[WBC_IVP\]|\[MOKSUNGYEON\]|\[NARRATIVE_FOCUS\]|\[SERMON_BIGIDEA\]|## OUTPUT_END|$)",
+            "wbc_ivp":       r"\[WBC_IVP\](.*?)(?=\[MOKSUNGYEON\]|\[NARRATIVE_FOCUS\]|\[SERMON_BIGIDEA\]|## OUTPUT_END|$)",
+            "moksungyeon":   r"\[MOKSUNGYEON\](.*?)(?=\[NARRATIVE_FOCUS\]|\[SERMON_BIGIDEA\]|## OUTPUT_END|$)",
+            "narrative_focus": r"\[NARRATIVE_FOCUS\](.*?)(?=\[SERMON_BIGIDEA\]|## OUTPUT_END|$)",
+            "sermon_bigidea":  r"\[SERMON_BIGIDEA\](.*?)(?=## OUTPUT_END|$)",
+        }
+        for key, pattern in sections.items():
+            m = _re.search(pattern, text, _re.DOTALL | _re.IGNORECASE)
+            if m:
+                val = _re.sub(r"^###.*$", "", m.group(1).strip(), flags=_re.MULTILINE).strip()
+                if val:
+                    result[key] = val
+        print(f"✨ [Generator] Gemini 직접 생성 완료: {book_name} ({list(result.keys())})")
+        return result
+    except Exception as e:
+        print(f"⚠️ [Generator] Gemini 직접 호출 실패: {e}")
+        return {}
+
+
 def get_book_knowledge(book_name: str, testament: str, genre: str, passage: str = "") -> dict:
     """성경 권별 지식 베이스 검색.
-    
+
     우선순위:
     1. 하드코딩된 상세 지식 (10대 권 - 창/출/레/민/신/시편/이사야/마태/로마서/요한)
     2. drive_loader (Google Drive API → 로컬 D드라이브 → Gemini AI 생성)
-    3. 제너릭 템플릿 폴백
+    3. Gemini AI 직접 호출 (drive_loader 결과가 template일 때)
+    4. 제너릭 템플릿 폴백
     """
     # 1. 하드코딩된 상세 지식 베이스 우선 사용
     if book_name in BOOK_SPECIFIC_KNOWLEDGE:
         kb = BOOK_SPECIFIC_KNOWLEDGE[book_name].copy()
         print(f"📖 [KnowledgeBase] 상세 하드코딩 지식 사용: {book_name}")
         return kb
-    
+
     # 2. drive_loader 통해 실제 드라이브 자료 + Gemini AI 생성
     if _DRIVE_LOADER_AVAILABLE:
         try:
             kb = _drive_load_kb(book_name, passage or book_name, testament, genre)
-            print(f"🤖 [KnowledgeBase] DriveLoader 자료 사용: {book_name} (출처: {kb.get('_source', 'unknown')})")
-            return kb
+            source = kb.get("_source", "template")
+            print(f"🤖 [KnowledgeBase] DriveLoader 자료 사용: {book_name} (출처: {source})")
+            # drive_loader가 template 이외의 내용을 생성했으면 그대로 사용
+            if source != "template":
+                return kb
+            # template이면 3단계로 진행
         except Exception as e:
             print(f"⚠️ [KnowledgeBase] DriveLoader 실패 → 폴백: {e}")
-    
-    # 3. 최종 제너릭 템플릿 폴백
+
+    # 3. Gemini AI 직접 호출 (drive_loader가 template을 반환하거나 실패한 경우)
     is_ot = (testament == "구약")
+    gemini_kb = _generate_with_gemini_direct(book_name, passage or book_name, testament, genre)
+    if gemini_kb:
+        # 원어 기본값 세팅
+        if is_ot:
+            default_words = [("בְּרִית", "베리트", "명사 여성 단수", f"언약 - {book_name}에서 하나님과 백성 간의 영원한 구원의 약속"), ("חֶ֫סֶד", "헤세드", "명사 남성 단수", f"인애 - {book_name} 전체를 관통하는 하나님의 무조건적 언약적 사랑")]
+        else:
+            default_words = [("χάρις", "카리스", "명사 여성 단수 주격", f"은혜 - {book_name}에서 죄인을 의인으로 변화시키는 하나님의 조건 없는 선물"), ("πίστις", "피스티스", "명사 여성 단수 주격", f"믿음 - {book_name}에서 그리스도의 대속을 신뢰하는 전인격적 연합")]
+        return {
+            "original_words": default_words,
+            "oxford_hockma": gemini_kb.get("oxford_hockma", ""),
+            "calvin_park":   gemini_kb.get("calvin_park", ""),
+            "wbc_ivp":       gemini_kb.get("wbc_ivp", ""),
+            "moksungyeon":   gemini_kb.get("moksungyeon", ""),
+            "narrative_focus": gemini_kb.get("narrative_focus", f"{book_name}의 구속사적 핵심"),
+            "sermon_bigidea":  gemini_kb.get("sermon_bigidea", ""),
+            "_source": "gemini_direct",
+        }
+
+    # 4. 최종 제너릭 템플릿 폴백
     print(f"📝 [KnowledgeBase] 제너릭 템플릿 사용: {book_name}")
     if is_ot:
         return {
@@ -451,6 +537,7 @@ def get_book_knowledge(book_name: str, testament: str, genre: str, passage: str 
             "moksungyeon": f"목회자 성경 연구원(목성연) 강의록은 {book_name}을 '그리스도 안에서의 새로운 피조물의 정체성과 교회 공동체의 사명'으로 조명하며 현대 목회 현장에서의 온전한 성도 양육의 지침으로 제시한다.",
             "narrative_focus": f"{book_name}을 통해 계시된 예수 그리스도의 복음의 능력과 성령 안에서의 성화"
         }
+
 
 def generate_dynamic_master_report(raw_passage: str, is_private: bool = False, created_by: str = "admin") -> dict:
     """사용자가 입력한 어떤 성경 본문이든 9대 올인원 마스터 규격으로 즉시 생성 및 빌드"""
