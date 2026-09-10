@@ -460,10 +460,10 @@ def load_knowledge_base(book_name: str, passage: str, testament: str, genre: str
     
     print(f"📚 [DriveLoader] 수집 완료 - 주석:{len(commentary_texts)}개, 목성연:{len(pastoral_texts)}개")
     
-    # 3. Gemini AI로 보고서 생성
+    # 3. Gemini AI로 보고서 생성 (Drive 파일 유무와 무관하게 항상 호출)
     gemini_result = None
     parsed = {}
-    if _gemini_available and (commentary_texts or pastoral_texts):
+    if _gemini_available:
         gemini_text = generate_with_gemini(
             passage, book_name, testament, genre,
             commentary_texts, pastoral_texts
