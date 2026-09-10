@@ -2,7 +2,9 @@ import os
 import sys
 import json
 import time
+import threading
 import urllib.parse
+import urllib.request
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
@@ -24,9 +26,38 @@ from generator import generate_dynamic_master_report, delete_master_report, togg
 
 PORT = int(os.environ.get("PORT", 8765))
 
+# ─────────────────────────────────────────────────────────────
+# Keepalive: Render 무료 플랜 슬립 방지 (4분 40초마다 자가 Ping)
+# ─────────────────────────────────────────────────────────────
+RENDER_EXTERNAL_URL = os.environ.get("RENDER_EXTERNAL_URL", f"http://localhost:{PORT}")
+
+def _keepalive_worker():
+    """Render 무료 플랜의 슬립 방지를 위한 자가 Ping 스레드"""
+    time.sleep(30)  # 서버 완전 기동 후 시작
+    while True:
+        try:
+            target = f"{RENDER_EXTERNAL_URL}/health"
+            req = urllib.request.Request(target, headers={"User-Agent": "BiblePingBot/1.0"})
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                print(f"💓 [Keepalive] Ping OK → {resp.status}")
+        except Exception as e:
+            print(f"⚠️ [Keepalive] Ping 실패 (무시 가능): {e}")
+        time.sleep(280)  # 4분 40초 대기
+
+def start_keepalive():
+    t = threading.Thread(target=_keepalive_worker, daemon=True)
+    t.start()
+    print(f"💓 [Keepalive] 슬립 방지 스레드 가동 (대상: {RENDER_EXTERNAL_URL}/health)")
+
+
 class BibleMasterApiHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(CURRENT_DIR), **kwargs)
+
+    def log_message(self, format, *args):
+        # /health ping 로그는 너무 많으므로 생략
+        if "/health" not in self.path:
+            super().log_message(format, *args)
 
     def end_headers(self):
         # 브라우저 캐시 방지 및 CORS 헤더 적용
@@ -45,6 +76,24 @@ class BibleMasterApiHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
         params = urllib.parse.parse_qs(parsed.query)
+
+        # 0. Health Check 엔드포인트 (Render keepalive + 자가 Ping)
+        if parsed.path in ("/health", "/api/health"):
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            payload = {"status": "ok", "service": "BibleMasterAPI", "timestamp": time.time()}
+            self.wfile.write(json.dumps(payload, ensure_ascii=False).encode('utf-8'))
+            return
+
+        # 0-1. Debug 진단 엔드포인트 (API 키 값 노출 없이 상태만 반환)
+        if parsed.path == "/api/debug":
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            debug_info = self._collect_debug_info()
+            self.wfile.write(json.dumps(debug_info, ensure_ascii=False, indent=2).encode('utf-8'))
+            return
         
         # 1. API: 보고서 목록 조회 (관리자 모드 vs 외부 공개 모드 완벽 분리)
         if parsed.path == "/api/reports":
@@ -148,10 +197,92 @@ class BibleMasterApiHandler(SimpleHTTPRequestHandler):
             self.wfile.write(json.dumps(result, ensure_ascii=False).encode('utf-8'))
             return
 
+        # 4. API: 드라이브 지식 베이스 캐시 초기화 (관리자 기능)
+        if parsed.path == "/api/cache-clear":
+            self._handle_cache_clear()
+            return
+
         self.send_response(404)
         self.end_headers()
 
+    def _collect_debug_info(self) -> dict:
+        """진단 정보 수집 (API 키 값은 노출하지 않음)"""
+        import sys, os
+        info = {
+            "python_version": sys.version,
+            "platform": sys.platform,
+            "env_vars": {
+                "GEMINI_API_KEY": "SET" if os.environ.get("GEMINI_API_KEY") else "MISSING",
+                "GOOGLE_SERVICE_ACCOUNT_JSON": "SET" if os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON") else "MISSING",
+                "DRIVE_COMMENTARY_FOLDER_ID": "SET" if os.environ.get("DRIVE_COMMENTARY_FOLDER_ID") else "MISSING",
+                "DRIVE_PASTORAL_FOLDER_ID": "SET" if os.environ.get("DRIVE_PASTORAL_FOLDER_ID") else "MISSING",
+                "PYTHONUNBUFFERED": os.environ.get("PYTHONUNBUFFERED", "NOT SET"),
+            },
+            "library_imports": {},
+            "drive_loader_status": {},
+            "test_knowledge_base": {}
+        }
+
+        # 라이브러리 import 테스트
+        for lib_name, import_stmt in [
+            ("google.oauth2", "from google.oauth2.service_account import Credentials"),
+            ("googleapiclient", "from googleapiclient.discovery import build"),
+            ("google.genai", "from google import genai"),
+            ("PyPDF2", "import PyPDF2"),
+            ("docx", "from docx import Document"),
+        ]:
+            try:
+                exec(import_stmt)
+                info["library_imports"][lib_name] = "OK"
+            except Exception as e:
+                info["library_imports"][lib_name] = f"FAILED: {str(e)[:100]}"
+
+        # drive_loader 상태 확인
+        try:
+            from drive_loader import _drive_available, _gemini_available, GEMINI_MODEL
+            info["drive_loader_status"] = {
+                "drive_available": _drive_available,
+                "gemini_available": _gemini_available,
+                "gemini_model": GEMINI_MODEL,
+            }
+        except Exception as e:
+            info["drive_loader_status"] = {"error": str(e)[:200]}
+
+        # 빌립보서로 지식 베이스 테스트
+        try:
+            from generator import get_book_knowledge
+            kb = get_book_knowledge("빌립보서", "신약", "바울서신", "빌립보서 4:6")
+            info["test_knowledge_base"] = {
+                "source": kb.get("_source", "hardcoded"),
+                "commentary_count": kb.get("_commentary_count", "N/A"),
+                "pastoral_count": kb.get("_pastoral_count", "N/A"),
+                "oxford_hockma_preview": kb.get("oxford_hockma", "")[:80] + "..."
+            }
+        except Exception as e:
+            info["test_knowledge_base"] = {"error": str(e)[:200]}
+
+        return info
+
+    def _handle_cache_clear(self):
+        """관리자용: 지식 베이스 캐시 강제 초기화 (드라이브 자료 최신화)"""
+        try:
+            from drive_loader import clear_knowledge_cache
+            success = clear_knowledge_cache()
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps({"success": success, "message": "드라이브 지식 베이스 캐시가 초기화되었습니다."}, ensure_ascii=False).encode('utf-8'))
+        except Exception as e:
+            self.send_response(500)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps({"success": False, "error": str(e)}, ensure_ascii=False).encode('utf-8'))
+
+
 def run_server():
+    # Keepalive 슬립 방지 스레드 시작 (Render 무료 플랜 cold start 방지)
+    start_keepalive()
+
     server = HTTPServer(("0.0.0.0", PORT), BibleMasterApiHandler)
     print(f"🌟 [Bible API Server] http://127.0.0.1:{PORT} 가동 중...")
     server.serve_forever()
