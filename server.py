@@ -23,6 +23,7 @@ REPORTS_DATA_JSON = CURRENT_DIR / "reports_data.json"
 
 sys.path.insert(0, str(CURRENT_DIR))
 from generator import generate_dynamic_master_report, delete_master_report, toggle_report_privacy
+from github_sync import load_github_config, save_github_config, sync_report_files_to_github
 
 PORT = int(os.environ.get("PORT", 8765))
 
@@ -55,9 +56,15 @@ class BibleMasterApiHandler(SimpleHTTPRequestHandler):
         super().__init__(*args, directory=str(CURRENT_DIR), **kwargs)
 
     def log_message(self, format, *args):
-        # /health ping 로그는 너무 많으므로 생략
-        if "/health" not in self.path:
-            super().log_message(format, *args)
+        # /health ping 로그는 생략하고, Windows 콘솔 인코딩 에러로 인한 소켓 단절 원천 방지
+        try:
+            if "/health" in getattr(self, "path", ""):
+                return
+            msg = "%s - - [%s] %s\n" % (self.address_string(), self.log_date_time_string(), format % args)
+            sys.stderr.buffer.write(msg.encode("utf-8", errors="replace"))
+            sys.stderr.buffer.flush()
+        except Exception:
+            pass
 
     def end_headers(self):
         # 브라우저 캐시 방지 및 CORS 헤더 적용
@@ -134,6 +141,24 @@ class BibleMasterApiHandler(SimpleHTTPRequestHandler):
             self.send_header('Content-Type', 'application/json; charset=utf-8')
             self.end_headers()
             self.wfile.write(json.dumps(response_payload, ensure_ascii=False, indent=2).encode('utf-8'))
+            return
+
+        # 1-2. API: GitHub 연동 설정 조회
+        if parsed.path == "/api/github-config":
+            cfg = load_github_config()
+            raw_token = cfg.get("token", "")
+            masked = f"{raw_token[:4]}...{raw_token[-4:]}" if len(raw_token) > 8 else ("***" if raw_token else "")
+            res_data = {
+                "success": True,
+                "repo": cfg.get("repo", ""),
+                "branch": cfg.get("branch", "main"),
+                "is_configured": bool(raw_token and cfg.get("repo")),
+                "masked_token": masked
+            }
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps(res_data, ensure_ascii=False).encode('utf-8'))
             return
 
         # 2. 일반 정적 파일 서빙
@@ -214,6 +239,36 @@ class BibleMasterApiHandler(SimpleHTTPRequestHandler):
         # 4. API: 드라이브 지식 베이스 캐시 초기화 (관리자 기능)
         if parsed.path == "/api/cache-clear":
             self._handle_cache_clear()
+            return
+
+        # 5. API: GitHub 연동 설정 저장
+        if parsed.path == "/api/github-config":
+            repo = body_data.get("repo", "").strip()
+            token = body_data.get("token", "").strip()
+            branch = body_data.get("branch", "main").strip() or "main"
+            if "..." in token:
+                old_cfg = load_github_config()
+                token = old_cfg.get("token", "")
+            saved = save_github_config(repo, token, branch)
+            self.send_response(200 if saved else 400)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps({"success": saved, "repo": repo, "branch": branch}, ensure_ascii=False).encode('utf-8'))
+            return
+
+        # 6. API: 지금 즉시 GitHub & Vercel 전체 동기화 실행
+        if parsed.path == "/api/github-sync-now":
+            try:
+                sync_res = sync_report_files_to_github(target_passage="수동 전체 동기화")
+                self.send_response(200 if sync_res.get("success") else 400)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.end_headers()
+                self.wfile.write(json.dumps(sync_res, ensure_ascii=False).encode('utf-8'))
+            except Exception as e:
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.end_headers()
+                self.wfile.write(json.dumps({"success": False, "error": str(e)}, ensure_ascii=False).encode('utf-8'))
             return
 
         self.send_response(404)
