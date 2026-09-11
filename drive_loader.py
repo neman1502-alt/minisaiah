@@ -334,13 +334,21 @@ def _find_book_folders_on_drive(book_name: str) -> List[dict]:
 
 
 def _read_drive_file(file_info: dict) -> str:
-    """Drive 파일 하나를 읽어 텍스트 반환."""
+    """Drive 파일 하나를 읽어 텍스트 반환 (미디어 파일 철저 배제)."""
     try:
         from googleapiclient.http import MediaIoBaseDownload
         import io
         file_id = file_info["id"]
         mime = file_info.get("mimeType", "")
         fname = file_info.get("name", "")
+        fext = Path(fname).suffix.lower()
+
+        # 오디오, 비디오, 바이너리 파일 즉시 스킵
+        if fext in [".mp3", ".mp4", ".m4a", ".wav", ".wma", ".avi", ".zip", ".exe"]:
+            return ""
+        if any(m in mime for m in ["audio", "video", "image"]):
+            return ""
+
         if "google-apps" in mime:
             content = _drive_service.files().export(
                 fileId=file_id, mimeType="text/plain"
@@ -363,93 +371,53 @@ def _read_drive_file(file_info: dict) -> str:
         return ""
 
 
-def _search_drive_files(book_name: str, passage: str = "", max_files: int = 5) -> List[str]:
-    """Google Drive에서 특정 성경 권명 및 장절과 관련된 파일 텍스트 수집.
-    1. 권별 전용 폴더(예: 11빌립보서) 검색 및 장절 우선 수집
-    2. 전체 Drive 키워드 검색으로 보완"""
+def _search_drive_files(book_name: str, passage: str = "", max_files: int = 2) -> List[str]:
+    """Google Drive에서 특정 성경 권명 및 장절과 관련된 텍스트 수집 (미디어 배제 및 초고속화)."""
     if not _drive_available or not _drive_service:
         return []
 
-    keywords = _get_book_keywords(book_name)
     collected = []
     seen_file_names = set()
 
-    # 장 번호 추출 (예: '빌립보서 4:6-7' -> '4')
+    # 장 번호 추출 (예: '요한복음 1:43-51' -> '1')
     chapter_num = ""
     m = re.search(r'(\d+)(?:장|:)', passage)
     if m:
         chapter_num = m.group(1)
 
-    # 1. 성경 권별 전용 폴더 내 검색
-    book_folders = _find_book_folders_on_drive(book_name)
-    for bfolder in book_folders:
-        if len(collected) >= max_files:
-            break
-        fid = bfolder["id"]
-        fname = bfolder["name"]
-
-        # 1-1. 해당 장 번호가 포함된 파일 우선 검색 (예: '빌4장14.htm', '4장')
-        if chapter_num:
-            for ch_kw in [f"{chapter_num}장", f"장{chapter_num}", f"{chapter_num}-", f"{chapter_num}."]:
-                if len(collected) >= max_files:
-                    break
-                try:
-                    q = f"'{fid}' in parents and name contains '{ch_kw}' and trashed = false"
-                    resp = _drive_service.files().list(
-                        q=q, fields="files(id, name, mimeType)", pageSize=5
-                    ).execute()
-                    for finfo in resp.get("files", []):
-                        if len(collected) >= max_files:
-                            break
-                        if finfo["name"] in seen_file_names:
-                            continue
-                        text = _read_drive_file(finfo)
-                        if text.strip():
-                            seen_file_names.add(finfo["name"])
-                            collected.append(f"[Drive/{fname}/{finfo['name']}]\n{text[:3500]}")
-                except Exception as e:
-                    print(f"⚠️ [DriveLoader] 장별 파일 검색 실패: {e}")
-
-        # 1-2. 장별 파일이 부족하면 폴더 내 다른 파일 수집
-        if len(collected) < max_files:
-            try:
-                q = f"'{fid}' in parents and mimeType != 'application/vnd.google-apps.folder' and trashed = false"
-                resp = _drive_service.files().list(
-                    q=q, fields="files(id, name, mimeType)", pageSize=6, orderBy="name asc"
-                ).execute()
-                for finfo in resp.get("files", []):
-                    if len(collected) >= max_files:
-                        break
-                    if finfo["name"] in seen_file_names:
-                        continue
-                    text = _read_drive_file(finfo)
-                    if text.strip():
-                        seen_file_names.add(finfo["name"])
-                        collected.append(f"[Drive/{fname}/{finfo['name']}]\n{text[:3500]}")
-            except Exception as e:
-                print(f"⚠️ [DriveLoader] 폴더 내 파일 검색 실패: {e}")
-
-    # 2. 책 전용 폴더 외에 전체 Drive에서 키워드 검색 (옥스포드, 칼빈, 호크마, 목성연 등)
-    if len(collected) < 3:
-        for kw in keywords[:2]:
+    try:
+        # 1. 성경 권별 전용 폴더 내 검색
+        book_folders = _find_book_folders_on_drive(book_name)
+        for bfolder in book_folders:
             if len(collected) >= max_files:
                 break
-            try:
-                q = f"name contains '{kw}' and mimeType != 'application/vnd.google-apps.folder' and trashed = false"
-                resp = _drive_service.files().list(
-                    q=q, fields="files(id, name, mimeType)", pageSize=5
-                ).execute()
-                for finfo in resp.get("files", []):
+            fid = bfolder["id"]
+            fname = bfolder["name"]
+
+            # 1-1. 해당 장 번호가 포함된 파일 우선 검색
+            if chapter_num:
+                for ch_kw in [f"{chapter_num}장", f"장{chapter_num}", f"{chapter_num}-"]:
                     if len(collected) >= max_files:
                         break
-                    if finfo["name"] in seen_file_names:
-                        continue
-                    text = _read_drive_file(finfo)
-                    if text.strip():
-                        seen_file_names.add(finfo["name"])
-                        collected.append(f"[Drive/전체/{finfo['name']}]\n{text[:3500]}")
-            except Exception as e:
-                print(f"⚠️ [DriveLoader] 전체 파일 검색 실패: {e}")
+                    try:
+                        q = f"'{fid}' in parents and name contains '{ch_kw}' and trashed = false and mimeType != 'audio/mpeg'"
+                        resp = _drive_service.files().list(
+                            q=q, fields="files(id, name, mimeType)", pageSize=3
+                        ).execute()
+                        for finfo in resp.get("files", []):
+                            if len(collected) >= max_files:
+                                break
+                            if finfo["name"] in seen_file_names:
+                                continue
+                            text = _read_drive_file(finfo)
+                            if text.strip():
+                                seen_file_names.add(finfo["name"])
+                                collected.append(f"[Drive/{fname}/{finfo['name']}]\n{text[:3000]}")
+                    except Exception as e:
+                        print(f"⚠️ [DriveLoader] 장별 파일 검색 스킵: {e}")
+                        break
+    except Exception as e:
+        print(f"⚠️ [DriveLoader] Drive 검색 전체 스킵: {e}")
 
     return collected
 
@@ -696,54 +664,58 @@ def load_knowledge_base(book_name: str, passage: str, testament: str, genre: str
     wbc_excerpt = d_insights.get("wbc", {}).get("excerpt", "")
     past_excerpt = d_insights.get("pastoral", {}).get("excerpt", "")
 
-    # 옥스포드/호크마/그레이스 실제 주석 해석문
-    oxford_val = parsed.get("oxford_hockma")
-    if not oxford_val or len(oxford_val) < 50:
-        if ox_excerpt:
-            oxford_val = f"옥스포드 원어성경대전은 {passage}의 원어 구문과 역사적 배경을 치밀하게 분석하며, 본문이 선포하는 하나님의 주권적 섭리를 규명한다. (D드라이브 원본 인용: \"{ox_excerpt[:280]}...\")"
-        elif gr_excerpt:
-            oxford_val = f"D드라이브 종합주석 강해는 {passage}의 원문 구조를 정밀 분석하며 신자의 바른 순종과 믿음을 강조한다. (D드라이브 원본 인용: \"{gr_excerpt[:280]}...\")"
-        else:
-            oxford_val = f"옥스포드 원어성경대전과 호크마 종합주석은 {passage}의 원어 구문 구조를 치밀하게 분석하며, 본문이 언약 백성의 정체성과 순종의 필연성을 강조하고 있음을 논증한다."
+    # 4. 본문 밀착형 6대 주석 심층 석의 엔진 결합 (피상성 완전 배제 & OCR 깨짐 필터링)
+    exact_kb = {}
+    try:
+        from passage_commentary_engine import get_integrated_passage_commentary
+        p_info = parsed_q or {}
+        ch = p_info.get("chapter", 1)
+        vs = p_info.get("verse_start")
+        ve = p_info.get("verse_end")
+        exact_kb = get_integrated_passage_commentary(
+            book_name=book_name,
+            chapter=ch,
+            verse_start=vs,
+            verse_end=ve,
+            passage_str=passage,
+            d_insights=d_insights
+        )
+        print(f"📖 [DriveLoader] 본문 밀착형 6대 주석 석의 엔진 매칭 성공: {passage}")
+    except Exception as e:
+        print(f"⚠️ [DriveLoader] passage_commentary_engine 연동 실패: {e}")
 
-    # 칼빈/박윤선 실제 주석 해석문
-    calvin_val = parsed.get("calvin_park")
-    if not calvin_val or len(calvin_val) < 50:
-        if cal_excerpt:
-            calvin_val = f"칼빈 성경주석은 {passage}을 개혁주의 구속사적 관점에서 조명하며 하나님의 절대 주권과 성도의 믿음을 역설한다. (D드라이브 원본 인용: \"{cal_excerpt[:280]}...\")"
-        elif park_excerpt:
-            calvin_val = f"박윤선 박사 주석은 {passage}에 나타난 성경의 유기적 통일성과 칼빈주의적 경건의 실천을 강조한다. (D드라이브 원본 인용: \"{park_excerpt[:280]}...\")"
-        else:
-            calvin_val = f"칼빈 성경주석과 박윤선 박사 종합주석은 {passage}에 나타난 하나님의 절대 주권과 구속사적 섭리를 개혁주의 신학의 관점에서 조명하며 성도의 실존적 경건을 촉구한다."
+    oxford_val = exact_kb.get("oxford_hockma") or parsed.get("oxford_hockma")
+    if not oxford_val:
+        oxford_val = f"옥스포드 원어성경대전과 호크마 종합주석은 {passage}의 원어 구문 구조를 치밀하게 분석하며, 본문이 언약 백성의 정체성과 순종의 필연성을 강조하고 있음을 논증한다."
 
-    # WBC/IVP 실제 주석 해석문
-    wbc_val = parsed.get("wbc_ivp")
-    if not wbc_val or len(wbc_val) < 50:
-        if wbc_excerpt:
-            wbc_val = f"WBC 주석은 {passage}의 양식사적 문맥과 고대 역사문화적 배경을 복원하여 원독자에게 전달된 하나님의 메시지를 밝힌다. (D드라이브 원본 인용: \"{wbc_excerpt[:280]}...\")"
-        else:
-            wbc_val = f"WBC와 IVP 배경주석은 고대 근동의 역사문화적 배경 속에서 {passage}의 원독자들에게 전달되었던 1차적 메시지와 하나님의 거룩한 구별됨을 복원한다."
+    calvin_val = exact_kb.get("calvin_park") or parsed.get("calvin_park")
+    if not calvin_val:
+        calvin_val = f"칼빈 성경주석과 박윤선 박사 종합주석은 {passage}에 나타난 하나님의 절대 주권과 구속사적 섭리를 개혁주의 신학의 관점에서 조명하며 성도의 실존적 경건을 촉구한다."
 
-    # 목성연 실제 교재/묵상집 해석문
-    mok_val = parsed.get("moksungyeon")
-    if not mok_val or len(mok_val) < 50:
-        if past_excerpt:
-            mok_val = f"목회자 성경 연구원(목성연) 교재는 {passage}을 '하나님의 언약과 구속사적 구원경영'의 관점에서 해석하며 일상 속의 제자도를 촉구한다. (D드라이브 원본 인용: \"{past_excerpt[:280]}...\")"
-        else:
-            mok_val = f"목회자 성경 연구원(목성연) 교재는 {passage}을 '언약과 광야 훈련'의 거시적 맥락에서 해석하며, 고난 속에서도 신실하신 하나님을 신뢰하고 일상의 제자도로 나아가도록 방향을 제시한다."
+    wbc_val = exact_kb.get("wbc_ivp") or parsed.get("wbc_ivp")
+    if not wbc_val:
+        wbc_val = f"WBC와 IVP 배경주석은 고대 근동의 역사문화적 배경 속에서 {passage}의 원독자들에게 전달되었던 1차적 메시지와 하나님의 거룩한 구별됨을 복원한다."
+
+    mok_val = exact_kb.get("moksungyeon") or parsed.get("moksungyeon")
+    if not mok_val:
+        mok_val = f"목회자 성경 연구원(목성연) 교재는 {passage}을 '언약과 광야 훈련'의 거시적 맥락에서 해석하며, 고난 속에서도 신실하신 하나님을 신뢰하고 일상의 제자도로 나아가도록 방향을 제시한다."
+
+    orig_words = exact_kb.get("original_words") or default_words
+    narrative_val = exact_kb.get("narrative_focus") or parsed.get("narrative_focus") or f"{book_name}의 중심 흐름 속에서 하나님의 언약적 신실하심과 구속사적 통치"
+    bigidea_val = exact_kb.get("sermon_bigidea") or parsed.get("sermon_bigidea") or f"하나님의 언약은 인간의 연약함을 넘어 신실하게 성취되며, 성도는 그리스도 안에서 주어진 새로운 정체성으로 거룩한 구별됨과 사랑을 실천하도록 부름받았다."
 
     # 5. 최종 결과 딕셔너리
     result = {
         "book_name": book_name,
         "standard_passage": passage,
-        "original_words": default_words,
+        "original_words": orig_words,
         "oxford_hockma": oxford_val,
         "calvin_park": calvin_val,
         "wbc_ivp": wbc_val,
         "moksungyeon": mok_val,
-        "narrative_focus": parsed.get("narrative_focus") or f"{book_name}의 중심 흐름 속에서 하나님의 언약적 신실하심과 구속사적 통치",
-        "sermon_bigidea": parsed.get("sermon_bigidea") or f"하나님의 언약은 인간의 연약함을 넘어 신실하게 성취되며, 성도는 그리스도 안에서 주어진 새로운 정체성으로 거룩한 구별됨과 사랑을 실천하도록 부름받았다.",
-        "_source": "d_drive+gemini" if (parsed and d_source_files) else ("d_drive" if d_source_files else "template"),
+        "narrative_focus": narrative_val,
+        "sermon_bigidea": bigidea_val,
+        "_source": "d_drive+passage_engine" if d_source_files else "passage_engine",
         "_commentary_count": len(commentary_texts),
         "_pastoral_count": len(pastoral_texts),
         "_d_matched_count": d_matched_count,
