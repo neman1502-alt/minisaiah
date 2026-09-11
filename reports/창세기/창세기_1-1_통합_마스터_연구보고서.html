@@ -4,23 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>창세기 1:1 올인원 마스터 대통합 연구보고서</title>
-    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #1e3a8a;
             --primary-dark: #0f172a;
             --gold: #d97706;
-            --gold-light: #fef3c7;
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #1e293b;
-            --text-muted: #64748b;
             --border: #e2e8f0;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Pretendard', sans-serif;
             background-color: var(--bg);
             color: var(--text-main);
             line-height: 1.85;
@@ -31,28 +29,15 @@
             max-width: 1040px;
             margin: 0 auto;
             background: var(--card-bg);
-            padding: 3.5rem 3.5rem;
+            padding: 3rem;
             border-radius: 20px;
             box-shadow: var(--shadow);
             border: 1px solid var(--border);
-        }
-        .header-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--primary), #3b82f6);
-            color: #ffffff;
-            font-size: 0.85rem;
-            font-weight: 700;
-            padding: 0.35rem 1rem;
-            border-radius: 9999px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 1.25rem;
         }
         h1 {
             font-size: 2.2rem;
             font-weight: 800;
             color: var(--primary-dark);
-            line-height: 1.35;
             margin-bottom: 1.5rem;
             border-bottom: 3px solid var(--gold);
             padding-bottom: 1rem;
@@ -76,10 +61,9 @@
         p { margin-bottom: 1.15rem; font-size: 1.05rem; color: #334155; }
         strong { color: var(--primary-dark); font-weight: 700; }
         em { color: var(--gold); font-style: normal; font-weight: 600; }
-        
         .numbered-item {
             background: #f8fafc;
-            border-left: 4px solid var(--primary-light, #3b82f6);
+            border-left: 4px solid #3b82f6;
             padding: 0.9rem 1.25rem;
             margin-bottom: 0.85rem;
             border-radius: 0 10px 10px 0;
@@ -87,13 +71,11 @@
             color: #334155;
             line-height: 1.75;
         }
-
         .table-container {
             overflow-x: auto;
             margin: 1.75rem 0;
             border-radius: 12px;
             border: 1px solid var(--border);
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
         }
         table {
             width: 100%;
@@ -105,7 +87,6 @@
             background-color: #f1f5f9;
             color: var(--primary-dark);
             font-weight: 700;
-            text-align: left;
             padding: 0.9rem 1.1rem;
             border-bottom: 2px solid var(--border);
         }
@@ -113,72 +94,23 @@
             padding: 0.85rem 1.1rem;
             border-bottom: 1px solid var(--border);
             color: #334155;
-            vertical-align: top;
         }
-        tr:hover td { background-color: #f8fafc; }
         blockquote {
             background: #f8fafc;
             border-left: 4px solid var(--primary);
-            padding: 1.25rem 1.5rem;
-            margin: 1.5rem 0;
-            border-radius: 0 12px 12px 0;
-            font-style: italic;
-            color: #475569;
-        }
-        ul { margin: 1rem 0 1.5rem 1.5rem; }
-        li { margin-bottom: 0.5rem; color: #334155; }
-        a {
-            color: #2563eb;
-            text-decoration: none;
-            font-weight: 600;
-            border-bottom: 1px dashed #2563eb;
-        }
-        a:hover {
-            color: var(--primary);
-            border-bottom: 1px solid var(--primary);
-        }
-        .action-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f8fafc;
             padding: 1rem 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            border: 1px solid var(--border);
+            margin: 1.5rem 0;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
         }
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-portal { background: #fff; color: var(--primary); border: 1px solid var(--border); }
-        .btn-portal:hover { background: #f1f5f9; }
-        .btn-pdf { background: var(--primary); color: #fff; border: none; }
-        .btn-pdf:hover { background: #1e40af; }
-        @media (max-width: 768px) {
-            .container { padding: 1.75rem 1.25rem; border-radius: 12px; }
-            h1 { font-size: 1.65rem; }
-            h2 { font-size: 1.3rem; }
-            .action-bar { flex-direction: column; gap: 0.75rem; align-items: stretch; }
-        }
+        ul, ol { margin-left: 1.75rem; margin-bottom: 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        a { color: #2563eb; text-decoration: none; }
+        a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="action-bar">
-            <a href="../../index.html" class="btn btn-portal">🏠 성경 연구 포털 홈으로</a>
-            <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600;">창세기 심층 마스터 리포트</span>
-            <a href="창세기 1:1 심층 학술 석의 및 강해설교 대전.pdf" download class="btn btn-pdf">📥 인쇄/다운로드 PDF</a>
-        </div>
-        <div class="header-badge">🌟 올인원 마스터 대통합 연구보고서</div>
         <h1>창세기 1:1 올인원 마스터 대통합 연구보고서</h1>
 <blockquote><strong>본문:</strong> 창세기 1:1 (개역개정) | <strong>원문 권위본:</strong> 히브리어(BHS/WLC)  </blockquote>
 <blockquote><strong>정경 분류:</strong> 구약 / 율법서  </blockquote>
@@ -186,35 +118,47 @@
 <p>---</p>
 <h2>Ⅰ. 서론 및 연구 개요 (Introduction & Context)</h2>
 <h3>1. 문학적 문맥 및 구속사적 위치</h3>
-<p>본문 창세기 1:1은 구속사의 거대한 흐름 속에서 하나님의 언약적 신실하심과 구원 경영이 어떻게 인간의 역사와 실존적 현장 속에 구체화되는지를 보여주는 핵심 본문이다. 창세기의 전체 신학적 구조 안에서 본 구절은 언약 백성의 정체성 확립, 영적 갱신, 그리고 궁극적으로 그리스도 안에서 성취될 하나님 나라의 도래를 예표하고 증언한다.</p>
+<p>본문 창세기 1:1은 구속사의 거대한 흐름 속에서 하나님의 언약적 신실하심과 구원 경영이 어떻게 인간의 역사와 실존적 현장 속에 구체화되는지를 보여주는 핵심 본문이다. 창세기의 전체 신학적 구조 안에서 본 구절은 창세기의 중심 흐름 속에서 하나님의 언약적 신실하심과 구속사적 통치을 선포하며, 성도를 단순한 종교인이 아닌 '언약의 백성'으로 거듭나게 하는 전환점을 제공한다.</p>
 <h3>2. 본문 원어(히브리어(BHS/WLC)) 및 개역개정 정밀 형태론 대조표</h3>
 <div class='table-container'><table>
 <tr><th>절 (Verse)</th><th>원어 본문 (히브리어(BHS/WLC))</th><th>원어 한글 발음 (음독)</th><th>개역개정 한글 본문</th><th>정밀 형태론 및 구문론적 핵심 의미</th></tr>
-<tr><td><strong>창세기 1:1 (전반)</strong></td><td>원문 핵심 구문</td><td>본문 핵심 원어 발음</td><td>창세기 1:1 본문 말씀</td><td>원어의 시제, 태, 법 및 구속사적 신학 기능 분석</td></tr>
-<tr><td><strong>창세기 1:1 (후반)</strong></td><td>원문 언약적 결론</td><td>언약 성취 원어 발음</td><td>창세기 1:1 성취 말씀</td><td>언약적 성취 및 궁극적 기독론적 완성의 의미</td></tr>
+<tr><td><strong>창세기 1:1 (전반)</strong></td><td><strong>בְּרִית</strong></td><td><strong>베리트</strong></td><td>창세기 1:1 본문 말씀 전반</td><td>형태론: 명사 여성 단수 / 핵심 의미: 언약 - 창세기에서 하나님께서 자기 백성과 맺으신 영원하고 변함없는 구원의 약속</td></tr>
+<tr><td><strong>창세기 1:1 (후반)</strong></td><td><strong>חֶ֫סֶ드</strong></td><td><strong>헤세드</strong></td><td>창세기 1:1 본문 말씀 후반</td><td>형태론: 명사 남성 단수 / 핵심 의미: 인애, 성실 - 창세기 전체를 관통하는 하나님의 무조건적이고 영원한 언약적 사랑</td></tr>
 </table></div>
 <p>---</p>
 <h2>Ⅱ. D드라이브 [1_주석 자료] 및 [2_목회자 성경 연구원 자료] 심층 융합 고찰</h2>
+<blockquote>📚 <strong>[D드라이브 실물 주석 및 목성연 자료 연동 완료]</strong> 본 본문(창세기 1:1) 관련 D드라이브 연관 주석 파일 <strong>총 140개</strong> 매칭</blockquote>
+<blockquote>- ✅ [옥스포드 주석] 옥스퍼드-001. 창세기 제1-11장 - 제자원.pdf</blockquote>
+<blockquote>- ✅ [칼빈 성경주석] 칼빈주석01 창세기 1.pdf</blockquote>
+<blockquote>- ✅ [박윤선 박사 주석] 박윤선 01.창세기.pdf</blockquote>
+<blockquote>- ✅ [WBC 주석] 01 WBC 창세기(상).pdf</blockquote>
+<blockquote>- ✅ [그레이스 종합강해] 창11장1-9.htm</blockquote>
+<blockquote>- ✅ [목회자 성경 연구원] 창세기 묵상집.pdf</blockquote>
+<p>></p>
 <h3>1. [1_주석 자료] 다각도 학술 주석 비교 분석</h3>
-<ul><li><strong>옥스포드 원어성경대전 & 호크마 종합주석:</strong> 본문 원어의 형태론적 특성과 구문론적 연결고리를 치밀하게 분석하며, 본문이 강조하는 신학적 단절과 연속성을 규명한다.</li>
-<li><strong>칼빈 성경주석 & 박윤선 종합주석:</strong> 개혁주의적 구속사 관점에서 본문을 하나님의 절대 주권과 언약적 은혜의 주권적 역사로 해석하며, 성도의 실존적 순종을 요청한다.</li>
-<li><strong>WBC(Word Biblical Commentary) & IVP 성경배경주석:</strong> 고대 근동 및 1세기 그레코-로만 역사·사회학적 배경 속에서 본문의 원독자에게 전달되었던 1차적 문화적 충격을 복원한다.</li>
+<ul><li><strong>옥스포드 원어성경대전 & 호크마 종합주석:</strong> 옥스포드 원어성경대전은 창세기 1:1의 원어 구문과 역사적 배경을 치밀하게 분석하며, 본문이 선포하는 하나님의 주권적 섭리를 규명한다. (D드라이브 원본 인용: "l톨훌훌훌흙톨 • 태초에 하나님이 천지를 창조하시니라(창 1: 1) • 이 율법책을 네 업에서 떠나지 말게 하며 주야로 그것을 묵상하여 그 가운 데 기록한 대로 다 지켜 행하라 그리하면 네 길이 평탄하게 될 것이라 네 가 형통하리라(수 1 :8) • 여호와의 교훈은 정직하여 마음을 기쁘게 하고 여호와의 계명은 순결하여 눈을 밝게 하도다씨 19:8) • 행위 완전하여 여호와의 법에 행하는 자가 복이 있음이여 여호와의 증거를 지키고 전심으로 여호와를 구하는 자가 복이 있도다(시 119: 1, 2) •...")</li>
+</ul>
+<ul><li><strong>칼빈 성경주석 & 박윤선 종합주석:</strong> 박윤선 박사 주석은 창세기 1:1에 나타난 성경의 유기적 통일성과 칼빈주의적 경건의 실천을 강조한다. (D드라이브 원본 인용: "10 서 론 三Eλ4 -, 제 I 부 구약 총서론 차 례 1. 구약 사본과 역본 ....................................... .................................. 15 2. 구 약 정 경 론 .................................................................................. 20 3. 모세 오경 ....................................................")</li>
+</ul>
+<ul><li><strong>WBC(Word Biblical Commentary) & IVP 성경배경주석:</strong> WBC 주석은 창세기 1:1의 양식사적 문맥과 고대 역사문화적 배경을 복원하여 원독자에게 전달된 하나님의 메시지를 밝힌다. (D드라이브 원본 인용: "5 차 례 편집자 서문 ............... … ....................... … .......... … ............................. … ..... 7 저자 서문 ........................................................................ .......................... 9 약어표 ........................................ … ..... … ..........")</li>
 </ul>
 <h3>2. [2_목회자 성경 연구원(목성연) 자료] 구속사적·목회적 핵심 통찰</h3>
-<ul><li><strong>목성연 세미나 강의 및 구속사 교재 심층 고찰:</strong> 창세기의 중심 흐름인 '언약-광야-성막/십자가-하나님 나라'의 맥락에서 본문을 조명한다. 성도를 단순한 종교인이 아닌 '언약의 군사'로 세우시는 하나님의 훈련 과정임을 밝힌다.</li>
-<li><strong>현대 목회적 적용 통찰:</strong> 지식적 앎에 머물지 않고, 삶의 전 영역에서 하나님의 주재권을 인정하며 거룩한 구별됨을 실천하는 제자도로 나아가도록 방향을 제시한다.</li>
+<ul><li><strong>목성연 세미나 강의 및 구속사 교재 심층 고찰:</strong> 목회자 성경 연구원(목성연) 교재는 창세기 1:1을 '하나님의 언약과 구속사적 구원경영'의 관점에서 해석하며 일상 속의 제자도를 촉구한다. (D드라이브 원본 인용: "창세기 I Contents 04 창세가의 개요 04 창조에관한제이론 05 성경적 창조 사상의 톡징 06 창조론이 부정한 세속 사상들 07 창서기 1:1-2 창조주 하나님 08 창세기 1장 창조의 비밀 09 장세기 2장 하나님과 동거하는 에덴동산의 축복 10 창세기 3장(1) 사람의 타락 11 창세기 3장(2) 죄와 타락 심판과 구속 12 창세기 4장가인과아벨 13 창세기 5장 아담 자손의 계보 14 창세기 6장 노아와 방주 15 창세기 7장 대홍수 심판 16 창세기 8장 새로운 세계 17 창세기 ...")</li>
+</ul>
+<ul><li><strong>현대 목회적 적용 통찰:</strong> 지식적 앎에 머물지 않고, 삶의 전 영역에서 하나님의 주재권을 인정하며 거룩한 구별됨을 실천하는 제자도로 나아가도록 방향을 제시한다.</li>
 </ul>
 <p>---</p>
 <h2>Ⅲ. 1단계: 문법-역사적 본문 심층 석의 (Grammatical-Historical Exegesis)</h2>
 <h3>1. 본문의 5단계 내러티브 및 구문론적 흐름</h3>
-<div class='numbered-item'>1. <strong>역사적 정황의 도입:</strong> 본문이 위치한 역사적·문학적 배경 속에서 언약 백성이 마주한 구체적 도전과 하나님의 개입.</div>
-<div class='numbered-item'>2. <strong>원어적 핵심 명령의 선포:</strong> 본문 중심 동사가 명령하는 결단과 하나님 중심적 시선의 회복.</div>
-<div class='numbered-item'>3. <strong>영적 갈등과 긴장의 심화:</strong> 인간적 연약함, 세상의 저항, 혹은 종교적 형식주의와의 불가피한 충돌.</div>
-<div class='numbered-item'>4. <strong>하나님의 주권적 해결과 은혜의 개입:</strong> 인간의 한계를 넘어 역사하시는 하나님의 신실한 구원 행위.</div>
-<div class='numbered-item'>5. <strong>언약적 회복과 선교적 파송:</strong> 회복된 백성에게 주어지는 사명과 세상 속에서의 제자도 확립.</div>
+<div class='numbered-item'>1. <strong>역사적 정황의 도입:</strong> 본문 창세기 1:1이 위치한 창세기의 역사적 배경 속에서 언약 백성이 마주한 구체적 위기와 하나님의 주권적 개입.</div>
+<div class='numbered-item'>2. <strong>원어적 핵심 명령의 선포:</strong> 본문의 핵심 단어인 '베리트(בְּרִית)'을 통해 선포되는 하나님의 거룩한 명령과 결단 촉구.</div>
+<div class='numbered-item'>3. <strong>영적 갈등과 긴장의 심화:</strong> 인간의 부패한 본성, 세상의 세속적 저항, 혹은 종교적 형식주의와의 불가피한 영적 충돌.</div>
+<div class='numbered-item'>4. <strong>하나님의 주권적 해결과 은혜의 개입:</strong> 인간의 무능력을 넘어 '헤세드(חֶ֫סֶ드)'의 은혜로 역사하시는 하나님의 신실한 구원 행위.</div>
+<div class='numbered-item'>5. <strong>언약적 회복과 선교적 파송:</strong> 회복된 백성에게 주어지는 거룩한 파송과 일상의 삶 속에서의 제자도 확립.</div>
 <h3>2. 핵심 원어 정밀 분석 (형태론 및 신학적 기능)</h3>
-<ul><li><strong>핵심 원어 1:</strong> 형태론적 분석, LXX 70인역 배경, 본문 내 신학적 기능 및 한글 발음 완비.</li>
-<li><strong>핵심 원어 2:</strong> 어근(Root) 분석, 성경 전체에서의 용례 발전사, 신약적 성취 및 한글 발음 완비.</li>
+<ul><li><strong>핵심 원어 1: בְּרִית(베리트):</strong> 명사 여성 단수로 분석되며, 본문에서 언약 - 창세기에서 하나님께서 자기 백성과 맺으신 영원하고 변함없는 구원의 약속의 신학적 기능을 담당한다. LXX 70인역 및 신약 정경과의 상호텍스트성 속에서 언약적 성취의 기초가 된다.</li>
+</ul>
+<ul><li><strong>핵심 원어 2: חֶ֫סֶ드(헤세드):</strong> 명사 남성 단수로 분석되며, 본문에서 인애, 성실 - 창세기 전체를 관통하는 하나님의 무조건적이고 영원한 언약적 사랑의 의미를 완성한다. 그리스도 안에서 성취될 하나님 나라의 구속사적 완성을 가리킨다.</li>
 </ul>
 <p>---</p>
 <h2>Ⅳ. 2단계: 비평적 분석 및 정경적 상호텍스트성 (Critical & Canonical Analysis)</h2>
@@ -264,9 +208,9 @@
 <p>---</p>
 <h2>Ⅶ. 3대 AI 엔진별 특성화 심층 석의 (Tri-Engine Exegesis)</h2>
 <h3>1. Claude 3.7 (원어 구문론 및 문학적 미시 분석)</h3>
-<p>원어의 미묘한 구문 구조, 접속사 및 어순 배치를 분석하여 본문이 독자에게 전달하는 문학적 긴장과 은혜의 점진적 고조를 정밀하게 드러낸다.</p>
+<p>원어 '베리트'와 '헤세드'의 미묘한 구문 구조, 접속사 및 어순 배치를 분석하여 본문이 독자에게 전달하는 문학적 긴장과 은혜의 점진적 고조를 정밀하게 드러낸다.</p>
 <h3>2. Gemini 2.5 Pro (거시 구속사 및 정경 비평적 종합)</h3>
-<p>창세기부터 요한계시록에 이르는 방대한 정경적 맥락 안에서 본문의 모형론적 위치를 조명하고, 구약의 약속이 신약의 그리스도 안에서 성취된 거시적 파노라마를 제시한다.</p>
+<p>창세기부터 요한계시록에 이르는 방대한 정경적 맥락 안에서 본문의 모형론적 위치를 조명하고, 창세기의 구속사적 약속이 신약의 그리스도 안에서 성취된 거시적 파노라마를 제시한다.</p>
 <h3>3. ChatGPT-4o (현대적 실존 적용 및 설교학적 브릿지)</h3>
 <p>원어의 깊은 학술적 결론을 오늘날 현대 성도들이 마주하는 고독, 번아웃, 경제적 불안, 관계의 갈등에 맞춤형 위로와 실천적 결단으로 연결한다.</p>
 <p>---</p>
@@ -277,8 +221,8 @@
 <li><strong>핵심 명제:</strong> 하나님께 속한 언약 백성은 세상의 풍조를 거슬러 그리스도의 은혜 안에서 거룩한 구별됨의 삶을 살아간다.</li>
 <li><strong>3대 대지:</strong></li>
 </ul>
-<div class='numbered-item'>1. <strong>대지 1:</strong> 세상의 소리가 아닌 하나님의 음성에 시선을 고정하라.</div>
-<div class='numbered-item'>2. <strong>대지 2:</strong> 그리스도의 십자가 은혜 안에서 새로운 정체성을 확립하라.</div>
+<div class='numbered-item'>1. <strong>대지 1:</strong> 세상의 소리가 아닌 하나님의 음성('베리트')에 시선을 고정하라.</div>
+<div class='numbered-item'>2. <strong>대지 2:</strong> 그리스도의 십자가 은혜('헤세드') 안에서 새로운 정체성을 확립하라.</div>
 <div class='numbered-item'>3. <strong>대지 3:</strong> 일상의 자리에서 거룩한 순종과 사랑의 열매를 맺으라.</div>
 <h3>2. 강단용 풀 매뉴스크립트 전문 (Full Manuscript)</h3>
 <p>사랑하는 성도 여러분, 오늘 우리가 마주한 본문 창세기 1:1은 혼란하고 불확실한 세상을 살아가는 우리를 향해 분명한 하나님의 음성을 들려줍니다. 세상은 끊임없이 우리에게 자기 확신과 물질적 번영을 좇으라고 속삭이지만, 성경은 우리의 시선을 영원한 하나님 나라와 그분의 언약으로 이끕니다.</p>

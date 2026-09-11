@@ -4,23 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로마서 8:1-11 올인원 마스터 대통합 연구보고서</title>
-    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #1e3a8a;
             --primary-dark: #0f172a;
             --gold: #d97706;
-            --gold-light: #fef3c7;
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #1e293b;
-            --text-muted: #64748b;
             --border: #e2e8f0;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Pretendard', sans-serif;
             background-color: var(--bg);
             color: var(--text-main);
             line-height: 1.85;
@@ -31,28 +29,15 @@
             max-width: 1040px;
             margin: 0 auto;
             background: var(--card-bg);
-            padding: 3.5rem 3.5rem;
+            padding: 3rem;
             border-radius: 20px;
             box-shadow: var(--shadow);
             border: 1px solid var(--border);
-        }
-        .header-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--primary), #3b82f6);
-            color: #ffffff;
-            font-size: 0.85rem;
-            font-weight: 700;
-            padding: 0.35rem 1rem;
-            border-radius: 9999px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 1.25rem;
         }
         h1 {
             font-size: 2.2rem;
             font-weight: 800;
             color: var(--primary-dark);
-            line-height: 1.35;
             margin-bottom: 1.5rem;
             border-bottom: 3px solid var(--gold);
             padding-bottom: 1rem;
@@ -76,10 +61,9 @@
         p { margin-bottom: 1.15rem; font-size: 1.05rem; color: #334155; }
         strong { color: var(--primary-dark); font-weight: 700; }
         em { color: var(--gold); font-style: normal; font-weight: 600; }
-        
         .numbered-item {
             background: #f8fafc;
-            border-left: 4px solid var(--primary-light, #3b82f6);
+            border-left: 4px solid #3b82f6;
             padding: 0.9rem 1.25rem;
             margin-bottom: 0.85rem;
             border-radius: 0 10px 10px 0;
@@ -87,13 +71,11 @@
             color: #334155;
             line-height: 1.75;
         }
-
         .table-container {
             overflow-x: auto;
             margin: 1.75rem 0;
             border-radius: 12px;
             border: 1px solid var(--border);
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
         }
         table {
             width: 100%;
@@ -105,7 +87,6 @@
             background-color: #f1f5f9;
             color: var(--primary-dark);
             font-weight: 700;
-            text-align: left;
             padding: 0.9rem 1.1rem;
             border-bottom: 2px solid var(--border);
         }
@@ -113,72 +94,23 @@
             padding: 0.85rem 1.1rem;
             border-bottom: 1px solid var(--border);
             color: #334155;
-            vertical-align: top;
         }
-        tr:hover td { background-color: #f8fafc; }
         blockquote {
             background: #f8fafc;
             border-left: 4px solid var(--primary);
-            padding: 1.25rem 1.5rem;
-            margin: 1.5rem 0;
-            border-radius: 0 12px 12px 0;
-            font-style: italic;
-            color: #475569;
-        }
-        ul { margin: 1rem 0 1.5rem 1.5rem; }
-        li { margin-bottom: 0.5rem; color: #334155; }
-        a {
-            color: #2563eb;
-            text-decoration: none;
-            font-weight: 600;
-            border-bottom: 1px dashed #2563eb;
-        }
-        a:hover {
-            color: var(--primary);
-            border-bottom: 1px solid var(--primary);
-        }
-        .action-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f8fafc;
             padding: 1rem 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            border: 1px solid var(--border);
+            margin: 1.5rem 0;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
         }
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-portal { background: #fff; color: var(--primary); border: 1px solid var(--border); }
-        .btn-portal:hover { background: #f1f5f9; }
-        .btn-pdf { background: var(--primary); color: #fff; border: none; }
-        .btn-pdf:hover { background: #1e40af; }
-        @media (max-width: 768px) {
-            .container { padding: 1.75rem 1.25rem; border-radius: 12px; }
-            h1 { font-size: 1.65rem; }
-            h2 { font-size: 1.3rem; }
-            .action-bar { flex-direction: column; gap: 0.75rem; align-items: stretch; }
-        }
+        ul, ol { margin-left: 1.75rem; margin-bottom: 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        a { color: #2563eb; text-decoration: none; }
+        a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="action-bar">
-            <a href="../../index.html" class="btn btn-portal">🏠 성경 연구 포털 홈으로</a>
-            <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600;">로마서 심층 마스터 리포트</span>
-            <a href="로마서 8:1-11 심층 학술 석의 및 강해설교 대전.pdf" download class="btn btn-pdf">📥 인쇄/다운로드 PDF</a>
-        </div>
-        <div class="header-badge">🌟 올인원 마스터 대통합 연구보고서</div>
         <h1>로마서 8:1-11 올인원 마스터 대통합 연구보고서</h1>
 <blockquote><strong>본문:</strong> 로마서 8:1-11 (개역개정) | <strong>원문 권위본:</strong> 헬라어(NA28 Nestle-Aland)  </blockquote>
 <blockquote><strong>정경 분류:</strong> 신약 / 바울서신  </blockquote>
@@ -186,35 +118,36 @@
 <p>---</p>
 <h2>Ⅰ. 서론 및 연구 개요 (Introduction & Context)</h2>
 <h3>1. 문학적 문맥 및 구속사적 위치</h3>
-<p>본문 로마서 8:1-11은 구속사의 거대한 흐름 속에서 하나님의 언약적 신실하심과 구원 경영이 어떻게 인간의 역사와 실존적 현장 속에 구체화되는지를 보여주는 핵심 본문이다. 로마서의 전체 신학적 구조 안에서 본 구절은 언약 백성의 정체성 확립, 영적 갱신, 그리고 궁극적으로 그리스도 안에서 성취될 하나님 나라의 도래를 예표하고 증언한다.</p>
+<p>본문 로마서 8:1-11은 구속사의 거대한 흐름 속에서 하나님의 언약적 신실하심과 구원 경영이 어떻게 인간의 역사와 실존적 현장 속에 구체화되는지를 보여주는 핵심 본문이다. 로마서의 전체 신학적 구조 안에서 본 구절은 모든 인간의 절망적 죄악을 넘어 오직 예수 그리스도를 믿음으로 주어지는 하나님의 의와 성령 안에서의 성화을 선포하며, 성도를 단순한 종교인이 아닌 '언약의 백성'으로 거듭나게 하는 전환점을 제공한다.</p>
 <h3>2. 본문 원어(헬라어(NA28 Nestle-Aland)) 및 개역개정 정밀 형태론 대조표</h3>
 <div class='table-container'><table>
 <tr><th>절 (Verse)</th><th>원어 본문 (헬라어(NA28 Nestle-Aland))</th><th>원어 한글 발음 (음독)</th><th>개역개정 한글 본문</th><th>정밀 형태론 및 구문론적 핵심 의미</th></tr>
-<tr><td><strong>로마서 8:1-11 (전반)</strong></td><td>원문 핵심 구문</td><td>본문 핵심 원어 발음</td><td>로마서 8:1-11 본문 말씀</td><td>원어의 시제, 태, 법 및 구속사적 신학 기능 분석</td></tr>
-<tr><td><strong>로마서 8:1-11 (후반)</strong></td><td>원문 언약적 결론</td><td>언약 성취 원어 발음</td><td>로마서 8:1-11 성취 말씀</td><td>언약적 성취 및 궁극적 기독론적 완성의 의미</td></tr>
+<tr><td><strong>로마서 8:1-11 (전반)</strong></td><td><strong>δικαιοσύνη θεοῦ</strong></td><td><strong>디카이오쉬네 테우</strong></td><td>로마서 8:1-11 본문 말씀 전반</td><td>형태론: 명사 여성 단수 주격 + 명사 남성 단수 속격 / 핵심 의미: 하나님의 의 - 인간의 행위가 아닌 그리스도를 믿음으로 거저 주어지는 하나님의 은혜로운 선물</td></tr>
+<tr><td><strong>로마서 8:1-11 (후반)</strong></td><td><strong>χάρις</strong></td><td><strong>카리스</strong></td><td>로마서 8:1-11 본문 말씀 후반</td><td>형태론: 명사 여성 단수 주격 / 핵심 의미: 은혜 - 죄인을 의인으로 변화시키며 성도의 구원을 끝까지 견인하는 불가항력적 사랑</td></tr>
 </table></div>
 <p>---</p>
 <h2>Ⅱ. D드라이브 [1_주석 자료] 및 [2_목회자 성경 연구원 자료] 심층 융합 고찰</h2>
 <h3>1. [1_주석 자료] 다각도 학술 주석 비교 분석</h3>
-<ul><li><strong>옥스포드 원어성경대전 & 호크마 종합주석:</strong> 본문 원어의 형태론적 특성과 구문론적 연결고리를 치밀하게 분석하며, 본문이 강조하는 신학적 단절과 연속성을 규명한다.</li>
-<li><strong>칼빈 성경주석 & 박윤선 종합주석:</strong> 개혁주의적 구속사 관점에서 본문을 하나님의 절대 주권과 언약적 은혜의 주권적 역사로 해석하며, 성도의 실존적 순종을 요청한다.</li>
-<li><strong>WBC(Word Biblical Commentary) & IVP 성경배경주석:</strong> 고대 근동 및 1세기 그레코-로만 역사·사회학적 배경 속에서 본문의 원독자에게 전달되었던 1차적 문화적 충격을 복원한다.</li>
+<ul><li><strong>옥스포드 원어성경대전 & 호크마 종합주석:</strong> 옥스포드 원어성경대전은 로마서 3장과 8장의 '디카이오시스(δικαίωσις, 칭의)'와 '휘오데시아(υἱοθεσία, 양자 됨)'의 법정적·신분적 효력을 분석하며, 결코 정죄함이 없는 영원한 구원의 견고함을 논증한다.</li>
+<li><strong>칼빈 성경주석 & 박윤선 종합주석:</strong> 칼빈은 로마서를 '성경 전체의 보물창고로 들어가는 열린 문'으로 규명하며 이신칭의와 성도의 성화, 그리고 하나님의 주권적 예정을 교의학적으로 완성한다. 박윤선 박사는 8장의 성령의 내주와 탄식이 영광스러운 영화의 보증임을 밝힌다.</li>
+<li><strong>WBC(Word Biblical Commentary) & IVP 성경배경주석:</strong> WBC(James Dunn)는 바울 신학의 새 관점과 전통적 개혁주의 관점을 포괄적으로 비교하며, 칭의가 개인적 구원을 넘어 유대인과 이방인이 그리스도 안에서 한 몸을 이루는 구속사적 대연합임을 설명한다.</li>
 </ul>
 <h3>2. [2_목회자 성경 연구원(목성연) 자료] 구속사적·목회적 핵심 통찰</h3>
-<ul><li><strong>목성연 세미나 강의 및 구속사 교재 심층 고찰:</strong> 로마서의 중심 흐름인 '언약-광야-성막/십자가-하나님 나라'의 맥락에서 본문을 조명한다. 성도를 단순한 종교인이 아닌 '언약의 군사'로 세우시는 하나님의 훈련 과정임을 밝힌다.</li>
+<ul><li><strong>목성연 세미나 강의 및 구속사 교재 심층 고찰:</strong> 목성연 세미나 교재는 로마서를 '복음의 본질과 그리스도인의 영광스러운 신분'으로 정리한다. 아담 안에서의 사망에서 그리스도 안에서의 생명으로의 전환이며, 12장 이후의 삶의 제사(Living Sacrifice)로 연결되는 실천적 제자도를 강조한다.</li>
 <li><strong>현대 목회적 적용 통찰:</strong> 지식적 앎에 머물지 않고, 삶의 전 영역에서 하나님의 주재권을 인정하며 거룩한 구별됨을 실천하는 제자도로 나아가도록 방향을 제시한다.</li>
 </ul>
 <p>---</p>
 <h2>Ⅲ. 1단계: 문법-역사적 본문 심층 석의 (Grammatical-Historical Exegesis)</h2>
 <h3>1. 본문의 5단계 내러티브 및 구문론적 흐름</h3>
-<div class='numbered-item'>1. <strong>역사적 정황의 도입:</strong> 본문이 위치한 역사적·문학적 배경 속에서 언약 백성이 마주한 구체적 도전과 하나님의 개입.</div>
-<div class='numbered-item'>2. <strong>원어적 핵심 명령의 선포:</strong> 본문 중심 동사가 명령하는 결단과 하나님 중심적 시선의 회복.</div>
-<div class='numbered-item'>3. <strong>영적 갈등과 긴장의 심화:</strong> 인간적 연약함, 세상의 저항, 혹은 종교적 형식주의와의 불가피한 충돌.</div>
-<div class='numbered-item'>4. <strong>하나님의 주권적 해결과 은혜의 개입:</strong> 인간의 한계를 넘어 역사하시는 하나님의 신실한 구원 행위.</div>
-<div class='numbered-item'>5. <strong>언약적 회복과 선교적 파송:</strong> 회복된 백성에게 주어지는 사명과 세상 속에서의 제자도 확립.</div>
+<div class='numbered-item'>1. <strong>역사적 정황의 도입:</strong> 본문 로마서 8:1-11이 위치한 로마서의 역사적 배경 속에서 언약 백성이 마주한 구체적 위기와 하나님의 주권적 개입.</div>
+<div class='numbered-item'>2. <strong>원어적 핵심 명령의 선포:</strong> 본문의 핵심 단어인 '디카이오쉬네 테우(δικαιοσύνη θεοῦ)'을 통해 선포되는 하나님의 거룩한 명령과 결단 촉구.</div>
+<div class='numbered-item'>3. <strong>영적 갈등과 긴장의 심화:</strong> 인간의 부패한 본성, 세상의 세속적 저항, 혹은 종교적 형식주의와의 불가피한 영적 충돌.</div>
+<div class='numbered-item'>4. <strong>하나님의 주권적 해결과 은혜의 개입:</strong> 인간의 무능력을 넘어 '카리스(χάρις)'의 은혜로 역사하시는 하나님의 신실한 구원 행위.</div>
+<div class='numbered-item'>5. <strong>언약적 회복과 선교적 파송:</strong> 회복된 백성에게 주어지는 거룩한 파송과 일상의 삶 속에서의 제자도 확립.</div>
 <h3>2. 핵심 원어 정밀 분석 (형태론 및 신학적 기능)</h3>
-<ul><li><strong>핵심 원어 1:</strong> 형태론적 분석, LXX 70인역 배경, 본문 내 신학적 기능 및 한글 발음 완비.</li>
-<li><strong>핵심 원어 2:</strong> 어근(Root) 분석, 성경 전체에서의 용례 발전사, 신약적 성취 및 한글 발음 완비.</li>
+<ul><li><strong>핵심 원어 1: δικαιοσύνη θεοῦ(디카이오쉬네 테우):</strong> 명사 여성 단수 주격 + 명사 남성 단수 속격로 분석되며, 본문에서 하나님의 의 - 인간의 행위가 아닌 그리스도를 믿음으로 거저 주어지는 하나님의 은혜로운 선물의 신학적 기능을 담당한다. LXX 70인역 및 신약 정경과의 상호텍스트성 속에서 언약적 성취의 기초가 된다.</li>
+</ul>
+<ul><li><strong>핵심 원어 2: χάρις(카리스):</strong> 명사 여성 단수 주격로 분석되며, 본문에서 은혜 - 죄인을 의인으로 변화시키며 성도의 구원을 끝까지 견인하는 불가항력적 사랑의 의미를 완성한다. 그리스도 안에서 성취될 하나님 나라의 구속사적 완성을 가리킨다.</li>
 </ul>
 <p>---</p>
 <h2>Ⅳ. 2단계: 비평적 분석 및 정경적 상호텍스트성 (Critical & Canonical Analysis)</h2>
@@ -264,9 +197,9 @@
 <p>---</p>
 <h2>Ⅶ. 3대 AI 엔진별 특성화 심층 석의 (Tri-Engine Exegesis)</h2>
 <h3>1. Claude 3.7 (원어 구문론 및 문학적 미시 분석)</h3>
-<p>원어의 미묘한 구문 구조, 접속사 및 어순 배치를 분석하여 본문이 독자에게 전달하는 문학적 긴장과 은혜의 점진적 고조를 정밀하게 드러낸다.</p>
+<p>원어 '디카이오쉬네 테우'와 '카리스'의 미묘한 구문 구조, 접속사 및 어순 배치를 분석하여 본문이 독자에게 전달하는 문학적 긴장과 은혜의 점진적 고조를 정밀하게 드러낸다.</p>
 <h3>2. Gemini 2.5 Pro (거시 구속사 및 정경 비평적 종합)</h3>
-<p>창세기부터 요한계시록에 이르는 방대한 정경적 맥락 안에서 본문의 모형론적 위치를 조명하고, 구약의 약속이 신약의 그리스도 안에서 성취된 거시적 파노라마를 제시한다.</p>
+<p>창세기부터 요한계시록에 이르는 방대한 정경적 맥락 안에서 본문의 모형론적 위치를 조명하고, 로마서의 구속사적 약속이 신약의 그리스도 안에서 성취된 거시적 파노라마를 제시한다.</p>
 <h3>3. ChatGPT-4o (현대적 실존 적용 및 설교학적 브릿지)</h3>
 <p>원어의 깊은 학술적 결론을 오늘날 현대 성도들이 마주하는 고독, 번아웃, 경제적 불안, 관계의 갈등에 맞춤형 위로와 실천적 결단으로 연결한다.</p>
 <p>---</p>
@@ -277,8 +210,8 @@
 <li><strong>핵심 명제:</strong> 하나님께 속한 언약 백성은 세상의 풍조를 거슬러 그리스도의 은혜 안에서 거룩한 구별됨의 삶을 살아간다.</li>
 <li><strong>3대 대지:</strong></li>
 </ul>
-<div class='numbered-item'>1. <strong>대지 1:</strong> 세상의 소리가 아닌 하나님의 음성에 시선을 고정하라.</div>
-<div class='numbered-item'>2. <strong>대지 2:</strong> 그리스도의 십자가 은혜 안에서 새로운 정체성을 확립하라.</div>
+<div class='numbered-item'>1. <strong>대지 1:</strong> 세상의 소리가 아닌 하나님의 음성('디카이오쉬네 테우')에 시선을 고정하라.</div>
+<div class='numbered-item'>2. <strong>대지 2:</strong> 그리스도의 십자가 은혜('카리스') 안에서 새로운 정체성을 확립하라.</div>
 <div class='numbered-item'>3. <strong>대지 3:</strong> 일상의 자리에서 거룩한 순종과 사랑의 열매를 맺으라.</div>
 <h3>2. 강단용 풀 매뉴스크립트 전문 (Full Manuscript)</h3>
 <p>사랑하는 성도 여러분, 오늘 우리가 마주한 본문 로마서 8:1-11은 혼란하고 불확실한 세상을 살아가는 우리를 향해 분명한 하나님의 음성을 들려줍니다. 세상은 끊임없이 우리에게 자기 확신과 물질적 번영을 좇으라고 속삭이지만, 성경은 우리의 시선을 영원한 하나님 나라와 그분의 언약으로 이끕니다.</p>

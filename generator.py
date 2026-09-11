@@ -273,8 +273,16 @@ def convert_html_to_pdf(html_path: Path, pdf_path: Path) -> bool:
     return False
 
 def parse_bible_passage(raw_input: str):
-    """사용자가 입력한 성경 구절 문자열 정규화 (예: '로마서 8:1-11', '창 1:1-5', '롬 8 1 11')"""
+    """사용자가 입력한 성경 구절 정규화 (bible_canon_matcher 전수 연동)"""
     cleaned = raw_input.strip()
+
+    try:
+        from bible_canon_matcher import parse_bible_query
+        pq = parse_bible_query(cleaned)
+        if pq and pq.get("success"):
+            return pq["book_name"], pq["standard_passage"], pq["testament"], pq["genre"]
+    except Exception:
+        pass
     
     # 약어 매핑
     book_abbr = {
@@ -769,9 +777,7 @@ def generate_dynamic_master_report(raw_passage: str, is_private: bool = False, c
 2. **어린이 결단 기도문:** "사랑하는 하나님, 언제 어디서나 나를 지켜보아 주시고 사랑해 주셔서 감사해요. 세상의 나쁜 유혹을 이기고, 예수님처럼 착하고 아름다운 사랑을 나누는 멋진 하나님의 자녀가 되게 도와주세요. 예수님의 이름으로 기도합니다. 아멘!"
 """
 
-    # 1. 파일 저장 경로 설정
-    book_script_dir = SCRIPTS_DIR / book_name
-    book_script_dir.mkdir(parents=True, exist_ok=True)
+    # 1. 파일 저장 경로 설정 (웹 서비스 디렉터리 REPORTS_DIR 우선 생성)
     book_share_dir = REPORTS_DIR / book_name
     book_share_dir.mkdir(parents=True, exist_ok=True)
 
@@ -782,20 +788,27 @@ def generate_dynamic_master_report(raw_passage: str, is_private: bool = False, c
     # 2. Markdown 저장
     with open(md_path, "w", encoding="utf-8") as f:
         f.write(md_content)
-    with open(book_script_dir / f"{stem}.md", "w", encoding="utf-8") as f:
-        f.write(md_content)
 
     # 3. 반응형 HTML 빌드
     html_code = build_master_html(md_content, title, book_name, passage)
     with open(html_path, "w", encoding="utf-8") as f:
         f.write(html_code)
-    with open(book_script_dir / f"{stem}.html", "w", encoding="utf-8") as f:
-        f.write(html_code)
 
-    # 4. PDF 생성
+    # 4. PDF 생성 (선택적)
     pdf_created = convert_html_to_pdf(html_path, pdf_path)
-    if pdf_created and pdf_path.exists():
-        shutil.copy2(pdf_path, book_script_dir / f"{stem}.pdf")
+
+    # 5. 로컬 SCRIPTS_DIR 백업 복사 (클라우드 환경에서는 실패해도 무시)
+    try:
+        book_script_dir = SCRIPTS_DIR / book_name
+        book_script_dir.mkdir(parents=True, exist_ok=True)
+        with open(book_script_dir / f"{stem}.md", "w", encoding="utf-8") as f:
+            f.write(md_content)
+        with open(book_script_dir / f"{stem}.html", "w", encoding="utf-8") as f:
+            f.write(html_code)
+        if pdf_created and pdf_path.exists():
+            shutil.copy2(pdf_path, book_script_dir / f"{stem}.pdf")
+    except Exception as e:
+        print(f"ℹ️ [Generator] 클라우드 배포 모드 - 외부 scripts 폴더 백업 건너뜀")
 
     # 5. reports_data.json에 실시간 병합 및 정경 순서 정렬
     current_manifest = []
@@ -874,13 +887,13 @@ def delete_master_report(report_id: str) -> dict:
     # 목록에서 제거
     new_manifest = [item for item in current_manifest if item.get("id") != report_id and item.get("passage") != report_id]
     
-    with open(REPORTS_DATA_JSON, "w", encoding="utf-8") as f:
-        json.dump(new_manifest, f, ensure_ascii=False, indent=2)
-
-    share_link_json = BASE_DIR / "공유링크" / "reports_data.json"
-    if share_link_json.parent.exists():
-        with open(share_link_json, "w", encoding="utf-8") as f:
-            json.dump(new_manifest, f, ensure_ascii=False, indent=2)
+    try:
+        share_link_json = BASE_DIR / "공유링크" / "reports_data.json"
+        if share_link_json.parent.exists():
+            with open(share_link_json, "w", encoding="utf-8") as f:
+                json.dump(new_manifest, f, ensure_ascii=False, indent=2)
+    except Exception:
+        pass
 
     # 실제 생성 파일도 정리 (선택적 안전 삭제)
     try:
@@ -927,10 +940,13 @@ def toggle_report_privacy(report_id: str, set_private: bool = None) -> dict:
     with open(REPORTS_DATA_JSON, "w", encoding="utf-8") as f:
         json.dump(current_manifest, f, ensure_ascii=False, indent=2)
 
-    share_link_json = BASE_DIR / "공유링크" / "reports_data.json"
-    if share_link_json.parent.exists():
-        with open(share_link_json, "w", encoding="utf-8") as f:
-            json.dump(current_manifest, f, ensure_ascii=False, indent=2)
+    try:
+        share_link_json = BASE_DIR / "공유링크" / "reports_data.json"
+        if share_link_json.parent.exists():
+            with open(share_link_json, "w", encoding="utf-8") as f:
+                json.dump(current_manifest, f, ensure_ascii=False, indent=2)
+    except Exception:
+        pass
 
     state_str = "🔒 비공개 (나만 보기)" if target_item["isPrivate"] else "🌐 전체 공개"
     print(f"✅ '{report_id}' 상태 변경 -> {state_str}")
