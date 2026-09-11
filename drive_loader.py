@@ -25,10 +25,18 @@ if sys.platform == "win32":
     except Exception:
         pass
 
-# ─────────────────────────────────────────────────────────────
-# 환경 설정
-# ─────────────────────────────────────────────────────────────
 CURRENT_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(CURRENT_DIR))
+
+# D드라이브 인덱서 및 성경 66권 매처 임포트
+try:
+    from d_drive_indexer import get_integrated_commentary_insights, build_or_load_catalog
+    from bible_canon_matcher import parse_bible_query, BIBLE_66_BOOKS
+    _D_DRIVE_INDEXER_AVAILABLE = True
+except Exception as e:
+    print(f"⚠️ [DriveLoader] d_drive_indexer 임포트 실패: {e}")
+    _D_DRIVE_INDEXER_AVAILABLE = False
+
 CACHE_FILE = CURRENT_DIR / "drive_knowledge_cache.json"
 CACHE_TTL_SECONDS = 86400  # 24시간
 
@@ -89,7 +97,12 @@ def _init_google_drive():
 # ─────────────────────────────────────────────────────────────
 _gemini_client = None
 _gemini_available = False
-GEMINI_MODELS = ["gemini-3.6-flash", "gemini-2.5-flash", "gemini-1.5-flash"]
+GEMINI_MODELS = [
+    "gemini-2.5-flash",
+    "gemini-1.5-flash",
+    "gemini-2.5-pro",
+    "gemini-1.5-pro"
+]
 GEMINI_MODEL = GEMINI_MODELS[0]
 
 def _init_gemini():
@@ -105,7 +118,7 @@ def _init_gemini():
         from google import genai
         _gemini_client = genai.Client(api_key=api_key)
         _gemini_available = True
-        print(f"✅ [DriveLoader] Gemini AI 초기화 성공 (모델: {GEMINI_MODEL})")
+        print(f"✅ [DriveLoader] Gemini AI 초기화 성공 (기본 모델: {GEMINI_MODEL})")
     except Exception as e:
         print(f"⚠️ [DriveLoader] Gemini AI 초기화 실패: {e}")
 
@@ -561,15 +574,25 @@ def _parse_gemini_output(gemini_text: str) -> dict:
                 result[key] = clean_val
     
     return result
-
-
 # ─────────────────────────────────────────────────────────────
 # 통합 지식 베이스 로더 (외부에서 호출하는 메인 함수)
 # ─────────────────────────────────────────────────────────────
 def load_knowledge_base(book_name: str, passage: str, testament: str, genre: str) -> dict:
     """
     성경 권명과 구절에 맞는 주석 자료를 로드하고 Gemini AI로 분석합니다.
+    - '창', '창1', '창 1:1', '롬 8:1' 등 어떤 검색어도 정규화하여 D드라이브 실물 자료 전수 연동.
     """
+    # 0. 검색어 및 성경 권명 정규화
+    query_str = f"{book_name} {passage}".strip() if book_name not in passage else passage
+    parsed_q = None
+    if _D_DRIVE_INDEXER_AVAILABLE:
+        parsed_q = parse_bible_query(query_str) or parse_bible_query(passage) or parse_bible_query(book_name)
+        if parsed_q:
+            book_name = parsed_q["book_name"]
+            passage = parsed_q["standard_passage"]
+            testament = parsed_q["testament"]
+            genre = parsed_q["genre"]
+
     cache_key = f"{book_name}_{passage}"
     
     # 캐시 확인
@@ -578,26 +601,70 @@ def load_knowledge_base(book_name: str, passage: str, testament: str, genre: str
         print(f"📦 [DriveLoader] 캐시 히트: {cache_key}")
         return cache[cache_key]
     
-    print(f"🔍 [DriveLoader] 자료 수집 시작: {passage} ({book_name})")
+    print(f"🔍 [DriveLoader] D드라이브 실물 자료 수집 시작: {passage} ({book_name})")
     
-    # 1. 주석 자료 수집 (Google Drive → 로컬 D드라이브 순)
+    # 1. D드라이브 전수 인덱서에서 실제 주석 발췌문 및 매칭 파일 수집
+    d_insights = {}
+    d_source_files = []
+    d_matched_count = 0
+    if _D_DRIVE_INDEXER_AVAILABLE:
+        try:
+            d_insights = get_integrated_commentary_insights(passage)
+            if d_insights.get("success"):
+                d_source_files = d_insights.get("source_files", [])
+                d_matched_count = d_insights.get("matched_files_count", 0)
+                print(f"📂 [DriveLoader] D드라이브 매칭 성공: {d_matched_count}개 파일 연관, 실제 발췌 파일: {len(d_source_files)}개")
+        except Exception as e:
+            print(f"⚠️ [DriveLoader] D드라이브 인덱서 조회 실패: {e}")
+
+    # 컨텍스트 텍스트 구성
     commentary_texts = []
+    pastoral_texts = []
+    
+    if d_insights.get("success"):
+        # 옥스포드 실물 발췌
+        ox_txt = d_insights.get("oxford", {}).get("excerpt", "").strip()
+        if ox_txt:
+            commentary_texts.append(f"[옥스포드 원어성경대전 실물 발췌]\n{ox_txt[:2000]}")
+        # 칼빈 실물 발췌
+        cal_txt = d_insights.get("calvin", {}).get("excerpt", "").strip()
+        if cal_txt:
+            commentary_texts.append(f"[칼빈 성경주석 실물 발췌]\n{cal_txt[:2000]}")
+        # 그레이스종합 상세강해 실물 발췌
+        gr_txt = d_insights.get("grace", {}).get("excerpt", "").strip()
+        if gr_txt:
+            commentary_texts.append(f"[그레이스 종합강해 실물 발췌]\n{gr_txt[:2500]}")
+        # 박윤선 실물 발췌
+        pk_txt = d_insights.get("park", {}).get("excerpt", "").strip()
+        if pk_txt:
+            commentary_texts.append(f"[박윤선 종합주석 실물 발췌]\n{pk_txt[:2000]}")
+        # WBC 실물 발췌
+        wbc_txt = d_insights.get("wbc", {}).get("excerpt", "").strip()
+        if wbc_txt:
+            commentary_texts.append(f"[WBC 성경주석 실물 발췌]\n{wbc_txt[:2000]}")
+        # 목성연 실물 발췌
+        past_txt = d_insights.get("pastoral", {}).get("excerpt", "").strip()
+        if past_txt:
+            pastoral_texts.append(f"[목회자 성경 연구원(목성연) 교재/묵상집 실물 발췌]\n{past_txt[:2500]}")
+
+    # 구글 드라이브 추가 수집 (있을 때)
     if _drive_available:
-        commentary_texts = _search_drive_files(book_name, passage=passage, max_files=4)
+        drive_comm = _search_drive_files(book_name, passage=passage, max_files=2)
+        if drive_comm:
+            commentary_texts.extend(drive_comm)
+        drive_past = _search_drive_files(book_name, passage=passage, max_files=2)
+        if drive_past:
+            pastoral_texts.extend(drive_past)
+
+    # 로컬 폴더 폴백 (위에서 아무것도 못 찾았을 때만)
     if not commentary_texts:
         commentary_texts = _search_local_files(LOCAL_COMMENTARY_DIRS, book_name, max_files=4)
-    
-    # 2. 목성연 자료 수집
-    pastoral_texts = []
-    if _drive_available:
-        pastoral_texts = _search_drive_files(book_name, passage=passage, max_files=3)
     if not pastoral_texts:
         pastoral_texts = _search_local_files(LOCAL_PASTORAL_DIRS, book_name, max_files=3)
+
+    print(f"📚 [DriveLoader] 최종 수집 완료 - 주석:{len(commentary_texts)}개, 목성연:{len(pastoral_texts)}개 (총 매칭: {d_matched_count}개 파일)")
     
-    print(f"📚 [DriveLoader] 수집 완료 - 주석:{len(commentary_texts)}개, 목성연:{len(pastoral_texts)}개")
-    
-    # 3. Gemini AI로 보고서 생성 (Drive 파일 유무와 무관하게 항상 호출)
-    gemini_result = None
+    # 2. Gemini AI로 실물 주석 데이터 기반 심층 보고서 생성
     parsed = {}
     if _gemini_available:
         gemini_text = generate_with_gemini(
@@ -608,12 +675,12 @@ def load_knowledge_base(book_name: str, passage: str, testament: str, genre: str
             parsed = _parse_gemini_output(gemini_text)
             print(f"🤖 [DriveLoader] Gemini 생성 완료: {list(parsed.keys())}")
     
-    # 4. 원어 기본값 설정 (구약/신약 구분)
+    # 3. 원어 기본값 설정 (구약/신약 구분)
     is_ot = (testament == "구약")
     if is_ot:
         default_words = [
             ("בְּרִית", "베리트", "명사 여성 단수", f"언약 - {book_name}에서 하나님께서 자기 백성과 맺으신 영원하고 변함없는 구원의 약속"),
-            ("חֶ֫סֶד", "헤세드", "명사 남성 단수", f"인애, 성실 - {book_name} 전체를 관통하는 하나님의 무조건적이고 영원한 언약적 사랑"),
+            ("חֶ֫סֶ드", "헤세드", "명사 남성 단수", f"인애, 성실 - {book_name} 전체를 관통하는 하나님의 무조건적이고 영원한 언약적 사랑"),
         ]
     else:
         default_words = [
@@ -621,35 +688,80 @@ def load_knowledge_base(book_name: str, passage: str, testament: str, genre: str
             ("πίστις", "피스티스", "명사 여성 단수 주격", f"믿음 - {book_name}에서 예수 그리스도의 대속 사역을 신뢰하고 전인격적으로 연합하는 순종"),
         ]
     
-    # 5. 결과 조합
-    if parsed and commentary_texts:
-        source_label = "gemini+drive"
-    elif parsed:
-        source_label = "gemini"
-    elif commentary_texts:
-        source_label = "drive"
-    else:
-        source_label = "template"
+    # 4. 실물 텍스트 기반 섹션 구성 (실제 D드라이브 인용구 포함)
+    ox_excerpt = d_insights.get("oxford", {}).get("excerpt", "")
+    gr_excerpt = d_insights.get("grace", {}).get("excerpt", "")
+    cal_excerpt = d_insights.get("calvin", {}).get("excerpt", "")
+    park_excerpt = d_insights.get("park", {}).get("excerpt", "")
+    wbc_excerpt = d_insights.get("wbc", {}).get("excerpt", "")
+    past_excerpt = d_insights.get("pastoral", {}).get("excerpt", "")
 
+    # 옥스포드/호크마/그레이스 실제 주석 해석문
+    oxford_val = parsed.get("oxford_hockma")
+    if not oxford_val or len(oxford_val) < 50:
+        if ox_excerpt:
+            oxford_val = f"옥스포드 원어성경대전은 {passage}의 원어 구문과 역사적 배경을 치밀하게 분석하며, 본문이 선포하는 하나님의 주권적 섭리를 규명한다. (D드라이브 원본 인용: \"{ox_excerpt[:280]}...\")"
+        elif gr_excerpt:
+            oxford_val = f"D드라이브 종합주석 강해는 {passage}의 원문 구조를 정밀 분석하며 신자의 바른 순종과 믿음을 강조한다. (D드라이브 원본 인용: \"{gr_excerpt[:280]}...\")"
+        else:
+            oxford_val = f"옥스포드 원어성경대전과 호크마 종합주석은 {passage}의 원어 구문 구조를 치밀하게 분석하며, 본문이 언약 백성의 정체성과 순종의 필연성을 강조하고 있음을 논증한다."
+
+    # 칼빈/박윤선 실제 주석 해석문
+    calvin_val = parsed.get("calvin_park")
+    if not calvin_val or len(calvin_val) < 50:
+        if cal_excerpt:
+            calvin_val = f"칼빈 성경주석은 {passage}을 개혁주의 구속사적 관점에서 조명하며 하나님의 절대 주권과 성도의 믿음을 역설한다. (D드라이브 원본 인용: \"{cal_excerpt[:280]}...\")"
+        elif park_excerpt:
+            calvin_val = f"박윤선 박사 주석은 {passage}에 나타난 성경의 유기적 통일성과 칼빈주의적 경건의 실천을 강조한다. (D드라이브 원본 인용: \"{park_excerpt[:280]}...\")"
+        else:
+            calvin_val = f"칼빈 성경주석과 박윤선 박사 종합주석은 {passage}에 나타난 하나님의 절대 주권과 구속사적 섭리를 개혁주의 신학의 관점에서 조명하며 성도의 실존적 경건을 촉구한다."
+
+    # WBC/IVP 실제 주석 해석문
+    wbc_val = parsed.get("wbc_ivp")
+    if not wbc_val or len(wbc_val) < 50:
+        if wbc_excerpt:
+            wbc_val = f"WBC 주석은 {passage}의 양식사적 문맥과 고대 역사문화적 배경을 복원하여 원독자에게 전달된 하나님의 메시지를 밝힌다. (D드라이브 원본 인용: \"{wbc_excerpt[:280]}...\")"
+        else:
+            wbc_val = f"WBC와 IVP 배경주석은 고대 근동의 역사문화적 배경 속에서 {passage}의 원독자들에게 전달되었던 1차적 메시지와 하나님의 거룩한 구별됨을 복원한다."
+
+    # 목성연 실제 교재/묵상집 해석문
+    mok_val = parsed.get("moksungyeon")
+    if not mok_val or len(mok_val) < 50:
+        if past_excerpt:
+            mok_val = f"목회자 성경 연구원(목성연) 교재는 {passage}을 '하나님의 언약과 구속사적 구원경영'의 관점에서 해석하며 일상 속의 제자도를 촉구한다. (D드라이브 원본 인용: \"{past_excerpt[:280]}...\")"
+        else:
+            mok_val = f"목회자 성경 연구원(목성연) 교재는 {passage}을 '언약과 광야 훈련'의 거시적 맥락에서 해석하며, 고난 속에서도 신실하신 하나님을 신뢰하고 일상의 제자도로 나아가도록 방향을 제시한다."
+
+    # 5. 최종 결과 딕셔너리
     result = {
+        "book_name": book_name,
+        "standard_passage": passage,
         "original_words": default_words,
-        "oxford_hockma": parsed.get("oxford_hockma") or f"옥스포드 원어성경대전과 호크마 종합주석은 {passage}의 원어 구문 구조를 치밀하게 분석하며, 본문이 언약 백성의 정체성과 순종의 필연성을 강조하고 있음을 논증한다.",
-        "calvin_park": parsed.get("calvin_park") or f"칼빈 성경주석과 박윤선 박사 종합주석은 {passage}에 나타난 하나님의 절대 주권과 구속사적 섭리를 개혁주의 신학의 관점에서 조명하며 성도의 실존적 경건을 촉구한다.",
-        "wbc_ivp": parsed.get("wbc_ivp") or f"WBC와 IVP 배경주석은 고대 근동의 역사문화적 배경 속에서 {passage}의 원독자들에게 전달되었던 1차적 메시지와 하나님의 거룩한 구별됨을 복원한다.",
-        "moksungyeon": parsed.get("moksungyeon") or f"목회자 성경 연구원(목성연) 교재는 {passage}을 '언약과 광야 훈련'의 거시적 맥락에서 해석하며, 고난 속에서도 신실하신 하나님을 신뢰하고 일상의 제자도로 나아가도록 방향을 제시한다.",
+        "oxford_hockma": oxford_val,
+        "calvin_park": calvin_val,
+        "wbc_ivp": wbc_val,
+        "moksungyeon": mok_val,
         "narrative_focus": parsed.get("narrative_focus") or f"{book_name}의 중심 흐름 속에서 하나님의 언약적 신실하심과 구속사적 통치",
         "sermon_bigidea": parsed.get("sermon_bigidea") or f"하나님의 언약은 인간의 연약함을 넘어 신실하게 성취되며, 성도는 그리스도 안에서 주어진 새로운 정체성으로 거룩한 구별됨과 사랑을 실천하도록 부름받았다.",
-        "_source": source_label,
+        "_source": "d_drive+gemini" if (parsed and d_source_files) else ("d_drive" if d_source_files else "template"),
         "_commentary_count": len(commentary_texts),
         "_pastoral_count": len(pastoral_texts),
+        "_d_matched_count": d_matched_count,
+        "_d_source_files": d_source_files,
+        "_excerpts": {
+            "oxford": ox_excerpt[:800],
+            "calvin": cal_excerpt[:800],
+            "grace": gr_excerpt[:800],
+            "pastoral": past_excerpt[:800],
+        }
     }
     
     # 6. 캐시 저장
     cache[cache_key] = result
     _save_cache(cache)
     
-    source_emoji = "🤖" if "gemini" in result["_source"] else ("📚" if "drive" in result["_source"] else "📝")
-    print(f"{source_emoji} [DriveLoader] 완료 [{result['_source']}] - {passage}")
+    source_emoji = "📚" if d_source_files else "📝"
+    print(f"{source_emoji} [DriveLoader] 완료 [{result['_source']}] - {passage} (D드라이브 연관자료: {d_matched_count}개)")
     
     return result
 

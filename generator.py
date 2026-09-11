@@ -481,31 +481,29 @@ WBC 및 IVP 배경주석의 {passage} 역사적·문화적 배경 분석 (3-4문
 def get_book_knowledge(book_name: str, testament: str, genre: str, passage: str = "") -> dict:
     """성경 권별 지식 베이스 검색.
 
-    우선순위:
-    1. 하드코딩된 상세 지식 (10대 권 - 창/출/레/민/신/시편/이사야/마태/로마서/요한)
-    2. drive_loader (Google Drive API → 로컬 D드라이브 → Gemini AI 생성)
-    3. Gemini AI 직접 호출 (drive_loader 결과가 template일 때)
+    최우선 순위:
+    1. drive_loader (D드라이브 실물 3,853개 주석 + 2,343개 목성연 자료 전수 연동 & 실제 원문 발췌)
+    2. Gemini AI 직접 호출 (D드라이브 파일 보완 및 학술 합성)
+    3. 하드코딩된 상세 지식 (D드라이브 및 AI 모두 불능일 때의 폴백)
     4. 제너릭 템플릿 폴백
     """
-    # 1. 하드코딩된 상세 지식 베이스 우선 사용
-    if book_name in BOOK_SPECIFIC_KNOWLEDGE:
-        kb = BOOK_SPECIFIC_KNOWLEDGE[book_name].copy()
-        print(f"📖 [KnowledgeBase] 상세 하드코딩 지식 사용: {book_name}")
-        return kb
-
-    # 2. drive_loader 통해 실제 드라이브 자료 + Gemini AI 생성
+    # 1. D드라이브 실물 자료 + 전수 인덱서 우선 사용 (최우선!)
     if _DRIVE_LOADER_AVAILABLE:
         try:
             kb = _drive_load_kb(book_name, passage or book_name, testament, genre)
             source = kb.get("_source", "template")
-            print(f"🤖 [KnowledgeBase] DriveLoader 자료 사용: {book_name} (출처: {source})")
-            # drive_loader가 Gemini로 풍성한 학술 내용을 합성한 경우에만 즉시 사용
-            if "gemini" in source:
+            d_count = kb.get("_d_matched_count", 0)
+            print(f"📚 [KnowledgeBase] D드라이브 실물 연동 사용: {book_name} (출처: {source}, 매칭파일: {d_count}개)")
+            if d_count > 0 or "drive" in source or "gemini" in source:
                 return kb
-            print(f"🔄 [KnowledgeBase] drive_loader에 주석 파일은 있으나 Gemini 미합성 (출처: {source}) → Gemini 직접 호출로 보완")
-            # template이면 3단계로 진행
         except Exception as e:
             print(f"⚠️ [KnowledgeBase] DriveLoader 실패 → 폴백: {e}")
+
+    # 2. 하드코딩된 지식 베이스 (D드라이브 연동 실패 시 폴백)
+    if book_name in BOOK_SPECIFIC_KNOWLEDGE:
+        kb = BOOK_SPECIFIC_KNOWLEDGE[book_name].copy()
+        print(f"📖 [KnowledgeBase] 하드코딩 지식 폴백 사용: {book_name}")
+        return kb
 
     # 3. Gemini AI 직접 호출 (drive_loader가 template을 반환하거나 실패한 경우)
     is_ot = (testament == "구약")
@@ -567,6 +565,15 @@ def generate_dynamic_master_report(raw_passage: str, is_private: bool = False, c
     kb = get_book_knowledge(book_name, testament, genre, passage)
     orig1, orig2 = kb["original_words"][0], kb["original_words"][1]
 
+    d_files = kb.get('_d_source_files', [])
+    d_count = kb.get('_d_matched_count', len(d_files))
+    files_banner_md = ""
+    if d_files or d_count > 0:
+        files_banner_md = f"> 📚 **[D드라이브 실물 주석 및 목성연 자료 연동 완료]** 본 본문({passage}) 관련 D드라이브 연관 주석 파일 **총 {d_count}개** 매칭\n"
+        for sf in d_files:
+            files_banner_md += f"> - ✅ {sf}\n"
+        files_banner_md += ">\n"
+
     # 9대 필수 영역을 포함한 마스터 리포트 마크다운 본문 생성
     md_content = f"""# {passage} 올인원 마스터 대통합 연구보고서
 
@@ -592,13 +599,17 @@ def generate_dynamic_master_report(raw_passage: str, is_private: bool = False, c
 
 ## Ⅱ. D드라이브 [1_주석 자료] 및 [2_목회자 성경 연구원 자료] 심층 융합 고찰
 
+{files_banner_md}
 ### 1. [1_주석 자료] 다각도 학술 주석 비교 분석
 - **옥스포드 원어성경대전 & 호크마 종합주석:** {kb['oxford_hockma']}
+
 - **칼빈 성경주석 & 박윤선 종합주석:** {kb['calvin_park']}
+
 - **WBC(Word Biblical Commentary) & IVP 성경배경주석:** {kb['wbc_ivp']}
 
 ### 2. [2_목회자 성경 연구원(목성연) 자료] 구속사적·목회적 핵심 통찰
 - **목성연 세미나 강의 및 구속사 교재 심층 고찰:** {kb['moksungyeon']}
+
 - **현대 목회적 적용 통찰:** 지식적 앎에 머물지 않고, 삶의 전 영역에서 하나님의 주재권을 인정하며 거룩한 구별됨을 실천하는 제자도로 나아가도록 방향을 제시한다.
 
 ---

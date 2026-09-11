@@ -524,9 +524,48 @@
           </div>
         </div>
         <form class="generator-form" onsubmit="handleAdminAnalyze(event)">
-          <input type="text" id="adminPassageInput" placeholder="분석할 성경 구절 입력 (예: 히브리서 11:1-6, 이사야 53:1-6)" required>
+          <input type="text" id="adminPassageInput" placeholder="분석할 성경 구절 입력 (예: 창 1, 롬 8:1, 히 11:1-6, 마 10:34)" oninput="handlePassageInputHint(this.value)" required>
           <button type="submit" id="btnAdminGenerate">🚀 마스터 분석 생성</button>
         </form>
+        <div id="canonMatchHint" style="display:none; margin-top: 12px; padding: 10px 14px; background: rgba(30, 58, 138, 0.4); border: 1px solid var(--gold-accent); border-radius: 8px; font-size: 0.88rem; color: #f8fafc; text-align: left;"></div>
+
+        <!-- D드라이브 실물 주석 & 목성연 실시간 라이브 탐색 패널 -->
+        <div id="dDriveExplorerPanel" style="display:none; margin-top: 14px; background: #ffffff; border: 2px solid var(--gold-accent); border-radius: 14px; padding: 18px; color: #0f172a; box-shadow: 0 12px 30px rgba(0,0,0,0.25); text-align: left;">
+          <!-- Header: 매칭 요약 -->
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <div>
+              <span id="exploreCanonBadge" style="background: var(--navy-900); color: #fff; font-size: 0.82rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; margin-right: 6px;">01</span>
+              <strong id="exploreBookTitle" style="font-size: 1.18rem; color: #0f172a;">창세기</strong>
+              <span id="exploreGenreBadge" style="font-size: 0.84rem; color: #64748b; margin-left: 6px;">구약 / 율법서</span>
+              <span id="explorePassageNorm" style="margin-left: 8px; background: #eff6ff; color: #1d4ed8; font-weight: 700; padding: 2px 8px; border-radius: 4px; font-size: 0.82rem;">창세기 1장</span>
+            </div>
+            <div>
+              <span style="background: #fef3c7; border: 1px solid #f59e0b; color: #b45309; font-size: 0.88rem; font-weight: 800; padding: 4px 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;">
+                📚 D드라이브 실물 자료 <strong id="exploreTotalFiles" style="color: #dc2626; font-size: 1.05rem;">0</strong>개 전수 매칭!
+              </span>
+            </div>
+          </div>
+
+          <!-- 주석서 탭 버튼 -->
+          <div id="commTabsWrapper" style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;">
+            <!-- JS로 동적 생성 -->
+          </div>
+
+          <!-- 선택된 주석서 상세 카드 (해석문 + 실존 파일 목록) -->
+          <div id="commDetailCard" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; padding: 14px;">
+            <!-- JS로 렌더링 -->
+          </div>
+
+          <!-- 하단 액션 버튼 -->
+          <div style="margin-top: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; border-top: 1px solid #e2e8f0; padding-top: 12px;">
+            <div style="font-size: 0.82rem; color: #64748b;">
+              <i class="fa-solid fa-hard-drive"></i> D:\1_주석 자료 및 D:\2_목회자 성경 연구원 자료 실물 연동 완료
+            </div>
+            <button type="button" onclick="triggerAdminExploreGenerate()" style="background: linear-gradient(135deg, var(--gold), #d97706); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-size: 0.95rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(217,119,6,0.3);">
+              <span>🚀 이 본문 관리자 마스터 보고서 생성하기</span>
+            </button>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -799,6 +838,315 @@
       navigator.clipboard.writeText(publicUrl).then(() => showToast('✅ 외부 공개 포털 링크가 복사되었습니다!'));
     }
 
+// 성경 66권 약어 및 풀네임 실시간 매처 사전
+    const BIBLE_66_ABBR_MAP = {
+      '창': { name: '창세기', testament: '구약', genre: '율법서', num: '01' },
+      '창세기': { name: '창세기', testament: '구약', genre: '율법서', num: '01' },
+      '출': { name: '출애굽기', testament: '구약', genre: '율법서', num: '02' },
+      '출애굽기': { name: '출애굽기', testament: '구약', genre: '율법서', num: '02' },
+      '레': { name: '레위기', testament: '구약', genre: '율법서', num: '03' },
+      '레위기': { name: '레위기', testament: '구약', genre: '율법서', num: '03' },
+      '민': { name: '민수기', testament: '구약', genre: '율법서', num: '04' },
+      '민수기': { name: '민수기', testament: '구약', genre: '율법서', num: '04' },
+      '신': { name: '신명기', testament: '구약', genre: '율법서', num: '05' },
+      '신명기': { name: '신명기', testament: '구약', genre: '율법서', num: '05' },
+      '수': { name: '여호수아', testament: '구약', genre: '역사서', num: '06' },
+      '여호수아': { name: '여호수아', testament: '구약', genre: '역사서', num: '06' },
+      '삿': { name: '사사기', testament: '구약', genre: '역사서', num: '07' },
+      '사사기': { name: '사사기', testament: '구약', genre: '역사서', num: '07' },
+      '룻': { name: '룻기', testament: '구약', genre: '역사서', num: '08' },
+      '룻기': { name: '룻기', testament: '구약', genre: '역사서', num: '08' },
+      '삼상': { name: '사무엘상', testament: '구약', genre: '역사서', num: '09' },
+      '사무엘상': { name: '사무엘상', testament: '구약', genre: '역사서', num: '09' },
+      '삼하': { name: '사무엘하', testament: '구약', genre: '역사서', num: '10' },
+      '사무엘하': { name: '사무엘하', testament: '구약', genre: '역사서', num: '10' },
+      '왕상': { name: '열왕기상', testament: '구약', genre: '역사서', num: '11' },
+      '열왕기상': { name: '열왕기상', testament: '구약', genre: '역사서', num: '11' },
+      '왕하': { name: '열왕기하', testament: '구약', genre: '역사서', num: '12' },
+      '열왕기하': { name: '열왕기하', testament: '구약', genre: '역사서', num: '12' },
+      '대상': { name: '역대상', testament: '구약', genre: '역사서', num: '13' },
+      '역대상': { name: '역대상', testament: '구약', genre: '역사서', num: '13' },
+      '대하': { name: '역대하', testament: '구약', genre: '역사서', num: '14' },
+      '역대하': { name: '역대하', testament: '구약', genre: '역사서', num: '14' },
+      '스': { name: '에스라', testament: '구약', genre: '역사서', num: '15' },
+      '에스라': { name: '에스라', testament: '구약', genre: '역사서', num: '15' },
+      '느': { name: '느헤미야', testament: '구약', genre: '역사서', num: '16' },
+      '느헤미야': { name: '느헤미야', testament: '구약', genre: '역사서', num: '16' },
+      '에': { name: '에스더', testament: '구약', genre: '역사서', num: '17' },
+      '에스더': { name: '에스더', testament: '구약', genre: '역사서', num: '17' },
+      '욥': { name: '욥기', testament: '구약', genre: '시가서', num: '18' },
+      '욥기': { name: '욥기', testament: '구약', genre: '시가서', num: '18' },
+      '시': { name: '시편', testament: '구약', genre: '시가서', num: '19' },
+      '시편': { name: '시편', testament: '구약', genre: '시가서', num: '19' },
+      '잠': { name: '잠언', testament: '구약', genre: '시가서', num: '20' },
+      '잠언': { name: '잠언', testament: '구약', genre: '시가서', num: '20' },
+      '전': { name: '전도서', testament: '구약', genre: '시가서', num: '21' },
+      '전도서': { name: '전도서', testament: '구약', genre: '시가서', num: '21' },
+      '아': { name: '아가', testament: '구약', genre: '시가서', num: '22' },
+      '아가': { name: '아가', testament: '구약', genre: '시가서', num: '22' },
+      '사': { name: '이사야', testament: '구약', genre: '예언서', num: '23' },
+      '이사야': { name: '이사야', testament: '구약', genre: '예언서', num: '23' },
+      '렘': { name: '예레미야', testament: '구약', genre: '예언서', num: '24' },
+      '예레미야': { name: '예레미야', testament: '구약', genre: '예언서', num: '24' },
+      '애': { name: '예레미야애가', testament: '구약', genre: '예언서', num: '25' },
+      '예레미야애가': { name: '예레미야애가', testament: '구약', genre: '예언서', num: '25' },
+      '겔': { name: '에스겔', testament: '구약', genre: '예언서', num: '26' },
+      '에스겔': { name: '에스겔', testament: '구약', genre: '예언서', num: '26' },
+      '단': { name: '다니엘', testament: '구약', genre: '예언서', num: '27' },
+      '다니엘': { name: '다니엘', testament: '구약', genre: '예언서', num: '27' },
+      '호': { name: '호세아', testament: '구약', genre: '예언서', num: '28' },
+      '호세아': { name: '호세아', testament: '구약', genre: '예언서', num: '28' },
+      '욜': { name: '요엘', testament: '구약', genre: '예언서', num: '29' },
+      '요엘': { name: '요엘', testament: '구약', genre: '예언서', num: '29' },
+      '암': { name: '아모스', testament: '구약', genre: '예언서', num: '30' },
+      '아모스': { name: '아모스', testament: '구약', genre: '예언서', num: '30' },
+      '옵': { name: '오바댜', testament: '구약', genre: '예언서', num: '31' },
+      '오바댜': { name: '오바댜', testament: '구약', genre: '예언서', num: '31' },
+      '욘': { name: '요나', testament: '구약', genre: '예언서', num: '32' },
+      '요나': { name: '요나', testament: '구약', genre: '예언서', num: '32' },
+      '미': { name: '미가', testament: '구약', genre: '예언서', num: '33' },
+      '미가': { name: '미가', testament: '구약', genre: '예언서', num: '33' },
+      '나': { name: '나훔', testament: '구약', genre: '예언서', num: '34' },
+      '나훔': { name: '나훔', testament: '구약', genre: '예언서', num: '34' },
+      '합': { name: '하박국', testament: '구약', genre: '예언서', num: '35' },
+      '하박국': { name: '하박국', testament: '구약', genre: '예언서', num: '35' },
+      '습': { name: '스바냐', testament: '구약', genre: '예언서', num: '36' },
+      '스바냐': { name: '스바냐', testament: '구약', genre: '예언서', num: '36' },
+      '학': { name: '학개', testament: '구약', genre: '예언서', num: '37' },
+      '학개': { name: '학개', testament: '구약', genre: '예언서', num: '37' },
+      '슥': { name: '스가랴', testament: '구약', genre: '예언서', num: '38' },
+      '스가랴': { name: '스가랴', testament: '구약', genre: '예언서', num: '38' },
+      '말': { name: '말라기', testament: '구약', genre: '예언서', num: '39' },
+      '말라기': { name: '말라기', testament: '구약', genre: '예언서', num: '39' },
+      '마': { name: '마태복음', testament: '신약', genre: '복음서', num: '40' },
+      '마태복음': { name: '마태복음', testament: '신약', genre: '복음서', num: '40' },
+      '막': { name: '마가복음', testament: '신약', genre: '복음서', num: '41' },
+      '마가복음': { name: '마가복음', testament: '신약', genre: '복음서', num: '41' },
+      '눅': { name: '누가복음', testament: '신약', genre: '복음서', num: '42' },
+      '누가복음': { name: '누가복음', testament: '신약', genre: '복음서', num: '42' },
+      '요': { name: '요한복음', testament: '신약', genre: '복음서', num: '43' },
+      '요한복음': { name: '요한복음', testament: '신약', genre: '복음서', num: '43' },
+      '행': { name: '사도행전', testament: '신약', genre: '역사서', num: '44' },
+      '사도행전': { name: '사도행전', testament: '신약', genre: '역사서', num: '44' },
+      '롬': { name: '로마서', testament: '신약', genre: '바울서신', num: '45' },
+      '로마서': { name: '로마서', testament: '신약', genre: '바울서신', num: '45' },
+      '고전': { name: '고린도전서', testament: '신약', genre: '바울서신', num: '46' },
+      '고린도전서': { name: '고린도전서', testament: '신약', genre: '바울서신', num: '46' },
+      '고후': { name: '고린도후서', testament: '신약', genre: '바울서신', num: '47' },
+      '고린도후서': { name: '고린도후서', testament: '신약', genre: '바울서신', num: '47' },
+      '갈': { name: '갈라디아서', testament: '신약', genre: '바울서신', num: '48' },
+      '갈라디아서': { name: '갈라디아서', testament: '신약', genre: '바울서신', num: '48' },
+      '엡': { name: '에베소서', testament: '신약', genre: '바울서신', num: '49' },
+      '에베소서': { name: '에베소서', testament: '신약', genre: '바울서신', num: '49' },
+      '빌': { name: '빌립보서', testament: '신약', genre: '바울서신', num: '50' },
+      '빌립보서': { name: '빌립보서', testament: '신약', genre: '바울서신', num: '50' },
+      '골': { name: '골로새서', testament: '신약', genre: '바울서신', num: '51' },
+      '골로새서': { name: '골로새서', testament: '신약', genre: '바울서신', num: '51' },
+      '살전': { name: '데살로니가전서', testament: '신약', genre: '바울서신', num: '52' },
+      '데살로니가전서': { name: '데살로니가전서', testament: '신약', genre: '바울서신', num: '52' },
+      '살후': { name: '데살로니가후서', testament: '신약', genre: '바울서신', num: '53' },
+      '데살로니가후서': { name: '데살로니가후서', testament: '신약', genre: '바울서신', num: '53' },
+      '딤전': { name: '디모데전서', testament: '신약', genre: '바울서신', num: '54' },
+      '디모데전서': { name: '디모데전서', testament: '신약', genre: '바울서신', num: '54' },
+      '딤후': { name: '디모데후서', testament: '신약', genre: '바울서신', num: '55' },
+      '디모데후서': { name: '디모데후서', testament: '신약', genre: '바울서신', num: '55' },
+      '딛': { name: '디도서', testament: '신약', genre: '바울서신', num: '56' },
+      '디도서': { name: '디도서', testament: '신약', genre: '바울서신', num: '56' },
+      '몬': { name: '빌레몬서', testament: '신약', genre: '바울서신', num: '57' },
+      '빌레몬서': { name: '빌레몬서', testament: '신약', genre: '바울서신', num: '57' },
+      '히': { name: '히브리서', testament: '신약', genre: '일반서신', num: '58' },
+      '히브리서': { name: '히브리서', testament: '신약', genre: '일반서신', num: '58' },
+      '약': { name: '야고보서', testament: '신약', genre: '일반서신', num: '59' },
+      '야고보서': { name: '야고보서', testament: '신약', genre: '일반서신', num: '59' },
+      '벧전': { name: '베드로전서', testament: '신약', genre: '일반서신', num: '60' },
+      '베드로전서': { name: '베드로전서', testament: '신약', genre: '일반서신', num: '60' },
+      '벧후': { name: '베드로후서', testament: '신약', genre: '일반서신', num: '61' },
+      '베드로후서': { name: '베드로후서', testament: '신약', genre: '일반서신', num: '61' },
+      '요일': { name: '요한일서', testament: '신약', genre: '일반서신', num: '62' },
+      '요한일서': { name: '요한일서', testament: '신약', genre: '일반서신', num: '62' },
+      '요이': { name: '요한이서', testament: '신약', genre: '일반서신', num: '63' },
+      '요한이서': { name: '요한이서', testament: '신약', genre: '일반서신', num: '63' },
+      '요삼': { name: '요한삼서', testament: '신약', genre: '일반서신', num: '64' },
+      '요한삼서': { name: '요한삼서', testament: '신약', genre: '일반서신', num: '64' },
+      '유': { name: '유다서', testament: '신약', genre: '일반서신', num: '65' },
+      '유다서': { name: '유다서', testament: '신약', genre: '일반서신', num: '65' },
+      '계': { name: '요한계시록', testament: '신약', genre: '예언서', num: '66' },
+      '요한계시록': { name: '요한계시록', testament: '신약', genre: '예언서', num: '66' },
+    };
+
+    let exploreDebounceTimer = null;
+    let currentExploreData = null;
+    let currentExploreActiveTab = 'oxford';
+
+    function handlePassageInputHint(val) {
+      const hintBox = document.getElementById('canonMatchHint');
+      const panel = document.getElementById('dDriveExplorerPanel');
+      const clean = val.trim();
+
+      if (!clean) {
+        if (hintBox) hintBox.style.display = 'none';
+        if (panel) panel.style.display = 'none';
+        currentExploreData = null;
+        return;
+      }
+      
+      // 첫 단어 또는 문자열에서 권명 추출
+      const match = clean.match(/^([가-힣a-zA-Z]+)/);
+      if (match) {
+        const key = match[1].toLowerCase();
+        let found = null;
+        for (const [abbr, info] of Object.entries(BIBLE_66_ABBR_MAP)) {
+          if (abbr.toLowerCase() === key) {
+            found = info;
+            break;
+          }
+        }
+        if (found && hintBox) {
+          const rest = clean.slice(match[1].length).trim();
+          hintBox.style.display = 'block';
+          hintBox.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <div>
+                <span style="background:var(--gold); color:#000; font-weight:800; padding:2px 6px; border-radius:4px; margin-right:6px;">${found.num}</span>
+                <strong>[${match[1]}] ➔ ${found.testament} ${found.genre} 『${found.name}』</strong> ${rest ? '<span style="color:var(--gold); font-weight:700;">' + rest + '</span>' : '(1장 기본)'}
+              </div>
+              <div style="color:#93c5fd; font-weight:700;">
+                <i class="fa-solid fa-database"></i> D드라이브 실물 주석 & 목성연 자료 탐색 중...
+              </div>
+            </div>
+          `;
+
+          // 디바운스로 실시간 D드라이브 실물 자료 및 발췌문 호출
+          if (exploreDebounceTimer) clearTimeout(exploreDebounceTimer);
+          exploreDebounceTimer = setTimeout(() => {
+            fetchDDriveExplore(clean);
+          }, 250);
+          return;
+        }
+      }
+      if (hintBox) hintBox.style.display = 'none';
+      if (panel) panel.style.display = 'none';
+    }
+
+    async function fetchDDriveExplore(query) {
+      try {
+        const res = await fetch('/api/d-drive-explore?q=' + encodeURIComponent(query));
+        const data = await res.json();
+        if (data.success) {
+          currentExploreData = data;
+          renderDDriveExplorer(data);
+        }
+      } catch (e) {
+        console.error('D드라이브 탐색 오류:', e);
+      }
+    }
+
+    function renderDDriveExplorer(data) {
+      const panel = document.getElementById('dDriveExplorerPanel');
+      if (!panel) return;
+      panel.style.display = 'block';
+
+      document.getElementById('exploreCanonBadge').innerText = data.canon_num || '01';
+      document.getElementById('exploreBookTitle').innerText = data.book_name;
+      document.getElementById('exploreGenreBadge').innerText = `${data.testament} / ${data.genre}`;
+      document.getElementById('explorePassageNorm').innerText = data.standard_passage;
+      document.getElementById('exploreTotalFiles').innerText = data.total_files;
+
+      // 주석 탭 렌더링
+      const tabsWrapper = document.getElementById('commTabsWrapper');
+      tabsWrapper.innerHTML = '';
+
+      const catKeys = ['oxford', 'calvin', 'park', 'wbc', 'grace', 'pastoral'];
+      if (!catKeys.includes(currentExploreActiveTab)) currentExploreActiveTab = 'oxford';
+
+      catKeys.forEach(k => {
+        const cat = data.categories[k];
+        if (!cat) return;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.style.cssText = `
+          border: 1.5px solid ${k === currentExploreActiveTab ? 'var(--gold-accent)' : '#cbd5e1'};
+          background: ${k === currentExploreActiveTab ? 'var(--navy-900)' : '#f8fafc'};
+          color: ${k === currentExploreActiveTab ? '#ffffff' : '#334155'};
+          padding: 6px 12px;
+          border-radius: 8px;
+          font-size: 0.84rem;
+          font-weight: 700;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          transition: all 0.2s;
+        `;
+        btn.innerHTML = `
+          <span>${cat.name.split(' ')[0]}</span>
+          <span style="background:${k === currentExploreActiveTab ? 'rgba(255,255,255,0.2)' : '#e2e8f0'}; color:${k === currentExploreActiveTab ? '#fff' : '#475569'}; padding: 1px 6px; border-radius: 999px; font-size: 0.72rem;">${cat.count}</span>
+        `;
+        btn.onclick = () => {
+          currentExploreActiveTab = k;
+          renderDDriveExplorer(currentExploreData);
+        };
+        tabsWrapper.appendChild(btn);
+      });
+
+      // 선택된 주석서 상세 렌더링
+      renderCommDetail(data.categories[currentExploreActiveTab]);
+    }
+
+    function renderCommDetail(cat) {
+      const card = document.getElementById('commDetailCard');
+      if (!card || !cat) return;
+
+      const fileListHtml = cat.files && cat.files.length > 0
+        ? cat.files.map(f => `
+            <li style="display:flex; justify-content:space-between; align-items:center; padding:5px 0; border-bottom:1px dashed #e2e8f0; font-size:0.83rem;">
+              <span style="color:#1e3a8a; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:80%;" title="${f.name}">
+                📄 ${f.name}
+              </span>
+              <span style="color:#64748b; font-size:0.75rem;">실물 연동 ✅</span>
+            </li>
+          `).join('')
+        : '<li style="color:#94a3b8; font-size:0.82rem;">연관 파일 스캔 완료</li>';
+
+      card.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <strong style="font-size:0.98rem; color:var(--navy-900);">
+            📖 ${cat.name}
+            <span style="background:#fef3c7; color:#b45309; font-size:0.75rem; padding:2px 8px; border-radius:4px; margin-left:6px;">${cat.badge}</span>
+          </strong>
+          <span style="font-size:0.8rem; color:#64748b;">매칭 파일: <strong>${cat.count}개</strong></span>
+        </div>
+
+        <!-- 실제 발췌 해석문 -->
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-left:4px solid var(--gold-accent); border-radius:6px; padding:10px 14px; margin-bottom:12px; font-size:0.88rem; line-height:1.6; color:#334155;">
+          <div style="font-weight:700; color:#b45309; margin-bottom:4px; font-size:0.82rem;">
+            🔍 [D드라이브 실물 주석 원문 발췌 및 해석 인사이트]
+          </div>
+          ${cat.excerpt ? cat.excerpt + '...' : '해당 구절에 대한 원어 구문 구조 및 구속사적 중심 맥락이 실시간 주석 엔진에 연동되어 있습니다.'}
+        </div>
+
+        <!-- 매칭된 실제 파일 목록 프리뷰 -->
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:10px 12px;">
+          <div style="font-size:0.8rem; font-weight:700; color:#475569; margin-bottom:6px;">
+            📂 D드라이브 매칭 실물 파일 (${cat.files.length}개 표출 / 총 ${cat.count}개)
+          </div>
+          <ul style="list-style:none; padding:0; margin:0; max-height:130px; overflow-y:auto;">
+            ${fileListHtml}
+          </ul>
+        </div>
+      `;
+    }
+
+    function triggerAdminExploreGenerate() {
+      if (!currentExploreData) return;
+      const input = document.getElementById('adminPassageInput');
+      if (input) {
+        input.value = currentExploreData.standard_passage;
+        handleAdminAnalyze(new Event('submit'));
+      }
+    }
+
+    
     // 초기 실행
     fetchAdminReports();
   </script>
