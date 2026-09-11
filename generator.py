@@ -14,6 +14,14 @@ except ImportError:
     _DRIVE_LOADER_AVAILABLE = False
     print("⚠️ [Generator] drive_loader 없음 → 하드코딩 지식 베이스 모드")
 
+# 본문 장/절 밀착형 6대 권위 주석 심층 석의 엔진
+try:
+    from passage_commentary_engine import get_passage_exact_commentary, get_integrated_passage_commentary
+    _PASSAGE_ENGINE_AVAILABLE = True
+except ImportError:
+    _PASSAGE_ENGINE_AVAILABLE = False
+    print("⚠️ [Generator] passage_commentary_engine 없음")
+
 # Fix Windows console UTF-8 output
 if sys.platform == "win32":
     try:
@@ -68,6 +76,15 @@ def get_canon_index(book_name: str) -> int:
         return BIBLE_CANON_ORDER.index(book_name)
     except ValueError:
         return 999
+
+def get_canon_sort_key(item: dict) -> tuple:
+    book = item.get("book", "")
+    passage = item.get("passage", "")
+    canon_idx = get_canon_index(book)
+    m = re.search(r"(\d+)[:장]\s*(\d+)", passage)
+    if m:
+        return (canon_idx, int(m.group(1)), int(m.group(2)))
+    return (canon_idx, 0, 0)
 
 def clean_character_counts(text: str) -> str:
     text = re.sub(r"\s*-\s*\[[\d,\s~]+자\]", "", text)
@@ -487,30 +504,59 @@ WBC 및 IVP 배경주석의 {passage} 역사적·문화적 배경 분석 (3-4문
 
 
 def get_book_knowledge(book_name: str, testament: str, genre: str, passage: str = "") -> dict:
-    """성경 권별 지식 베이스 검색.
+    """성경 권별 및 본문 장/절 지식 베이스 검색.
 
     최우선 순위:
-    1. drive_loader (D드라이브 실물 3,853개 주석 + 2,343개 목성연 자료 전수 연동 & 실제 원문 발췌)
-    2. Gemini AI 직접 호출 (D드라이브 파일 보완 및 학술 합성)
-    3. 하드코딩된 상세 지식 (D드라이브 및 AI 모두 불능일 때의 폴백)
-    4. 제너릭 템플릿 폴백
+    1. drive_loader (D드라이브 실물 자료 + passage_commentary_engine 본문 밀착 6대 주석 융합)
+    2. passage_commentary_engine 직접 호출 (장/절 100% 밀착 심층 석의 및 원어 대조)
+    3. 하드코딩된 상세 지식 (구절 없이 책 이름만 검색했을 때의 개관용)
+    4. Gemini AI 직접 호출
+    5. 제너릭 템플릿 폴백
     """
-    # 1. D드라이브 실물 자료 + 전수 인덱서 우선 사용 (최우선!)
+    # 1. D드라이브 실물 자료 + 전수 인덱서 + 본문 밀착 석의 엔진 (최우선!)
     if _DRIVE_LOADER_AVAILABLE:
         try:
             kb = _drive_load_kb(book_name, passage or book_name, testament, genre)
             source = kb.get("_source", "template")
             d_count = kb.get("_d_matched_count", 0)
-            print(f"📚 [KnowledgeBase] D드라이브 실물 연동 사용: {book_name} (출처: {source}, 매칭파일: {d_count}개)")
-            if d_count > 0 or "drive" in source or "gemini" in source:
+            print(f"📚 [KnowledgeBase] D드라이브/석의엔진 연동 사용: {book_name} (출처: {source}, 매칭파일: {d_count}개)")
+            if d_count > 0 or "drive" in source or "passage_engine" in source or "gemini" in source:
                 return kb
         except Exception as e:
             print(f"⚠️ [KnowledgeBase] DriveLoader 실패 → 폴백: {e}")
 
-    # 2. 하드코딩된 지식 베이스 (D드라이브 연동 실패 시 폴백)
-    if book_name in BOOK_SPECIFIC_KNOWLEDGE:
+    # 2. passage_commentary_engine 직접 호출 (구절 밀착 심층 석의 보장)
+    if _PASSAGE_ENGINE_AVAILABLE and passage:
+        try:
+            ch, vs, ve = 1, None, None
+            m = re.search(r"(\d+)\s*:\s*(\d+)(?:\s*-\s*(\d+))?", passage)
+            if m:
+                ch = int(m.group(1))
+                vs = int(m.group(2))
+                ve = int(m.group(3)) if m.group(3) else vs
+            exact_kb = get_passage_exact_commentary(book_name, ch, vs, ve, passage)
+            if exact_kb:
+                print(f"📖 [KnowledgeBase] passage_commentary_engine 직접 매칭 성공: {passage}")
+                return {
+                    "book_name": book_name,
+                    "standard_passage": passage,
+                    "original_words": exact_kb.get("original_words", []),
+                    "oxford_hockma": exact_kb.get("oxford_hockma", ""),
+                    "calvin_park": exact_kb.get("calvin_park", ""),
+                    "wbc_ivp": exact_kb.get("wbc_ivp", ""),
+                    "moksungyeon": exact_kb.get("moksungyeon", ""),
+                    "narrative_focus": exact_kb.get("narrative_focus", ""),
+                    "sermon_bigidea": exact_kb.get("sermon_bigidea", ""),
+                    "_source": "passage_engine_direct"
+                }
+        except Exception as e:
+            print(f"⚠️ [KnowledgeBase] passage_commentary_engine 직접 호출 실패: {e}")
+
+    # 3. 하드코딩된 지식 베이스 (장/절이 지정되지 않고 책 이름만 검색된 경우에만 총론으로 사용)
+    has_specific_verse = bool(re.search(r"\d+[:장]", passage))
+    if not has_specific_verse and book_name in BOOK_SPECIFIC_KNOWLEDGE:
         kb = BOOK_SPECIFIC_KNOWLEDGE[book_name].copy()
-        print(f"📖 [KnowledgeBase] 하드코딩 지식 폴백 사용: {book_name}")
+        print(f"📖 [KnowledgeBase] 하드코딩 지식 개관 사용: {book_name}")
         return kb
 
     # 3. Gemini AI 직접 호출 (drive_loader가 template을 반환하거나 실패한 경우)
@@ -841,7 +887,7 @@ def generate_dynamic_master_report(raw_passage: str, is_private: bool = False, c
         "tags": [book_name, genre, "마스터보고서", "원어석의", "강해설교"]
     })
 
-    current_manifest.sort(key=lambda x: get_canon_index(x.get("book", "")))
+    current_manifest.sort(key=get_canon_sort_key)
     with open(REPORTS_DATA_JSON, "w", encoding="utf-8") as f:
         json.dump(current_manifest, f, ensure_ascii=False, indent=2)
 
@@ -850,6 +896,15 @@ def generate_dynamic_master_report(raw_passage: str, is_private: bool = False, c
     if share_link_json.parent.exists():
         with open(share_link_json, "w", encoding="utf-8") as f:
             json.dump(current_manifest, f, ensure_ascii=False, indent=2)
+
+    # 6. GitHub 및 Vercel/Render 실시간 자동 동기화 트리거
+    try:
+        from github_sync import sync_report_files_to_github
+        gh_res = sync_report_files_to_github(target_passage=passage, specific_html_path=html_path)
+        if gh_res.get("success"):
+            print(f"🚀 [GitHubSync] GitHub & Vercel 실시간 배포 트리거 완료! ({len(gh_res.get('pushed_files', []))}개 파일 푸시됨)")
+    except Exception as e_gh:
+        print(f"⚠️ [GitHubSync] 실시간 푸시 예외: {e_gh}")
 
     print(f"🎉 [{passage}] 올인원 마스터 대통합 보고서 실시간 생성 완료 (Private={is_private})!")
     return {
@@ -869,8 +924,12 @@ def generate_dynamic_master_report(raw_passage: str, is_private: bool = False, c
     }
 
 def delete_master_report(report_id: str) -> dict:
-    """원치 않는 보고서를 데이터베이스(reports_data.json) 및 저장소에서 삭제/제외"""
-    print(f"🗑️ [Master Report Deletion] '{report_id}' 삭제 요청 처리 중...")
+    """
+    원치 않는 보고서를 사이트 목록(reports_data.json) 및 GitHub 저장소에서 제외/삭제.
+    사용자 지침: 내 컴퓨터의 로컬 원본 파일(HTML/PDF/MD)은 그대로 안전하게 보존하고,
+    웹 사이트 및 대시보드 노출 목록에서만 완전히 제거.
+    """
+    print(f"🗑️ [Master Report Deletion] '{report_id}' 사이트 목록 삭제 요청 처리 중...")
     
     current_manifest = []
     if REPORTS_DATA_JSON.exists():
@@ -882,11 +941,22 @@ def delete_master_report(report_id: str) -> dict:
 
     target_item = next((item for item in current_manifest if item.get("id") == report_id or item.get("passage") == report_id), None)
     if not target_item:
-        return {"success": False, "error": f"ID '{report_id}'에 해당하는 보고서를 찾을 수 없습니다."}
+        return {"success": False, "error": f"ID 또는 구절 '{report_id}'에 해당하는 보고서를 찾을 수 없습니다."}
 
-    # 목록에서 제거
+    target_passage = target_item.get("passage", report_id)
+
+    # 1. 목록에서 제외된 새 매니페스트 구성
     new_manifest = [item for item in current_manifest if item.get("id") != report_id and item.get("passage") != report_id]
     
+    # 2. 메인 reports_data.json 저장 (누락되었던 핵심 저장 처리)
+    try:
+        with open(REPORTS_DATA_JSON, "w", encoding="utf-8") as f:
+            json.dump(new_manifest, f, ensure_ascii=False, indent=2)
+        print(f"✅ [REPORTS_DATA_JSON] '{target_passage}' 항목이 사이트 데이터베이스에서 제거되었습니다.")
+    except Exception as e:
+        print(f"⚠️ [Delete Error] REPORTS_DATA_JSON 저장 실패: {e}")
+
+    # 3. 공유링크 폴더의 reports_data.json도 동기화
     try:
         share_link_json = BASE_DIR / "공유링크" / "reports_data.json"
         if share_link_json.parent.exists():
@@ -895,28 +965,31 @@ def delete_master_report(report_id: str) -> dict:
     except Exception:
         pass
 
-    # 실제 생성 파일도 정리 (선택적 안전 삭제)
-    try:
-        html_rel = target_item.get("htmlUrl")
-        if html_rel:
-            f_path = CURRENT_DIR / html_rel
-            if f_path.exists():
-                f_path.unlink()
-        pdf_rel = target_item.get("pdfUrl")
-        if pdf_rel:
-            f_path = CURRENT_DIR / pdf_rel
-            if f_path.exists():
-                f_path.unlink()
-        md_rel = target_item.get("mdUrl")
-        if md_rel:
-            f_path = CURRENT_DIR / md_rel
-            if f_path.exists():
-                f_path.unlink()
-    except Exception as e:
-        print(f"⚠️ 파일 삭제 중 경미한 예외 (무시 가능): {e}")
+    # 4. 사용자 지침 준수: 로컬 원본 파일은 지우지 않고 안전하게 보존!
+    print(f"📁 [Local Files Preserved] 컴퓨터의 로컬 원본 파일(HTML/MD/PDF)은 온전히 보존되었습니다.")
 
-    print(f"✅ '{report_id}' ({target_item.get('passage')}) 보고서가 성공적으로 삭제되었습니다.")
-    return {"success": True, "deleted_id": report_id, "passage": target_item.get("passage")}
+    # 5. index.html 재빌드 (웹사이트 화면에서도 해당 카드 즉시 제거)
+    try:
+        from launch_share_service import rebuild_index_html
+        rebuild_index_html()
+    except Exception as e:
+        pass
+
+    # 6. GitHub 자동 커밋 & 푸시 -> Render / Vercel 라이브 사이트에서도 즉시 삭제 반영!
+    try:
+        from github_sync import load_github_config, push_file_to_github
+        cfg = load_github_config()
+        if cfg.get("repo") and cfg.get("token"):
+            push_file_to_github(cfg["repo"], REPORTS_DATA_JSON, "reports_data.json", cfg["branch"], cfg["token"], f"Remove report from portal: {target_passage}")
+            idx_file = CURRENT_DIR / "index.html"
+            if idx_file.exists():
+                push_file_to_github(cfg["repo"], idx_file, "index.html", cfg["branch"], cfg["token"], f"Update portal index after removing {target_passage}")
+            print(f"🚀 [GitHubSync] 사이트 삭제 변경사항이 GitHub 및 Render/Vercel에 실시간 반영되었습니다.")
+    except Exception as e:
+        print(f"⚠️ [Delete GitHub Sync Error]: {e}")
+
+    print(f"✅ '{report_id}' ({target_passage}) 보고서가 사이트에서 성공적으로 제거되었습니다.")
+    return {"success": True, "deleted_id": report_id, "passage": target_passage}
 
 def toggle_report_privacy(report_id: str, set_private: bool = None) -> dict:
     """보고서의 공개 ↔ 비공개(나만 보기) 상태 전환"""
@@ -950,6 +1023,19 @@ def toggle_report_privacy(report_id: str, set_private: bool = None) -> dict:
 
     state_str = "🔒 비공개 (나만 보기)" if target_item["isPrivate"] else "🌐 전체 공개"
     print(f"✅ '{report_id}' 상태 변경 -> {state_str}")
+
+    # GitHub 자동 커밋 & 푸시 -> Render / Vercel 라이브 사이트 동기화
+    try:
+        from github_sync import load_github_config, push_file_to_github
+        cfg = load_github_config()
+        if cfg.get("repo") and cfg.get("token"):
+            push_file_to_github(cfg["repo"], REPORTS_DATA_JSON, "reports_data.json", cfg["branch"], cfg["token"], f"Toggle privacy for {target_item.get('passage')}: {state_str}")
+            idx_file = CURRENT_DIR / "index.html"
+            if idx_file.exists():
+                push_file_to_github(cfg["repo"], idx_file, "index.html", cfg["branch"], cfg["token"], f"Update portal index for privacy toggle")
+    except Exception as e:
+        print(f"⚠️ [Privacy GitHub Sync Error]: {e}")
+
     return {"success": True, "id": report_id, "isPrivate": target_item["isPrivate"]}
 
 if __name__ == "__main__":
